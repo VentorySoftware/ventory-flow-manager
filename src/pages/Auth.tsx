@@ -277,21 +277,6 @@ const Auth = () => {
           </CardContent>
         </Card>
 
-        {/* Features Preview */}
-        <div className="grid grid-cols-2 gap-4 mt-8">
-          <Card className="shadow-soft">
-            <CardContent className="flex flex-col items-center p-4 space-y-2">
-              <ShoppingCart className="h-6 w-6 text-primary" />
-              <span className="text-sm font-medium">Gestión de Ventas</span>
-            </CardContent>
-          </Card>
-          <Card className="shadow-soft">
-            <CardContent className="flex flex-col items-center p-4 space-y-2">
-              <Package className="h-6 w-6 text-primary" />
-              <span className="text-sm font-medium">Control de Inventario</span>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   )
