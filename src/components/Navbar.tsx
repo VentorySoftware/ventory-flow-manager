@@ -64,6 +64,9 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {/* User Profile Dropdown */}
             <UserProfileDropdown />
+            
+            {/* Notifications - A la derecha del usuario */}
+            <NotificationPanel />
           </div>
         </div>
       </div>
