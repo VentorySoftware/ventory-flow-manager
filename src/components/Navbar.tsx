@@ -28,6 +28,7 @@ const Navbar = () => {
     { name: "Dashboard", icon: LayoutDashboard, path: "/" },
     { name: "Productos", icon: Package, path: "/products" },
     { name: "Ventas", icon: ShoppingCart, path: "/sales" },
+    { name: "Clientes", icon: Users, path: "/customers" },
     ...(hasRole('admin') ? [{ name: "Usuarios", icon: Users, path: "/users" }] : []),
     { name: "Reportes", icon: BarChart3, path: "/reports" },
   ]

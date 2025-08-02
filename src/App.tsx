@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
 import Users from "./pages/Users";
+import Customers from "./pages/Customers";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -45,6 +46,11 @@ const App = () => (
             <Route path="/sales" element={
               <ProtectedRoute>
                 <Sales />
+              </ProtectedRoute>
+            } />
+            <Route path="/customers" element={
+              <ProtectedRoute>
+                <Customers />
               </ProtectedRoute>
             } />
             <Route path="/users" element={
