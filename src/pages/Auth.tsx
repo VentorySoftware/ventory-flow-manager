@@ -126,7 +126,7 @@ const Auth = () => {
 
         <Card className="shadow-elegant">
           <CardHeader>
-            <CardTitle className="text-center">Acceso al Sistema</CardTitle>
+            <CardTitle className="text-center">BIENVENIDO</CardTitle>
             <CardDescription className="text-center">
               Inicia sesión o crea una nueva cuenta
             </CardDescription>
