@@ -80,11 +80,36 @@ const Sales = () => {
     try {
       setLoading(true)
       
-      // Use demo data for now - replace with real Supabase calls when connected
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500))
+      const { data, error } = await supabase
+        .from('sales')
+        .select(`
+          *,
+          customers (
+            name,
+            email
+          ),
+          sale_items (
+            id,
+            quantity,
+            unit_price,
+            subtotal,
+            products (
+              name,
+              sku
+            )
+          )
+        `)
+        .order('created_at', { ascending: false })
       
-      setSales(demoSales as any)
+      if (error) throw error
+      
+      // Transform data to match interface
+      const transformedSales = data?.map(sale => ({
+        ...sale,
+        sale_number: `V${sale.id.slice(-8).toUpperCase()}` // Generate sale number from ID
+      })) || []
+      
+      setSales(transformedSales)
       
     } catch (error) {
       console.error('Error fetching sales:', error)

@@ -86,19 +86,39 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
 
   const fetchProducts = async () => {
     try {
-      // Use demo data for now
-      setProducts(demoProducts as any)
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('name');
+      
+      if (error) throw error;
+      setProducts(data || []);
     } catch (error) {
-      console.error('Error fetching products:', error)
+      console.error('Error fetching products:', error);
+      toast({
+        title: "Error",
+        description: "Error al cargar los productos",
+        variant: "destructive",
+      });
     }
   }
 
   const fetchCustomers = async () => {
     try {
-      // Use demo data for now
-      setCustomers(demoCustomers as any)
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .order('name');
+      
+      if (error) throw error;
+      setCustomers(data || []);
     } catch (error) {
-      console.error('Error fetching customers:', error)
+      console.error('Error fetching customers:', error);
+      toast({
+        title: "Error", 
+        description: "Error al cargar los clientes",
+        variant: "destructive",
+      });
     }
   }
 
@@ -205,6 +225,23 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
         .insert(saleItemsData)
 
       if (itemsError) throw itemsError
+
+      // Update product stock
+      for (const item of saleItems) {
+        const { error: stockError } = await supabase
+          .from('products')
+          .update({ stock: item.availableStock - item.quantity })
+          .eq('id', item.productId);
+        
+        if (stockError) {
+          console.error('Error updating stock:', stockError);
+        }
+      }
+
+      toast({
+        title: "Venta registrada",
+        description: "La venta se ha registrado exitosamente",
+      });
 
       onSaleCreated()
       

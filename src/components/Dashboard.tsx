@@ -24,21 +24,62 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Use demo data for now - replace with real Supabase calls when connected
+      // Fetch today's sales
       const today = new Date().toISOString().split('T')[0]
-      const todaySales = demoSales
-        .filter(sale => sale.created_at.startsWith(today))
-        .reduce((sum, sale) => sum + sale.total, 0)
+      const { data: todaySalesData, error: salesError } = await supabase
+        .from('sales')
+        .select('total')
+        .gte('created_at', `${today}T00:00:00`)
+        .lte('created_at', `${today}T23:59:59`)
+      
+      if (salesError) throw salesError
+      
+      const todaySales = todaySalesData?.reduce((sum, sale) => sum + sale.total, 0) || 0
 
-      const totalProducts = 3 // From demo data
-      const lowStockProducts = 0 // None in demo
-      const totalSalesAmount = demoSales.reduce((sum, sale) => sum + sale.total, 0)
-      const recentSales = demoSales.slice(0, 3)
+      // Fetch total products and low stock
+      const { data: productsData, error: productsError } = await supabase
+        .from('products')
+        .select('stock')
+      
+      if (productsError) throw productsError
+      
+      const totalProducts = productsData?.length || 0
+      const lowStockProducts = productsData?.filter(product => product.stock < 10).length || 0
+
+      // Fetch all sales for total amount and count
+      const { data: allSalesData, error: allSalesError } = await supabase
+        .from('sales')
+        .select('total')
+      
+      if (allSalesError) throw allSalesError
+      
+      const totalSalesAmount = allSalesData?.reduce((sum, sale) => sum + sale.total, 0) || 0
+      const totalSales = allSalesData?.length || 0
+
+      // Fetch recent sales
+      const { data: recentSalesData, error: recentSalesError } = await supabase
+        .from('sales')
+        .select(`
+          *,
+          customers (
+            name,
+            email
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(3)
+      
+      if (recentSalesError) throw recentSalesError
+
+      const recentSales = recentSalesData?.map(sale => ({
+        ...sale,
+        sale_number: `V${sale.id.slice(-8).toUpperCase()}`
+      })) || []
 
       setDashboardData({
         todaySales,
         totalProducts,
-        totalSales: demoSales.length,
+        totalSales,
         lowStockProducts,
         totalSalesAmount,
         recentSales
