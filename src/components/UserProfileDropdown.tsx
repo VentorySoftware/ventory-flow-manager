@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/enhanced-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -34,9 +34,13 @@ import {
   Moon,
   Sun,
   ChevronDown,
-  Edit
+  Edit,
+  Check,
+  X
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
 
 const UserProfileDropdown = () => {
   const { user, userRole, userProfile, signOut, hasRole } = useAuth()
@@ -44,11 +48,16 @@ const UserProfileDropdown = () => {
   const { toast } = useToast()
   const [uploading, setUploading] = useState(false)
   const [editingProfile, setEditingProfile] = useState(false)
+  const [showCrop, setShowCrop] = useState(false)
+  const [imageToCrop, setImageToCrop] = useState('')
+  const [crop, setCrop] = useState<Crop>()
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
   const [profileForm, setProfileForm] = useState({
     full_name: '',
     phone: ''
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
 
   const handleSignOut = async () => {
     await signOut()
@@ -89,9 +98,64 @@ const UserProfileDropdown = () => {
       .substring(0, 2)
   }
 
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { width, height } = e.currentTarget
+    const crop = centerCrop(
+      makeAspectCrop(
+        {
+          unit: '%',
+          width: 90,
+        },
+        1,
+        width,
+        height,
+      ),
+      width,
+      height,
+    )
+    setCrop(crop)
+  }, [])
+
+  const getCroppedImg = useCallback((image: HTMLImageElement, pixelCrop: PixelCrop): Promise<Blob> => {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    if (!ctx) {
+      throw new Error('No 2d context')
+    }
+
+    const scaleX = image.naturalWidth / image.width
+    const scaleY = image.naturalHeight / image.height
+
+    canvas.width = pixelCrop.width
+    canvas.height = pixelCrop.height
+
+    ctx.drawImage(
+      image,
+      pixelCrop.x * scaleX,
+      pixelCrop.y * scaleY,
+      pixelCrop.width * scaleX,
+      pixelCrop.height * scaleY,
+      0,
+      0,
+      pixelCrop.width,
+      pixelCrop.height,
+    )
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          reject(new Error('Canvas is empty'))
+          return
+        }
+        resolve(blob)
+      }, 'image/jpeg', 0.95)
+    })
+  }, [])
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (!file || !user) return
+    if (!file) return
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
@@ -113,18 +177,31 @@ const UserProfileDropdown = () => {
       return
     }
 
+    const reader = new FileReader()
+    reader.addEventListener('load', () => {
+      setImageToCrop(reader.result?.toString() || '')
+      setShowCrop(true)
+    })
+    reader.readAsDataURL(file)
+  }
+
+  const handleCropConfirm = async () => {
+    if (!completedCrop || !imgRef.current || !user) return
+
     setUploading(true)
 
     try {
-      const fileExt = file.name.split('.').pop()
+      const croppedBlob = await getCroppedImg(imgRef.current, completedCrop)
+      
+      const fileExt = 'jpg'
       const fileName = `${user.id}/avatar.${fileExt}`
 
-      // Upload file to storage
+      // Upload cropped file to storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(fileName, file, {
+        .upload(fileName, croppedBlob, {
           upsert: true,
-          contentType: file.type
+          contentType: 'image/jpeg'
         })
 
       if (uploadError) throw uploadError
@@ -147,8 +224,13 @@ const UserProfileDropdown = () => {
         description: "Foto de perfil actualizada correctamente",
       })
 
+      setShowCrop(false)
+      setImageToCrop('')
+      
       // Refresh the page to show new avatar
-      window.location.reload()
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
 
     } catch (error: any) {
       console.error('Error uploading avatar:', error)
@@ -159,6 +241,17 @@ const UserProfileDropdown = () => {
       })
     } finally {
       setUploading(false)
+    }
+  }
+
+  const handleCropCancel = () => {
+    setShowCrop(false)
+    setImageToCrop('')
+    setCrop(undefined)
+    setCompletedCrop(undefined)
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
   }
 
@@ -185,8 +278,9 @@ const UserProfileDropdown = () => {
         description: "Perfil actualizado correctamente",
       })
 
-      setEditingProfile(false)
-      window.location.reload()
+      // No cerrar automáticamente el formulario
+      // setEditingProfile(false)
+      // window.location.reload()
 
     } catch (error: any) {
       console.error('Error updating profile:', error)
@@ -424,9 +518,50 @@ const UserProfileDropdown = () => {
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={handleAvatarUpload}
+        onChange={handleFileSelect}
         className="hidden"
       />
+
+      {/* Image Crop Dialog */}
+      <Dialog open={showCrop} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Recortar Imagen</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {imageToCrop && (
+              <div className="flex justify-center">
+                <ReactCrop
+                  crop={crop}
+                  onChange={(_, percentCrop) => setCrop(percentCrop)}
+                  onComplete={(c) => setCompletedCrop(c)}
+                  aspect={1}
+                  circularCrop
+                >
+                  <img
+                    ref={imgRef}
+                    alt="Crop me"
+                    src={imageToCrop}
+                    style={{ transform: 'scale(1) rotate(0deg)' }}
+                    onLoad={onImageLoad}
+                    className="max-h-96"
+                  />
+                </ReactCrop>
+              </div>
+            )}
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={handleCropCancel} disabled={uploading}>
+                <X className="h-4 w-4 mr-2" />
+                Cancelar
+              </Button>
+              <Button onClick={handleCropConfirm} disabled={uploading || !completedCrop}>
+                <Check className="h-4 w-4 mr-2" />
+                {uploading ? 'Guardando...' : 'Confirmar'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
