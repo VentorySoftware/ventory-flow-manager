@@ -9,6 +9,7 @@ import {
   Users,
   BarChart3,
   Settings,
+  LayoutGrid,
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -62,6 +63,19 @@ const Navbar = () => {
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
+            {/* Botón Modo Caja - Solo para admins */}
+            {hasRole('admin') && (
+              <Button
+                variant={location.pathname === '/kiosk' ? "business" : "outline"}
+                size="sm"
+                className="flex items-center space-x-2"
+                onClick={() => navigate('/kiosk')}
+              >
+                <LayoutGrid className="h-4 w-4" />
+                <span className="hidden lg:block">Modo Caja</span>
+              </Button>
+            )}
+            
             {/* User Profile Dropdown */}
             <UserProfileDropdown />
             

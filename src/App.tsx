@@ -14,6 +14,7 @@ import Users from "./pages/Users";
 import Customers from "./pages/Customers";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import KioskView from "./pages/KioskView";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,11 @@ const App = () => (
             <Route path="/" element={
               <ProtectedRoute>
                 <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/kiosk" element={
+              <ProtectedRoute>
+                <KioskView />
               </ProtectedRoute>
             } />
             <Route path="/products" element={
