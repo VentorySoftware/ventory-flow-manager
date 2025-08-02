@@ -5,10 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { 
   LayoutDashboard, 
-  ShoppingCart, 
-  Settings, 
-  Home,
-  ArrowLeft
+  PackageOpen
 } from 'lucide-react'
 
 const KioskNavbar = () => {
@@ -22,11 +19,13 @@ const KioskNavbar = () => {
         
         {/* Logo y título */}
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <ShoppingCart className="h-5 w-5 text-primary-foreground" />
+          <div className="flex items-center space-x-3">
+            <div className="h-10 w-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow">
+              <PackageOpen className="h-6 w-6 text-primary-foreground" />
             </div>
-            <h1 className="text-xl font-bold">Modo Caja</h1>
+            <span className="text-xl font-bold text-gradient">
+              Ventory Manager
+            </span>
           </div>
         </div>
 
