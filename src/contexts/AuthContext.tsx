@@ -6,6 +6,7 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   userRole: string | null
+  userProfile: { full_name: string | null } | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
+  const [userProfile, setUserProfile] = useState<{ full_name: string | null } | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -40,21 +42,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setSession(session)
         setUser(session?.user ?? null)
         
-        // Fetch user role when user is authenticated
+        // Fetch user role and profile when user is authenticated
         if (session?.user) {
           setTimeout(async () => {
             try {
-              const { data } = await supabase.rpc('get_user_role', {
+              // Fetch user role
+              const { data: roleData } = await supabase.rpc('get_user_role', {
                 _user_id: session.user.id
               })
-              setUserRole(data)
+              setUserRole(roleData)
+              
+              // Fetch user profile
+              const { data: profileData } = await supabase
+                .from('profiles')
+                .select('full_name')
+                .eq('user_id', session.user.id)
+                .single()
+              
+              setUserProfile(profileData)
             } catch (error) {
-              console.error('Error fetching user role:', error)
+              console.error('Error fetching user data:', error)
               setUserRole('user') // Default fallback
+              setUserProfile(null)
             }
           }, 0)
         } else {
           setUserRole(null)
+          setUserProfile(null)
         }
         
         setLoading(false)
@@ -116,6 +130,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     session,
     userRole,
+    userProfile,
     loading,
     signIn,
     signUp,

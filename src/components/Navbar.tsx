@@ -21,7 +21,7 @@ import { useAuth } from "@/contexts/AuthContext"
 const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, userRole, signOut, hasRole } = useAuth()
+  const { user, userRole, userProfile, signOut, hasRole } = useAuth()
 
   const navigation = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -115,7 +115,7 @@ const Navbar = () => {
                 <span className="text-xs">{getRoleDisplayName()}</span>
               </Badge>
               <span className="text-sm text-muted-foreground hidden lg:block">
-                {user?.email}
+                {userProfile?.full_name || user?.email}
               </span>
             </div>
             
