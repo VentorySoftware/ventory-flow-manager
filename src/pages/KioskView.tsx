@@ -336,14 +336,9 @@ const KioskView = () => {
       <Dialog open={showCalculator} onOpenChange={setShowCalculator}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Calculator className="h-5 w-5" />
-                Calculadora
-              </div>
-              <Button variant="ghost" size="sm" onClick={() => setShowCalculator(false)}>
-                <X className="h-4 w-4" />
-              </Button>
+            <DialogTitle className="flex items-center gap-2">
+              <Calculator className="h-5 w-5" />
+              Calculadora
             </DialogTitle>
           </DialogHeader>
           
