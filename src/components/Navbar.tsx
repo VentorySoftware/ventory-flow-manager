@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/enhanced-button"
-import { Badge } from "@/components/ui/badge"
-import ThemeToggle from "@/components/ThemeToggle"
+import UserProfileDropdown from "@/components/UserProfileDropdown"
 import NotificationPanel from "@/components/NotificationPanel"
 import {
   PackageOpen,
@@ -10,11 +9,6 @@ import {
   Users,
   BarChart3,
   Settings,
-  LogOut,
-  Bell,
-  Crown,
-  Shield,
-  User
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -22,7 +16,7 @@ import { useAuth } from "@/contexts/AuthContext"
 const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, userRole, userProfile, signOut, hasRole } = useAuth()
+  const { hasRole } = useAuth()
 
   const navigation = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -32,33 +26,6 @@ const Navbar = () => {
     ...(hasRole('admin') ? [{ name: "Usuarios", icon: Users, path: "/users" }] : []),
     { name: "Reportes", icon: BarChart3, path: "/reports" },
   ]
-
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/auth')
-  }
-
-  const getRoleIcon = () => {
-    switch (userRole) {
-      case 'admin':
-        return <Crown className="h-3 w-3" />
-      case 'moderator':
-        return <Shield className="h-3 w-3" />
-      default:
-        return <User className="h-3 w-3" />
-    }
-  }
-
-  const getRoleDisplayName = () => {
-    switch (userRole) {
-      case 'admin':
-        return 'Admin'
-      case 'moderator':
-        return 'Vendedor'
-      default:
-        return 'Usuario'
-    }
-  }
 
   return (
     <nav className="bg-card/95 backdrop-blur-md border-b border-border/50 shadow-elegant sticky top-0 z-50">
@@ -97,7 +64,6 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <NotificationPanel />
-              <ThemeToggle />
               <Button variant="ghost" size="sm" className="hover-scale transition-smooth">
                 <Settings className="h-4 w-4" />
               </Button>
@@ -105,31 +71,8 @@ const Navbar = () => {
             
             <div className="h-6 w-px bg-border/50" />
             
-            {/* User Info */}
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2">
-                <Badge 
-                  variant="outline" 
-                  className="flex items-center space-x-1 bg-gradient-card border-primary/20 hover-scale transition-smooth"
-                >
-                  {getRoleIcon()}
-                  <span className="text-xs font-medium">{getRoleDisplayName()}</span>
-                </Badge>
-                <span className="text-sm font-medium text-muted-foreground hidden lg:block">
-                  {userProfile?.full_name || user?.email}
-                </span>
-              </div>
-              
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleSignOut}
-                className="hover-scale transition-smooth border-destructive/20 hover:border-destructive hover:bg-destructive hover:text-destructive-foreground"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Salir
-              </Button>
-            </div>
+            {/* User Profile Dropdown */}
+            <UserProfileDropdown />
           </div>
         </div>
       </div>

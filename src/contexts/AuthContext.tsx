@@ -6,7 +6,11 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   userRole: string | null
-  userProfile: { full_name: string | null } | null
+  userProfile: { 
+    full_name: string | null
+    phone: string | null 
+    avatar_url: string | null 
+  } | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
@@ -32,7 +36,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
-  const [userProfile, setUserProfile] = useState<{ full_name: string | null } | null>(null)
+  const [userProfile, setUserProfile] = useState<{ 
+    full_name: string | null
+    phone: string | null 
+    avatar_url: string | null 
+  } | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -55,7 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
               // Fetch user profile
               const { data: profileData } = await supabase
                 .from('profiles')
-                .select('full_name')
+                .select('full_name, phone, avatar_url')
                 .eq('user_id', session.user.id)
                 .single()
               

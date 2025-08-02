@@ -25,7 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Users as UsersIcon, Search, Shield, UserCog, Crown, User } from 'lucide-react'
+import { Users as UsersIcon, Search, Shield, UserCog, Crown, User, Edit, Save, X } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
@@ -54,7 +54,12 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedUser, setSelectedUser] = useState<UserWithRole | null>(null)
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false)
+  const [isEditProfileDialogOpen, setIsEditProfileDialogOpen] = useState(false)
   const [newRole, setNewRole] = useState('')
+  const [editingProfile, setEditingProfile] = useState({
+    full_name: '',
+    phone: ''
+  })
   const { toast } = useToast()
   const { hasRole, user: currentUser } = useAuth()
 
@@ -141,6 +146,38 @@ const Users = () => {
       toast({
         title: "Error",
         description: "No se pudo actualizar el rol",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleEditProfile = async () => {
+    if (!selectedUser) return
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: editingProfile.full_name,
+          phone: editingProfile.phone
+        })
+        .eq('user_id', selectedUser.user_id)
+
+      if (error) throw error
+
+      toast({
+        title: "Perfil actualizado",
+        description: `El perfil de ${selectedUser.full_name || selectedUser.email} ha sido actualizado`,
+      })
+
+      setIsEditProfileDialogOpen(false)
+      fetchUsers()
+      
+    } catch (error) {
+      console.error('Error updating profile:', error)
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el perfil",
         variant: "destructive",
       })
     }
@@ -357,19 +394,37 @@ const Users = () => {
                             {new Date(user.created_at).toLocaleDateString('es-MX')}
                           </TableCell>
                           <TableCell className="text-right">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedUser(user)
-                                setNewRole(user.role)
-                                setIsRoleDialogOpen(true)
-                              }}
-                              disabled={user.user_id === currentUser?.id}
-                            >
-                              <UserCog className="h-4 w-4" />
-                              Editar
-                            </Button>
+                            <div className="flex items-center justify-end space-x-1">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedUser(user)
+                                  setEditingProfile({
+                                    full_name: user.full_name || '',
+                                    phone: user.phone || ''
+                                  })
+                                  setIsEditProfileDialogOpen(true)
+                                }}
+                                disabled={user.user_id === currentUser?.id}
+                                title="Editar perfil"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedUser(user)
+                                  setNewRole(user.role)
+                                  setIsRoleDialogOpen(true)
+                                }}
+                                disabled={user.user_id === currentUser?.id}
+                                title="Cambiar rol"
+                              >
+                                <UserCog className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))
@@ -426,6 +481,52 @@ const Users = () => {
               </Button>
               <Button variant="gradient" onClick={handleRoleChange}>
                 Actualizar Rol
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Profile Dialog */}
+      <Dialog open={isEditProfileDialogOpen} onOpenChange={setIsEditProfileDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Perfil de Usuario</DialogTitle>
+            <DialogDescription>
+              Actualiza la información de {selectedUser?.full_name || selectedUser?.email}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Nombre Completo</label>
+              <Input
+                value={editingProfile.full_name}
+                onChange={(e) => setEditingProfile(prev => ({
+                  ...prev,
+                  full_name: e.target.value
+                }))}
+                placeholder="Ingresa el nombre completo"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Teléfono</label>
+              <Input
+                value={editingProfile.phone}
+                onChange={(e) => setEditingProfile(prev => ({
+                  ...prev,
+                  phone: e.target.value
+                }))}
+                placeholder="Ingresa el número de teléfono"
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsEditProfileDialogOpen(false)}>
+                <X className="h-4 w-4 mr-2" />
+                Cancelar
+              </Button>
+              <Button variant="gradient" onClick={handleEditProfile}>
+                <Save className="h-4 w-4 mr-2" />
+                Guardar Cambios
               </Button>
             </div>
           </div>
