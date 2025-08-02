@@ -254,6 +254,18 @@ All colors MUST be HSL.
     transform: translateY(-4px);
     box-shadow: var(--shadow-glow);
   }
+  
+  .animate-breathing-slow {
+    animation: breathingSlow 4s ease-in-out infinite;
+  }
+  
+  .animate-breathing-slower {
+    animation: breathingSlower 6s ease-in-out infinite;
+  }
+  
+  .animate-breathing-glow {
+    animation: breathingGlow 3s ease-in-out infinite;
+  }
 }
 
 @keyframes fadeIn {
@@ -308,20 +320,6 @@ All colors MUST be HSL.
   }
 }
 
-  
-  .animate-breathing-slow {
-    animation: breathingSlow 4s ease-in-out infinite;
-  }
-  
-  .animate-breathing-slower {
-    animation: breathingSlower 6s ease-in-out infinite;
-  }
-  
-  .animate-breathing-glow {
-    animation: breathingGlow 3s ease-in-out infinite;
-  }
-}
-
 @keyframes pulseError {
   0% {
     box-shadow: 0 0 0 0 hsl(var(--destructive) / 0.7);
@@ -333,6 +331,7 @@ All colors MUST be HSL.
     box-shadow: 0 0 0 0 hsl(var(--destructive) / 0);
   }
 }
+
 
 @keyframes breathingSlow {
   0%, 100% {
