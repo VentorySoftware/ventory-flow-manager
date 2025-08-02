@@ -227,10 +227,10 @@ const UserProfileDropdown = () => {
       setShowCrop(false)
       setImageToCrop('')
       
-      // Refresh the page to show new avatar
-      setTimeout(() => {
-        window.location.reload()
-      }, 1000)
+      // No recargar la página para mantener el modal abierto
+      // setTimeout(() => {
+      //   window.location.reload()
+      // }, 1000)
 
     } catch (error: any) {
       console.error('Error uploading avatar:', error)
