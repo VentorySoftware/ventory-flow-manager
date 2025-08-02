@@ -52,7 +52,7 @@ const Navbar = () => {
       case 'admin':
         return 'Admin'
       case 'moderator':
-        return 'Moderador'
+        return 'Vendedor'
       default:
         return 'Usuario'
     }

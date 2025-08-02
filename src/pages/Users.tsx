@@ -173,7 +173,7 @@ const Users = () => {
       case 'admin':
         return 'Administrador'
       case 'moderator':
-        return 'Moderador'
+        return 'Vendedor'
       default:
         return 'Usuario'
     }
@@ -266,7 +266,7 @@ const Users = () => {
             <Card className="shadow-soft">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Moderadores
+                  Vendedores
                 </CardTitle>
                 <Shield className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -408,7 +408,7 @@ const Users = () => {
                   <SelectItem value="moderator">
                     <div className="flex items-center space-x-2">
                       <Shield className="h-4 w-4" />
-                      <span>Moderador</span>
+                      <span>Vendedor</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="admin">
