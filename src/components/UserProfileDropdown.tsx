@@ -374,7 +374,7 @@ const UserProfileDropdown = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Mi Usuario</DialogTitle>
+                <DialogTitle className="text-center">Mi Usuario</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 {/* Avatar Upload Section */}
