@@ -62,12 +62,7 @@ const Navbar = () => {
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <NotificationPanel />
-              <Button variant="ghost" size="sm" className="hover-scale transition-smooth">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </div>
+            <NotificationPanel />
             
             <div className="h-6 w-px bg-border/50" />
             

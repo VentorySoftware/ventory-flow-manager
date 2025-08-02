@@ -30,7 +30,7 @@ import {
 import { useTheme } from 'next-themes'
 
 const UserProfileDropdown = () => {
-  const { user, userRole, userProfile, signOut } = useAuth()
+  const { user, userRole, userProfile, signOut, hasRole } = useAuth()
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
   const [uploading, setUploading] = useState(false)
@@ -242,11 +242,13 @@ const UserProfileDropdown = () => {
             <span>Modo {theme === 'dark' ? 'claro' : 'oscuro'}</span>
           </DropdownMenuItem>
 
-          {/* Settings */}
-          <DropdownMenuItem className="flex items-center space-x-3 p-3">
-            <Settings className="h-4 w-4" />
-            <span>Configuración</span>
-          </DropdownMenuItem>
+          {/* Settings - Solo para Admin */}
+          {hasRole('admin') && (
+            <DropdownMenuItem className="flex items-center space-x-3 p-3">
+              <Settings className="h-4 w-4" />
+              <span>Configuración del Sistema</span>
+            </DropdownMenuItem>
+          )}
 
           <DropdownMenuSeparator />
 
