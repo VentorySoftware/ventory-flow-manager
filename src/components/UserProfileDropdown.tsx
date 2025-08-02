@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/enhanced-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import NotificationPanel from '@/components/NotificationPanel'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -171,6 +172,7 @@ const UserProfileDropdown = () => {
               <span className="text-sm font-medium text-foreground hidden lg:block">
                 {userProfile?.full_name || user?.email}
               </span>
+              <NotificationPanel />
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </div>
           </Button>
