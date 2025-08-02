@@ -234,6 +234,18 @@ All colors MUST be HSL.
     background-clip: text;
   }
   
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+  
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .rotateX-15 {
+    transform: rotateX(15deg);
+  }
+  
   .card-hover {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }

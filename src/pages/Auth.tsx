@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { useAuthSecurity } from '@/hooks/useAuthSecurity'
 import ThemeToggle from '@/components/ThemeToggle'
+import LoginTransition from '@/components/LoginTransition'
 import { supabase } from '@/integrations/supabase/client'
 import { LogIn, UserPlus, Package, Eye, EyeOff, AlertTriangle, CheckCircle, Mail } from 'lucide-react'
 
@@ -22,6 +23,7 @@ const Auth = () => {
   const [showSignupPassword, setShowSignupPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const [currentTab, setCurrentTab] = useState('login')
+  const [showTransition, setShowTransition] = useState(false)
   
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [signupForm, setSignupForm] = useState({ 
@@ -112,14 +114,15 @@ const Auth = () => {
       clearAttempts(loginForm.email)
       saveRememberMe(rememberMe, loginForm.email)
       
-      toast({
-        title: "Bienvenido",
-        description: "Has iniciado sesión correctamente",
-      })
-      navigate('/')
+      // Mostrar animación de transición
+      setShowTransition(true)
     }
 
     setIsLoading(false)
+  }
+
+  const handleTransitionComplete = () => {
+    navigate('/')
   }
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -256,6 +259,11 @@ const Auth = () => {
 
   const passwordValidation = validatePassword(signupForm.password)
   const emailValidation = currentTab === 'signup' ? validateEmail(signupForm.email) : validateEmail(loginForm.email)
+
+  // Mostrar animación de transición si login exitoso
+  if (showTransition) {
+    return <LoginTransition onComplete={handleTransitionComplete} />
+  }
 
   return (
     <div className="min-h-screen bg-gradient-dashboard flex items-center justify-center p-6 relative">
