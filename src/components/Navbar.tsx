@@ -9,21 +9,53 @@ import {
   BarChart3,
   Settings,
   LogOut,
-  Bell
+  Bell,
+  Crown,
+  Shield,
+  User
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
+import { useAuth } from "@/contexts/AuthContext"
 
 const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { user, userRole, signOut, hasRole } = useAuth()
 
   const navigation = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/" },
     { name: "Productos", icon: Package, path: "/products" },
     { name: "Ventas", icon: ShoppingCart, path: "/sales" },
-    { name: "Usuarios", icon: Users, path: "/users" },
+    ...(hasRole('admin') ? [{ name: "Usuarios", icon: Users, path: "/users" }] : []),
     { name: "Reportes", icon: BarChart3, path: "/reports" },
   ]
+
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/auth')
+  }
+
+  const getRoleIcon = () => {
+    switch (userRole) {
+      case 'admin':
+        return <Crown className="h-3 w-3" />
+      case 'moderator':
+        return <Shield className="h-3 w-3" />
+      default:
+        return <User className="h-3 w-3" />
+    }
+  }
+
+  const getRoleDisplayName = () => {
+    switch (userRole) {
+      case 'admin':
+        return 'Admin'
+      case 'moderator':
+        return 'Moderador'
+      default:
+        return 'Usuario'
+    }
+  }
 
   return (
     <nav className="bg-card border-b border-border shadow-soft">
@@ -73,7 +105,18 @@ const Navbar = () => {
             
             <div className="h-6 w-px bg-border" />
             
-            <Button variant="outline" size="sm">
+            {/* User Info */}
+            <div className="flex items-center space-x-2">
+              <Badge variant="outline" className="flex items-center space-x-1">
+                {getRoleIcon()}
+                <span className="text-xs">{getRoleDisplayName()}</span>
+              </Badge>
+              <span className="text-sm text-muted-foreground hidden lg:block">
+                {user?.email}
+              </span>
+            </div>
+            
+            <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="h-4 w-4 mr-2" />
               Salir
             </Button>
