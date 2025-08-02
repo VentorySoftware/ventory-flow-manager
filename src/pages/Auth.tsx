@@ -59,8 +59,8 @@ const Auth = () => {
     }
   }, [])
 
-  // Redirect if already authenticated
-  if (user) {
+  // Redirect if already authenticated but NOT during transition animation
+  if (user && !showTransition) {
     return <Navigate to="/" replace />
   }
 
