@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/enhanced-button"
 import { Badge } from "@/components/ui/badge"
+import ThemeToggle from "@/components/ThemeToggle"
 import {
   Store,
   LayoutDashboard,
@@ -98,6 +99,8 @@ const Navbar = () => {
                 3
               </Badge>
             </Button>
+            
+            <ThemeToggle />
             
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4" />
