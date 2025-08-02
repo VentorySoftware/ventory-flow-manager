@@ -233,41 +233,20 @@ const UserProfileDropdown = () => {
         <DropdownMenuContent className="w-80 p-0" align="end">
           {/* User Profile Section */}
           <div className="p-4 bg-gradient-card">
-            <DropdownMenuLabel className="text-base font-heading font-semibold text-gradient mb-3">
-              Mi Usuario
-            </DropdownMenuLabel>
-            
             <div className="flex items-center space-x-4">
-              {/* Avatar with upload functionality */}
-              <div className="relative group">
-                <Avatar className="h-16 w-16 border-2 border-primary/20">
-                  <AvatarImage 
-                    src={userProfile?.avatar_url || undefined} 
-                    alt={userProfile?.full_name || 'Usuario'} 
-                  />
-                  <AvatarFallback className="bg-gradient-primary text-primary-foreground font-semibold text-lg">
-                    {userProfile?.full_name 
-                      ? getInitials(userProfile.full_name)
-                      : user?.email?.charAt(0).toUpperCase()
-                    }
-                  </AvatarFallback>
-                </Avatar>
-                
-                {/* Upload overlay */}
-                <button
-                  onClick={triggerFileInput}
-                  disabled={uploading}
-                  className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
-                >
-                  <Camera className="h-5 w-5" />
-                </button>
-                
-                {uploading && (
-                  <div className="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  </div>
-                )}
-              </div>
+              {/* Simple Avatar Display */}
+              <Avatar className="h-16 w-16 border-2 border-primary/20">
+                <AvatarImage 
+                  src={userProfile?.avatar_url || undefined} 
+                  alt={userProfile?.full_name || 'Usuario'} 
+                />
+                <AvatarFallback className="bg-gradient-primary text-primary-foreground font-semibold text-lg">
+                  {userProfile?.full_name 
+                    ? getInitials(userProfile.full_name)
+                    : user?.email?.charAt(0).toUpperCase()
+                  }
+                </AvatarFallback>
+              </Avatar>
 
               {/* User Info */}
               <div className="flex-1 space-y-1">
@@ -304,6 +283,56 @@ const UserProfileDropdown = () => {
                 <DialogTitle>Mi Usuario</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
+                {/* Avatar Upload Section */}
+                <div className="space-y-2">
+                  <Label>Foto de Perfil</Label>
+                  <div className="flex items-center space-x-4">
+                    <div className="relative group">
+                      <Avatar className="h-20 w-20 border-2 border-primary/20">
+                        <AvatarImage 
+                          src={userProfile?.avatar_url || undefined} 
+                          alt={userProfile?.full_name || 'Usuario'} 
+                        />
+                        <AvatarFallback className="bg-gradient-primary text-primary-foreground font-semibold text-lg">
+                          {userProfile?.full_name 
+                            ? getInitials(userProfile.full_name)
+                            : user?.email?.charAt(0).toUpperCase()
+                          }
+                        </AvatarFallback>
+                      </Avatar>
+                      
+                      {/* Upload overlay */}
+                      <button
+                        onClick={triggerFileInput}
+                        disabled={uploading}
+                        className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
+                      >
+                        <Camera className="h-5 w-5" />
+                      </button>
+                      
+                      {uploading && (
+                        <div className="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <Button 
+                        variant="outline" 
+                        onClick={triggerFileInput}
+                        disabled={uploading}
+                        className="w-full"
+                      >
+                        <Camera className="h-4 w-4 mr-2" />
+                        {uploading ? 'Subiendo...' : 'Cambiar foto'}
+                      </Button>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Máximo 5MB. Formatos: JPG, PNG, GIF
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="full_name">Nombre Completo</Label>
                   {hasRole('admin') ? (
