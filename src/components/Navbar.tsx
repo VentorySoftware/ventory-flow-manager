@@ -61,28 +61,31 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-card border-b border-border shadow-soft">
+    <nav className="bg-card/95 backdrop-blur-md border-b border-border/50 shadow-elegant sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <PackageOpen className="h-5 w-5 text-primary-foreground" />
+            <div className="flex items-center space-x-3 hover-scale transition-smooth">
+              <div className="h-10 w-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-glow">
+                <PackageOpen className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-foreground">Ventory Manager</span>
+              <span className="text-xl font-heading font-bold text-gradient">
+                Ventory Manager
+              </span>
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navigation.map((item) => (
+          <div className="hidden md:flex items-center space-x-2">
+            {navigation.map((item, index) => (
               <Button
                 key={item.name}
                 variant={location.pathname === item.path ? "business" : "ghost"}
                 size="sm"
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-2 hover-scale transition-smooth"
                 onClick={() => navigate(item.path)}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <item.icon className="h-4 w-4" />
                 <span>{item.name}</span>
@@ -91,32 +94,42 @@ const Navbar = () => {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center space-x-3">
-            <NotificationPanel />
-            
-            <ThemeToggle />
-            
-            <Button variant="ghost" size="sm">
-              <Settings className="h-4 w-4" />
-            </Button>
-            
-            <div className="h-6 w-px bg-border" />
-            
-            {/* User Info */}
+          <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Badge variant="outline" className="flex items-center space-x-1">
-                {getRoleIcon()}
-                <span className="text-xs">{getRoleDisplayName()}</span>
-              </Badge>
-              <span className="text-sm text-muted-foreground hidden lg:block">
-                {userProfile?.full_name || user?.email}
-              </span>
+              <NotificationPanel />
+              <ThemeToggle />
+              <Button variant="ghost" size="sm" className="hover-scale transition-smooth">
+                <Settings className="h-4 w-4" />
+              </Button>
             </div>
             
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Salir
-            </Button>
+            <div className="h-6 w-px bg-border/50" />
+            
+            {/* User Info */}
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <Badge 
+                  variant="outline" 
+                  className="flex items-center space-x-1 bg-gradient-card border-primary/20 hover-scale transition-smooth"
+                >
+                  {getRoleIcon()}
+                  <span className="text-xs font-medium">{getRoleDisplayName()}</span>
+                </Badge>
+                <span className="text-sm font-medium text-muted-foreground hidden lg:block">
+                  {userProfile?.full_name || user?.email}
+                </span>
+              </div>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleSignOut}
+                className="hover-scale transition-smooth border-destructive/20 hover:border-destructive hover:bg-destructive hover:text-destructive-foreground"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Salir
+              </Button>
+            </div>
           </div>
         </div>
       </div>

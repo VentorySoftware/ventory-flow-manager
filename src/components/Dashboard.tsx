@@ -140,32 +140,44 @@ const Dashboard = () => {
       value: `$${dashboardData.todaySales.toLocaleString('es-MX')}`,
       description: "Ingresos del día actual",
       icon: ShoppingCart,
-      color: "text-green-500",
-      change: "+12.5%"
+      gradient: "from-success to-success/80",
+      iconColor: "text-success-foreground",
+      bgColor: "bg-success/10",
+      change: "+12.5%",
+      changeType: "positive"
     },
     {
       title: "Total Productos",
       value: dashboardData.totalProducts.toString(),
       description: "Productos en inventario",
       icon: Package,
-      color: "text-blue-500",
-      change: "+2.1%"
+      gradient: "from-info to-info/80",
+      iconColor: "text-info-foreground",
+      bgColor: "bg-info/10",
+      change: "+2.1%",
+      changeType: "positive"
     },
     {
       title: "Ventas Totales",
       value: dashboardData.totalSales.toString(),
       description: "Ventas registradas",
       icon: BarChart3,
-      color: "text-purple-500",
-      change: "+8.3%"
+      gradient: "from-primary to-primary-glow",
+      iconColor: "text-primary-foreground",
+      bgColor: "bg-primary/10",
+      change: "+8.3%",
+      changeType: "positive"
     },
     {
       title: "Stock Bajo",
       value: dashboardData.lowStockProducts.toString(),
       description: "Productos críticos",
       icon: AlertTriangle,
-      color: "text-orange-500",
-      change: "-5.2%"
+      gradient: "from-warning to-warning/80",
+      iconColor: "text-warning-foreground",
+      bgColor: "bg-warning/10",
+      change: "-5.2%",
+      changeType: "negative"
     }
   ]
 
@@ -189,33 +201,61 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Welcome Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Resumen general de tu negocio - {new Date().toLocaleDateString('es-MX', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </p>
+        <div className="space-y-3 animate-fade-in">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-heading font-bold text-gradient">
+                Dashboard Empresarial
+              </h1>
+              <p className="text-lg text-muted-foreground mt-2">
+                Resumen general de tu negocio - {new Date().toLocaleDateString('es-MX', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </p>
+            </div>
+            <div className="hidden md:flex items-center space-x-2">
+              <Badge variant="outline" className="bg-gradient-card border-primary/20">
+                <Calendar className="h-3 w-3 mr-1" />
+                Hoy
+              </Badge>
+              <Badge variant="outline" className="bg-gradient-card border-success/20">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                Activo
+              </Badge>
+            </div>
+          </div>
+          <div className="h-1 w-32 bg-gradient-primary rounded-full"></div>
         </div>
 
         {/* Stats Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => (
-            <Card key={index} className="shadow-elegant hover-scale transition-smooth">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <Card 
+              key={index} 
+              className="shadow-elegant card-hover backdrop-blur-sm bg-card/95 border-border/50 overflow-hidden group animate-slide-up"
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {stat.title}
                 </CardTitle>
-                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                <div className={`p-2 rounded-lg bg-gradient-to-r ${stat.gradient} shadow-lg`}>
+                  <stat.icon className={`h-4 w-4 ${stat.iconColor}`} />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                <div className="flex items-center space-x-2 text-xs">
-                  <span className="text-muted-foreground">{stat.description}</span>
-                  <Badge variant="outline" className="text-xs">
+                <div className="text-3xl font-heading font-bold text-foreground mb-2">
+                  {stat.value}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">{stat.description}</span>
+                  <Badge 
+                    variant={stat.changeType === 'positive' ? 'default' : 'destructive'}
+                    className="text-xs font-medium"
+                  >
                     {stat.change}
                   </Badge>
                 </div>
