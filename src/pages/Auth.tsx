@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { Button } from '@/components/ui/enhanced-button'
 import { Input } from '@/components/ui/input'
@@ -22,6 +22,7 @@ const Auth = () => {
   const { signIn, signUp, user } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
+  const tabsRef = useRef<any>(null)
 
   // Redirect if already authenticated
   if (user) {
@@ -89,8 +90,21 @@ const Auth = () => {
     } else {
       toast({
         title: "Registro exitoso",
-        description: "Revisa tu email para confirmar tu cuenta",
+        description: "Ahora puedes iniciar sesión con tu cuenta",
       })
+      
+      // Resetear formulario de registro
+      setSignupForm({
+        email: '', 
+        password: '', 
+        confirmPassword: '', 
+        fullName: '' 
+      })
+      
+      // Cambiar a la pestaña de login
+      if (tabsRef.current) {
+        tabsRef.current.value = "login"
+      }
     }
 
     setIsLoading(false)
@@ -118,7 +132,7 @@ const Auth = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="login" className="space-y-4">
+            <Tabs defaultValue="login" className="space-y-4" ref={tabsRef}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
                 <TabsTrigger value="signup">Registrarse</TabsTrigger>
