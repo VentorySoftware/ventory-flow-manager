@@ -36,7 +36,9 @@ import {
   ChevronDown,
   Edit,
   Check,
-  X
+  X,
+  ZoomIn,
+  ZoomOut
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop'
@@ -52,6 +54,7 @@ const UserProfileDropdown = () => {
   const [imageToCrop, setImageToCrop] = useState('')
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
+  const [zoom, setZoom] = useState(1)
   const [profileForm, setProfileForm] = useState({
     full_name: '',
     phone: ''
@@ -249,10 +252,19 @@ const UserProfileDropdown = () => {
     setImageToCrop('')
     setCrop(undefined)
     setCompletedCrop(undefined)
+    setZoom(1)
     // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+  }
+
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.1, 3))
+  }
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.1, 0.5))
   }
 
   const triggerFileInput = () => {
@@ -513,6 +525,29 @@ const UserProfileDropdown = () => {
             <DialogTitle>Recortar Imagen</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Zoom Controls */}
+            <div className="flex items-center justify-center space-x-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleZoomOut}
+                disabled={zoom <= 0.5}
+              >
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Zoom: {Math.round(zoom * 100)}%
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleZoomIn}
+                disabled={zoom >= 3}
+              >
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+            </div>
+
             {imageToCrop && (
               <div className="flex justify-center">
                 <ReactCrop
@@ -526,7 +561,10 @@ const UserProfileDropdown = () => {
                     ref={imgRef}
                     alt="Crop me"
                     src={imageToCrop}
-                    style={{ transform: 'scale(1) rotate(0deg)' }}
+                    style={{ 
+                      transform: `scale(${zoom}) rotate(0deg)`,
+                      transformOrigin: 'center'
+                    }}
                     onLoad={onImageLoad}
                     className="max-h-96"
                   />
