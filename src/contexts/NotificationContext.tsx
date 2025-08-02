@@ -112,11 +112,14 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
   }
 
   const markAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(notif => 
+    console.log('markAsRead called with id:', id)
+    setNotifications(prev => {
+      const updated = prev.map(notif => 
         notif.id === id ? { ...notif, read: true } : notif
       )
-    )
+      console.log('Updated notifications:', updated)
+      return updated
+    })
   }
 
   const markAllAsRead = () => {

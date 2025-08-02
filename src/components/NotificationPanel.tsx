@@ -63,7 +63,9 @@ const NotificationPanel = () => {
   }
 
   const handleNotificationClick = (notificationId: string) => {
+    console.log('Clicking notification:', notificationId)
     markAsRead(notificationId)
+    console.log('Notification marked as read')
   }
 
   return (
@@ -143,7 +145,7 @@ const NotificationPanel = () => {
               <ScrollArea className="h-96">
                 <div className="space-y-1">
                   {notifications.map((notification, index) => (
-                    <div key={notification.id}>
+                    <div key={notification.id} className="group">{/* Added group class for hover effects */}
                       <div
                         className={`p-4 cursor-pointer transition-colors hover:bg-muted/50 ${
                           !notification.read ? 'bg-primary/5 border-l-2 border-l-primary' : ''
@@ -180,9 +182,10 @@ const NotificationPanel = () => {
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation()
+                              console.log('Deleting notification:', notification.id)
                               clearNotification(notification.id)
                             }}
-                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
+                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive transition-opacity"
                           >
                             <X className="h-3 w-3" />
                           </Button>
