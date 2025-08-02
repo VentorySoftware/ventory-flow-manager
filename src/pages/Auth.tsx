@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import { useAuthSecurity } from '@/hooks/useAuthSecurity'
+import ThemeToggle from '@/components/ThemeToggle'
 import { supabase } from '@/integrations/supabase/client'
 import { LogIn, UserPlus, Package, Eye, EyeOff, AlertTriangle, CheckCircle, Mail } from 'lucide-react'
 
@@ -257,7 +258,12 @@ const Auth = () => {
   const emailValidation = currentTab === 'signup' ? validateEmail(signupForm.email) : validateEmail(loginForm.email)
 
   return (
-    <div className="min-h-screen bg-gradient-dashboard flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-dashboard flex items-center justify-center p-6 relative">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
+      
       <div className="w-full max-w-md space-y-6 animate-fade-in">
         {/* Header */}
         <div className="text-center space-y-3">
