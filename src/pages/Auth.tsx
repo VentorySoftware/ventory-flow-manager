@@ -258,23 +258,30 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-gradient-dashboard flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-6">
+      <div className="w-full max-w-md space-y-6 animate-fade-in">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Package className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">Ventory Manager</h1>
+        <div className="text-center space-y-3">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="p-2 rounded-full bg-gradient-primary animate-float">
+              <Package className="h-8 w-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-heading font-bold text-gradient">
+              Ventory Manager
+            </h1>
           </div>
-          <p className="text-muted-foreground">
-            Sistema de gestión de inventario y ventas
+          <p className="text-muted-foreground text-lg font-medium">
+            Sistema de gestión empresarial inteligente
           </p>
+          <div className="h-1 w-20 bg-gradient-primary mx-auto rounded-full"></div>
         </div>
 
-        <Card className="shadow-elegant">
-          <CardHeader>
-            <CardTitle className="text-center">BIENVENIDO</CardTitle>
-            <CardDescription className="text-center">
-              Inicia sesión o crea una nueva cuenta
+        <Card className="shadow-elegant card-hover backdrop-blur-sm bg-card/95 border-border/50 animate-slide-up">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-center text-2xl font-heading font-semibold text-gradient">
+              BIENVENIDO
+            </CardTitle>
+            <CardDescription className="text-center text-base text-muted-foreground">
+              Accede a tu cuenta empresarial de forma segura
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -286,28 +293,34 @@ const Auth = () => {
               </TabsList>
 
               <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                <form onSubmit={handleLogin} className="space-y-5">
+                  <div className="space-y-3">
+                    <Label htmlFor="email" className="text-sm font-medium text-foreground">Email corporativo</Label>
                     <div className="relative">
                       <Input
                         id="email"
                         type="email"
-                        placeholder="tu@email.com"
+                        placeholder="usuario@empresa.com"
                         value={loginForm.email}
                         onChange={(e) => setLoginForm(prev => ({
                           ...prev,
                           email: e.target.value
                         }))}
-                        className={!emailValidation && loginForm.email ? "border-red-500" : ""}
+                        className={`input-focus transition-all duration-300 ${
+                          !emailValidation && loginForm.email 
+                            ? "border-destructive pulse-error" 
+                            : emailValidation && loginForm.email 
+                              ? "border-success pulse-success" 
+                              : ""
+                        }`}
                         required
                       />
                       {loginForm.email && (
-                        <div className="absolute right-3 top-3">
+                        <div className="absolute right-3 top-3 transition-all duration-200">
                           {emailValidation ? (
-                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            <CheckCircle className="h-4 w-4 text-success animate-scale-in" />
                           ) : (
-                            <AlertTriangle className="h-4 w-4 text-red-500" />
+                            <AlertTriangle className="h-4 w-4 text-destructive animate-scale-in" />
                           )}
                         </div>
                       )}

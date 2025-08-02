@@ -37,6 +37,16 @@ All colors MUST be HSL.
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
+    /* Status Colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
     /* Modern Borders & Inputs */
     --border: 215 14% 91%;
     --input: 215 14% 93%;
@@ -95,6 +105,16 @@ All colors MUST be HSL.
 
     --destructive: 0 75% 65%;
     --destructive-foreground: 215 20% 98%;
+
+    /* Dark Mode Status Colors */
+    --success: 142 71% 45%;
+    --success-foreground: 215 20% 98%;
+    
+    --warning: 38 95% 60%;
+    --warning-foreground: 215 28% 3%;
+    
+    --info: 199 84% 55%;
+    --info-foreground: 215 20% 98%;
 
     --border: 215 25% 12%;
     --input: 215 25% 12%;
@@ -167,7 +187,15 @@ All colors MUST be HSL.
   }
   
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
   }
   
   .hover-scale {
@@ -175,22 +203,75 @@ All colors MUST be HSL.
   }
   
   .hover-scale:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
+  }
+  
+  .input-focus {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .input-focus:focus {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-elegant);
   }
   
   .animate-float {
     animation: float 3s ease-in-out infinite;
+  }
+  
+  .pulse-success {
+    animation: pulseSuccess 0.6s ease-out;
+  }
+  
+  .pulse-error {
+    animation: pulseError 0.6s ease-out;
+  }
+  
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
   }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px hsl(var(--primary) / 0.2);
+  }
+  to {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.4), 0 0 30px hsl(var(--primary) / 0.1);
   }
 }
 
@@ -199,6 +280,30 @@ All colors MUST be HSL.
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulseSuccess {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--success) / 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px hsl(var(--success) / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--success) / 0);
+  }
+}
+
+@keyframes pulseError {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--destructive) / 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px hsl(var(--destructive) / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--destructive) / 0);
   }
 }
