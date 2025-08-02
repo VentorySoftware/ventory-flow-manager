@@ -42,15 +42,6 @@ const KioskNavbar = () => {
               <span>Dashboard Admin</span>
             </Button>
           )}
-          
-          <Button
-            variant={location.pathname === '/kiosk' ? "default" : "ghost"}
-            onClick={() => navigate('/kiosk')}
-            className="flex items-center space-x-2"
-          >
-            <ShoppingCart className="h-4 w-4" />
-            <span>Punto de Venta</span>
-          </Button>
         </div>
 
         {/* Acciones del usuario */}
