@@ -15,8 +15,14 @@ import {
   ShoppingCart, 
   Package, 
   Calculator,
-  QrCode
+  X
 } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface Product {
   id: string
@@ -40,6 +46,10 @@ const KioskView = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [showCalculator, setShowCalculator] = useState(false)
+  const [calculatorDisplay, setCalculatorDisplay] = useState('0')
+  const [calculatorPrevValue, setCalculatorPrevValue] = useState('')
+  const [calculatorOperation, setCalculatorOperation] = useState('')
+  const [waitingForNext, setWaitingForNext] = useState(false)
 
   useEffect(() => {
     fetchProducts()
@@ -132,6 +142,96 @@ const KioskView = () => {
     setCart([])
   }
 
+  // Funciones de la calculadora
+  const handleCalculatorInput = (value: string) => {
+    if (waitingForNext) {
+      setCalculatorDisplay(value)
+      setWaitingForNext(false)
+    } else {
+      setCalculatorDisplay(calculatorDisplay === '0' ? value : calculatorDisplay + value)
+    }
+  }
+
+  const handleCalculatorOperation = (nextOperation: string) => {
+    const inputValue = parseFloat(calculatorDisplay)
+
+    if (calculatorPrevValue === '') {
+      setCalculatorPrevValue(calculatorDisplay)
+    } else if (calculatorOperation) {
+      const currentValue = parseFloat(calculatorPrevValue)
+      let result = currentValue
+
+      switch (calculatorOperation) {
+        case '+':
+          result = currentValue + inputValue
+          break
+        case '-':
+          result = currentValue - inputValue
+          break
+        case '*':
+          result = currentValue * inputValue
+          break
+        case '/':
+          result = currentValue / inputValue
+          break
+        default:
+          return
+      }
+
+      setCalculatorDisplay(String(result))
+      setCalculatorPrevValue(String(result))
+    }
+
+    setWaitingForNext(true)
+    setCalculatorOperation(nextOperation)
+  }
+
+  const handleCalculatorEquals = () => {
+    const inputValue = parseFloat(calculatorDisplay)
+    const currentValue = parseFloat(calculatorPrevValue)
+
+    if (calculatorPrevValue !== '' && calculatorOperation) {
+      let result = currentValue
+
+      switch (calculatorOperation) {
+        case '+':
+          result = currentValue + inputValue
+          break
+        case '-':
+          result = currentValue - inputValue
+          break
+        case '*':
+          result = currentValue * inputValue
+          break
+        case '/':
+          result = currentValue / inputValue
+          break
+        default:
+          return
+      }
+
+      setCalculatorDisplay(String(result))
+      setCalculatorPrevValue('')
+      setCalculatorOperation('')
+      setWaitingForNext(true)
+    }
+  }
+
+  const handleCalculatorClear = () => {
+    setCalculatorDisplay('0')
+    setCalculatorPrevValue('')
+    setCalculatorOperation('')
+    setWaitingForNext(false)
+  }
+
+  const copyCalculatorResult = () => {
+    navigator.clipboard.writeText(calculatorDisplay)
+    toast({
+      title: "Copiado",
+      description: "Resultado copiado al portapapeles",
+    })
+  }
+
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.sku.toLowerCase().includes(searchTerm.toLowerCase())
@@ -177,9 +277,6 @@ const KioskView = () => {
                   <div className="flex gap-2">
                     <Button variant="outline" size="lg" onClick={() => setShowCalculator(!showCalculator)}>
                       <Calculator className="h-5 w-5" />
-                    </Button>
-                    <Button variant="outline" size="lg">
-                      <QrCode className="h-5 w-5" />
                     </Button>
                   </div>
                 </div>
@@ -234,6 +331,114 @@ const KioskView = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Calculadora */}
+      <Dialog open={showCalculator} onOpenChange={setShowCalculator}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Calculator className="h-5 w-5" />
+                Calculadora
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => setShowCalculator(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Display */}
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-right">
+                {calculatorOperation && calculatorPrevValue && (
+                  <div className="text-sm text-muted-foreground">
+                    {calculatorPrevValue} {calculatorOperation}
+                  </div>
+                )}
+                <div className="text-3xl font-mono font-bold">{calculatorDisplay}</div>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={copyCalculatorResult}
+                className="mt-2 w-full"
+              >
+                Copiar resultado
+              </Button>
+            </div>
+
+            {/* Botones */}
+            <div className="grid grid-cols-4 gap-2">
+              {/* Fila 1 */}
+              <Button variant="outline" onClick={handleCalculatorClear} className="h-12">
+                C
+              </Button>
+              <Button variant="outline" onClick={() => {
+                setCalculatorDisplay(calculatorDisplay.slice(0, -1) || '0')
+              }} className="h-12">
+                ⌫
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorOperation('/')} className="h-12">
+                ÷
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorOperation('*')} className="h-12">
+                ×
+              </Button>
+
+              {/* Fila 2 */}
+              <Button variant="outline" onClick={() => handleCalculatorInput('7')} className="h-12">
+                7
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorInput('8')} className="h-12">
+                8
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorInput('9')} className="h-12">
+                9
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorOperation('-')} className="h-12">
+                -
+              </Button>
+
+              {/* Fila 3 */}
+              <Button variant="outline" onClick={() => handleCalculatorInput('4')} className="h-12">
+                4
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorInput('5')} className="h-12">
+                5
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorInput('6')} className="h-12">
+                6
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorOperation('+')} className="h-12">
+                +
+              </Button>
+
+              {/* Fila 4 */}
+              <Button variant="outline" onClick={() => handleCalculatorInput('1')} className="h-12">
+                1
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorInput('2')} className="h-12">
+                2
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorInput('3')} className="h-12">
+                3
+              </Button>
+              <Button variant="default" onClick={handleCalculatorEquals} className="h-12 row-span-2">
+                =
+              </Button>
+
+              {/* Fila 5 */}
+              <Button variant="outline" onClick={() => handleCalculatorInput('0')} className="h-12 col-span-2">
+                0
+              </Button>
+              <Button variant="outline" onClick={() => handleCalculatorInput('.')} className="h-12">
+                .
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
