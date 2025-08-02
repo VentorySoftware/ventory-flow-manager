@@ -11,7 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -25,7 +33,8 @@ import {
   Camera,
   Moon,
   Sun,
-  ChevronDown
+  ChevronDown,
+  Edit
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
@@ -34,6 +43,11 @@ const UserProfileDropdown = () => {
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
   const [uploading, setUploading] = useState(false)
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [profileForm, setProfileForm] = useState({
+    full_name: '',
+    phone: ''
+  })
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleSignOut = async () => {
@@ -152,6 +166,46 @@ const UserProfileDropdown = () => {
     fileInputRef.current?.click()
   }
 
+  const handleUpdateProfile = async () => {
+    if (!user || !hasRole('admin')) return
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: profileForm.full_name,
+          phone: profileForm.phone
+        })
+        .eq('user_id', user.id)
+
+      if (error) throw error
+
+      toast({
+        title: "Éxito",
+        description: "Perfil actualizado correctamente",
+      })
+
+      setEditingProfile(false)
+      window.location.reload()
+
+    } catch (error: any) {
+      console.error('Error updating profile:', error)
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el perfil",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const openEditDialog = () => {
+    setProfileForm({
+      full_name: userProfile?.full_name || '',
+      phone: userProfile?.phone || ''
+    })
+    setEditingProfile(true)
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -231,6 +285,79 @@ const UserProfileDropdown = () => {
           </div>
 
           <DropdownMenuSeparator />
+
+          {/* Mi Usuario */}
+          <Dialog open={editingProfile} onOpenChange={setEditingProfile}>
+            <DialogTrigger asChild>
+              <DropdownMenuItem 
+                onSelect={(e) => e.preventDefault()}
+                onClick={openEditDialog}
+                className="flex items-center space-x-3 p-3"
+              >
+                <User className="h-4 w-4" />
+                <span>Mi Usuario</span>
+                {hasRole('admin') && <Edit className="h-3 w-3 ml-auto" />}
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Mi Usuario</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="full_name">Nombre Completo</Label>
+                  {hasRole('admin') ? (
+                    <Input
+                      id="full_name"
+                      value={profileForm.full_name}
+                      onChange={(e) => setProfileForm(prev => ({ ...prev, full_name: e.target.value }))}
+                      placeholder="Nombre completo"
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{userProfile?.full_name || 'Sin nombre'}</p>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Teléfono</Label>
+                  {hasRole('admin') ? (
+                    <Input
+                      id="phone"
+                      value={profileForm.phone}
+                      onChange={(e) => setProfileForm(prev => ({ ...prev, phone: e.target.value }))}
+                      placeholder="Teléfono"
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{userProfile?.phone || 'Sin teléfono'}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="role">Rol</Label>
+                  <div className="flex items-center space-x-2">
+                    {getRoleIcon()}
+                    <span className="text-sm text-muted-foreground">{getRoleDisplayName()}</span>
+                  </div>
+                </div>
+
+                {hasRole('admin') && (
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button variant="outline" onClick={() => setEditingProfile(false)}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleUpdateProfile}>
+                      Guardar Cambios
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
 
           {/* Theme Toggle */}
           <DropdownMenuItem onClick={toggleTheme} className="flex items-center space-x-3 p-3">
