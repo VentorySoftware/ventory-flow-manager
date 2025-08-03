@@ -300,9 +300,8 @@ const Auth = () => {
           </CardHeader>
           <CardContent>
             <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-4" ref={tabsRef}>
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
-                <TabsTrigger value="signup">Registrarse</TabsTrigger>
                 <TabsTrigger value="reset">Recuperar</TabsTrigger>
               </TabsList>
 
