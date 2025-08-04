@@ -94,11 +94,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    return { error }
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) throw error
+
+      if (data.user) {
+        // Check if user is active
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('is_active')
+          .eq('user_id', data.user.id)
+          .single()
+
+        if (profileError) {
+          console.error('Profile check error:', profileError)
+          throw new Error('Error al verificar el estado del usuario')
+        }
+
+        if (!profile?.is_active) {
+          // Sign out the user immediately
+          await supabase.auth.signOut()
+          throw new Error('Tu cuenta ha sido inhabilitada. Contacta al administrador.')
+        }
+      }
+
+      return { error: null }
+    } catch (error: any) {
+      return { error }
+    }
   }
 
   const signUp = async (email: string, password: string, fullName: string) => {
