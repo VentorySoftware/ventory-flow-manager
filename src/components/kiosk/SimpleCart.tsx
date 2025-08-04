@@ -60,9 +60,11 @@ interface SimpleCartProps {
   onRemoveItem: (productId: string) => void
   onClear: () => void
   total: number
+  onRefreshProducts?: () => void
+  onRefreshSales?: () => void
 }
 
-const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total }: SimpleCartProps) => {
+const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRefreshProducts, onRefreshSales }: SimpleCartProps) => {
   const { user } = useAuth()
   const { toast } = useToast()
   const [paymentMethod, setPaymentMethod] = useState('efectivo')
@@ -129,12 +131,28 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total }: Si
 
       if (itemsError) throw itemsError
 
-      // Actualizar stock de productos
+      // Actualizar stock de productos de forma segura
       for (const item of cart) {
+        // Primero obtener el stock actual
+        const { data: currentProduct, error: fetchError } = await supabase
+          .from('products')
+          .select('stock')
+          .eq('id', item.product.id)
+          .single()
+
+        if (fetchError) throw fetchError
+
+        const newStock = currentProduct.stock - item.quantity
+
+        if (newStock < 0) {
+          throw new Error(`Stock insuficiente para ${item.product.name}`)
+        }
+
+        // Actualizar con el stock calculado correctamente
         const { error: stockError } = await supabase
           .from('products')
           .update({ 
-            stock: item.product.stock - item.quantity 
+            stock: newStock
           })
           .eq('id', item.product.id)
 
@@ -172,6 +190,16 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total }: Si
       onClear()
       setReceivedAmount('')
       setPaymentMethod('efectivo')
+
+      // Refrescar productos para actualizar stock en tiempo real
+      if (onRefreshProducts) {
+        onRefreshProducts()
+      }
+
+      // Refrescar ventas para mostrar la nueva venta
+      if (onRefreshSales) {
+        onRefreshSales()
+      }
 
     } catch (error: any) {
       console.error('Error processing sale:', error)

@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import KioskNavbar from '@/components/kiosk/KioskNavbar'
 import ProductGrid from '@/components/kiosk/ProductGrid'
 import SimpleCart from '@/components/kiosk/SimpleCart'
+import SalesPanel from '@/components/kiosk/SalesPanel'
 import { 
   Search, 
   ShoppingCart, 
@@ -50,6 +51,7 @@ const KioskView = () => {
   const [calculatorPrevValue, setCalculatorPrevValue] = useState('')
   const [calculatorOperation, setCalculatorOperation] = useState('')
   const [waitingForNext, setWaitingForNext] = useState(false)
+  const [salesRefreshTrigger, setSalesRefreshTrigger] = useState(0)
 
   useEffect(() => {
     fetchProducts()
@@ -140,6 +142,10 @@ const KioskView = () => {
 
   const clearCart = () => {
     setCart([])
+  }
+
+  const refreshSales = () => {
+    setSalesRefreshTrigger(prev => prev + 1)
   }
 
   // Funciones de la calculadora
@@ -256,9 +262,14 @@ const KioskView = () => {
       <KioskNavbar />
       
       <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-8rem)]">
           
-          {/* Panel de Productos - 2/3 del ancho en desktop */}
+          {/* Panel de Ventas - 1/4 del ancho en desktop */}
+          <div className="lg:col-span-1 space-y-4">
+            <SalesPanel refreshTrigger={salesRefreshTrigger} />
+          </div>
+          
+          {/* Panel de Productos - 2/4 del ancho en desktop */}
           <div className="lg:col-span-2 space-y-4">
             
             {/* Barra de búsqueda y acciones rápidas */}
@@ -319,7 +330,7 @@ const KioskView = () => {
             </Card>
           </div>
 
-          {/* Panel del Carrito - 1/3 del ancho en desktop */}
+          {/* Panel del Carrito - 1/4 del ancho en desktop */}
           <div className="lg:col-span-1">
             <SimpleCart
               cart={cart}
@@ -327,6 +338,8 @@ const KioskView = () => {
               onRemoveItem={removeFromCart}
               onClear={clearCart}
               total={cartTotal}
+              onRefreshProducts={fetchProducts}
+              onRefreshSales={refreshSales}
             />
           </div>
         </div>
