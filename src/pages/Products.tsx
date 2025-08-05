@@ -21,8 +21,13 @@ import {
   AlertTriangle,
   TrendingUp,
   DollarSign,
-  BarChart3
+  BarChart3,
+  Calculator,
+  Target
 } from 'lucide-react'
+import MassPriceUpdate from '@/components/products/MassPriceUpdate'
+import ProfitAnalysis from '@/components/products/ProfitAnalysis'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 
 interface Product {
@@ -31,10 +36,13 @@ interface Product {
   description: string | null
   sku: string
   price: number
+  cost_price: number
   stock: number
   unit: string
   alert_stock: number
   is_active: boolean
+  barcode: string | null
+  weight_unit: boolean
   created_at: string
   updated_at: string
 }
@@ -44,10 +52,13 @@ interface ProductFormData {
   description: string
   sku: string
   price: string
+  cost_price: string
   stock: string
   unit: string
   alert_stock: string
   is_active: boolean
+  barcode: string
+  weight_unit: boolean
 }
 
 const Products = () => {
@@ -56,15 +67,19 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [activeTab, setActiveTab] = useState('inventory')
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
     sku: '',
     price: '',
+    cost_price: '',
     stock: '',
-    unit: 'unidad',
+    unit: 'unit',
     alert_stock: '10',
-    is_active: true
+    is_active: true,
+    barcode: '',
+    weight_unit: false
   })
 
   const { toast } = useToast()
@@ -136,10 +151,13 @@ const Products = () => {
         description: formData.description || null,
         sku: formData.sku,
         price: parseFloat(formData.price),
+        cost_price: parseFloat(formData.cost_price) || 0,
         stock: parseInt(formData.stock) || 0,
         unit: formData.unit,
         alert_stock: parseInt(formData.alert_stock) || 10,
-        is_active: formData.is_active
+        is_active: formData.is_active,
+        barcode: formData.barcode || null,
+        weight_unit: formData.weight_unit
       }
 
       if (editingProduct) {
@@ -181,10 +199,13 @@ const Products = () => {
         description: '',
         sku: '',
         price: '',
+        cost_price: '',
         stock: '',
-        unit: 'unidad',
+        unit: 'unit',
         alert_stock: '10',
-        is_active: true
+        is_active: true,
+        barcode: '',
+        weight_unit: false
       })
       fetchProducts()
     } catch (error: any) {
@@ -203,10 +224,13 @@ const Products = () => {
       description: product.description || '',
       sku: product.sku,
       price: product.price.toString(),
+      cost_price: product.cost_price?.toString() || '',
       stock: product.stock.toString(),
       unit: product.unit,
       alert_stock: product.alert_stock.toString(),
-      is_active: product.is_active
+      is_active: product.is_active,
+      barcode: product.barcode || '',
+      weight_unit: product.weight_unit
     })
     setIsDialogOpen(true)
   }
@@ -263,15 +287,46 @@ const Products = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-dashboard">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <Navbar />
       
-      <div className="container mx-auto p-6 space-y-6">
+      <main className="container mx-auto px-4 py-8">
+        <div className="space-y-8">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                Gestión de Productos
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Administra tu inventario, precios y ganancias
+              </p>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="inventory" className="flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Inventario
+              </TabsTrigger>
+              <TabsTrigger value="pricing" className="flex items-center gap-2">
+                <Calculator className="h-4 w-4" />
+                Precios
+              </TabsTrigger>
+              <TabsTrigger value="profits" className="flex items-center gap-2">
+                <Target className="h-4 w-4" />
+                Ganancias
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="inventory" className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Gestión de Productos</h1>
-            <p className="text-muted-foreground">Administra tu inventario y productos</p>
+            <h2 className="text-2xl font-bold">Inventario</h2>
+            <p className="text-muted-foreground">Gestiona tus productos</p>
           </div>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -286,10 +341,13 @@ const Products = () => {
                     description: '',
                     sku: '',
                     price: '',
+                    cost_price: '',
                     stock: '',
-                    unit: 'unidad',
+                    unit: 'unit',
                     alert_stock: '10',
-                    is_active: true
+                    is_active: true,
+                    barcode: '',
+                    weight_unit: false
                   })
                 }}
               >
@@ -347,9 +405,9 @@ const Products = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="price">Precio *</Label>
+                    <Label htmlFor="price">Precio de Venta *</Label>
                     <Input
                       id="price"
                       type="number"
@@ -362,24 +420,83 @@ const Products = () => {
                   </div>
                   
                   <div className="space-y-2">
+                    <Label htmlFor="cost_price">Precio de Costo</Label>
+                    <Input
+                      id="cost_price"
+                      type="number"
+                      step="0.01"
+                      value={formData.cost_price}
+                      onChange={(e) => setFormData(prev => ({ ...prev, cost_price: e.target.value }))}
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="barcode">Código de Barras</Label>
+                    <Input
+                      id="barcode"
+                      value={formData.barcode}
+                      onChange={(e) => setFormData(prev => ({ ...prev, barcode: e.target.value }))}
+                      placeholder="Código de barras"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
                     <Label htmlFor="stock">Stock Inicial</Label>
                     <Input
                       id="stock"
                       type="number"
+                      step={formData.weight_unit ? "0.1" : "1"}
                       value={formData.stock}
                       onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
                       placeholder="0"
                     />
                   </div>
-                  
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="unit">Unidad</Label>
-                    <Input
+                    <Label htmlFor="unit">Unidad de Medida</Label>
+                    <select
                       id="unit"
                       value={formData.unit}
-                      onChange={(e) => setFormData(prev => ({ ...prev, unit: e.target.value }))}
-                      placeholder="unidad"
-                    />
+                      onChange={(e) => {
+                        const isWeight = ['kg', 'gramos', 'lbs'].includes(e.target.value)
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          unit: e.target.value,
+                          weight_unit: isWeight
+                        }))
+                      }}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
+                      <option value="unit">Unidad</option>
+                      <option value="kg">Kilogramos</option>
+                      <option value="gramos">Gramos</option>
+                      <option value="lbs">Libras</option>
+                      <option value="litros">Litros</option>
+                      <option value="cajas">Cajas</option>
+                      <option value="paquetes">Paquetes</option>
+                    </select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="weight_unit">Tipo de Producto</Label>
+                    <div className="flex items-center space-x-2 h-10">
+                      <Switch
+                        id="weight_unit"
+                        checked={formData.weight_unit}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, weight_unit: checked }))}
+                      />
+                      <Label htmlFor="weight_unit" className="text-sm">
+                        {formData.weight_unit ? 'Por Peso' : 'Por Unidad'}
+                      </Label>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Los productos por peso permiten decimales en stock
+                    </p>
                   </div>
                 </div>
 
@@ -610,7 +727,21 @@ const Products = () => {
             )}
           </CardContent>
         </Card>
-      </div>
+            </TabsContent>
+
+            <TabsContent value="pricing">
+              <MassPriceUpdate 
+                products={filteredProducts} 
+                onUpdate={fetchProducts}
+              />
+            </TabsContent>
+
+            <TabsContent value="profits">
+              <ProfitAnalysis />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
     </div>
   )
 }
