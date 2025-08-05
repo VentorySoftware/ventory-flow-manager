@@ -50,6 +50,9 @@ const ImageUploader = ({
     const files = event.target.files
     if (!files || files.length === 0) return
 
+    // Prevent event propagation
+    event.stopPropagation()
+
     if (images.length + files.length > maxImages) {
       toast({
         title: 'Límite de imágenes',
@@ -94,6 +97,7 @@ const ImageUploader = ({
         description: `${uploadedUrls.length} imagen(es) subida(s) correctamente`,
       })
     } catch (error: any) {
+      console.error('Upload error:', error)
       toast({
         title: 'Error',
         description: 'Error al subir las imágenes',
@@ -101,13 +105,20 @@ const ImageUploader = ({
       })
     } finally {
       setUploading(false)
+      // Clear the file input
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
     }
   }
 
-  const handleRemoveImage = async (imageUrl: string) => {
+  const handleRemoveImage = async (imageUrl: string, event?: React.MouseEvent) => {
+    // Prevent event propagation to avoid closing parent dialogs
+    if (event) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+
     try {
       // Extract file path from URL
       const urlParts = imageUrl.split('/product-images/')
@@ -141,7 +152,13 @@ const ImageUploader = ({
     }
   }
 
-  const handleSetPrimary = (imageUrl: string) => {
+  const handleSetPrimary = (imageUrl: string, event?: React.MouseEvent) => {
+    // Prevent event propagation
+    if (event) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+    
     if (onPrimaryImageChange) {
       onPrimaryImageChange(imageUrl)
       toast({
@@ -217,7 +234,7 @@ const ImageUploader = ({
                       <Button
                         size="sm"
                         variant="secondary"
-                        onClick={() => handleSetPrimary(imageUrl)}
+                        onClick={(e) => handleSetPrimary(imageUrl, e)}
                         className="h-8 w-8 p-0"
                       >
                         <Star className="h-3 w-3" />
@@ -226,7 +243,11 @@ const ImageUploader = ({
                     <Button
                       size="sm"
                       variant="secondary"
-                      onClick={() => setEditingImage(imageUrl)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        setEditingImage(imageUrl)
+                      }}
                       className="h-8 w-8 p-0"
                     >
                       <Edit3 className="h-3 w-3" />
@@ -234,7 +255,7 @@ const ImageUploader = ({
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => handleRemoveImage(imageUrl)}
+                      onClick={(e) => handleRemoveImage(imageUrl, e)}
                       className="h-8 w-8 p-0"
                     >
                       <X className="h-3 w-3" />
