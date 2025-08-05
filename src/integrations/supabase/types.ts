@@ -47,6 +47,8 @@ export type Database = {
       products: {
         Row: {
           alert_stock: number | null
+          barcode: string | null
+          cost_price: number | null
           created_at: string
           description: string | null
           id: string
@@ -57,9 +59,12 @@ export type Database = {
           stock: number
           unit: string
           updated_at: string
+          weight_unit: boolean | null
         }
         Insert: {
           alert_stock?: number | null
+          barcode?: string | null
+          cost_price?: number | null
           created_at?: string
           description?: string | null
           id?: string
@@ -70,9 +75,12 @@ export type Database = {
           stock?: number
           unit?: string
           updated_at?: string
+          weight_unit?: boolean | null
         }
         Update: {
           alert_stock?: number | null
+          barcode?: string | null
+          cost_price?: number | null
           created_at?: string
           description?: string | null
           id?: string
@@ -83,6 +91,7 @@ export type Database = {
           stock?: number
           unit?: string
           updated_at?: string
+          weight_unit?: boolean | null
         }
         Relationships: []
       }
@@ -243,6 +252,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_product_profit: {
+        Args: { sale_price: number; cost_price: number; quantity: number }
+        Returns: number
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -253,6 +266,12 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
+      }
+      update_prices_by_percentage: {
+        Args: { product_ids: string[]; percentage_increase: number }
+        Returns: {
+          updated_count: number
+        }[]
       }
     }
     Enums: {
