@@ -27,6 +27,8 @@ import {
 } from 'lucide-react'
 import MassPriceUpdate from '@/components/products/MassPriceUpdate'
 import ProfitAnalysis from '@/components/products/ProfitAnalysis'
+import ImageUploader from '@/components/products/ImageUploader'
+import ImageCarousel from '@/components/products/ImageCarousel'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 
@@ -43,6 +45,8 @@ interface Product {
   is_active: boolean
   barcode: string | null
   weight_unit: boolean
+  image_urls: string[]
+  primary_image_url: string | null
   created_at: string
   updated_at: string
 }
@@ -59,6 +63,8 @@ interface ProductFormData {
   is_active: boolean
   barcode: string
   weight_unit: boolean
+  image_urls: string[]
+  primary_image_url: string
 }
 
 const Products = () => {
@@ -79,7 +85,9 @@ const Products = () => {
     alert_stock: '10',
     is_active: true,
     barcode: '',
-    weight_unit: false
+    weight_unit: false,
+    image_urls: [],
+    primary_image_url: ''
   })
 
   const { toast } = useToast()
@@ -205,7 +213,9 @@ const Products = () => {
         alert_stock: '10',
         is_active: true,
         barcode: '',
-        weight_unit: false
+        weight_unit: false,
+        image_urls: [],
+        primary_image_url: ''
       })
       fetchProducts()
     } catch (error: any) {
@@ -230,7 +240,9 @@ const Products = () => {
       alert_stock: product.alert_stock.toString(),
       is_active: product.is_active,
       barcode: product.barcode || '',
-      weight_unit: product.weight_unit
+      weight_unit: product.weight_unit,
+      image_urls: product.image_urls || [],
+      primary_image_url: product.primary_image_url || ''
     })
     setIsDialogOpen(true)
   }
@@ -347,7 +359,9 @@ const Products = () => {
                     alert_stock: '10',
                     is_active: true,
                     barcode: '',
-                    weight_unit: false
+                    weight_unit: false,
+                    image_urls: [],
+                    primary_image_url: ''
                   })
                 }}
               >
@@ -533,6 +547,16 @@ const Products = () => {
                   </div>
                 </div>
 
+                {/* Image Upload Section */}
+                <ImageUploader
+                  productId={editingProduct?.id}
+                  images={formData.image_urls}
+                  onImagesChange={(images) => setFormData(prev => ({ ...prev, image_urls: images }))}
+                  primaryImage={formData.primary_image_url}
+                  onPrimaryImageChange={(imageUrl) => setFormData(prev => ({ ...prev, primary_image_url: imageUrl }))}
+                  maxImages={3}
+                />
+
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button 
                     type="button" 
@@ -668,16 +692,32 @@ const Products = () => {
                 <TableBody>
                   {filteredProducts.map((product) => (
                     <TableRow key={product.id} className="hover:bg-muted/50">
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{product.name}</div>
-                          {product.description && (
-                            <div className="text-sm text-muted-foreground">
-                              {product.description}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
+                       <TableCell>
+                         <div className="flex items-center gap-3">
+                           {product.image_urls && product.image_urls.length > 0 ? (
+                             <ImageCarousel
+                               images={product.image_urls}
+                               primaryImage={product.primary_image_url || undefined}
+                               productName={product.name}
+                               size="sm"
+                               className="w-16 h-16"
+                               showControls={false}
+                             />
+                           ) : (
+                             <div className="w-16 h-16 bg-muted rounded flex items-center justify-center">
+                               <Package className="h-6 w-6 text-muted-foreground" />
+                             </div>
+                           )}
+                           <div>
+                             <div className="font-medium">{product.name}</div>
+                             {product.description && (
+                               <div className="text-sm text-muted-foreground">
+                                 {product.description}
+                               </div>
+                             )}
+                           </div>
+                         </div>
+                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{product.sku}</Badge>
                       </TableCell>
