@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/enhanced-button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { Plus, Package } from 'lucide-react'
+import { Plus, Package, AlertTriangle } from 'lucide-react'
 
 interface Product {
   id: string
@@ -10,6 +10,8 @@ interface Product {
   stock: number
   sku: string
   unit: string
+  alert_stock: number
+  is_active: boolean
 }
 
 interface ProductGridProps {
@@ -18,19 +20,22 @@ interface ProductGridProps {
 }
 
 const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
-  if (products.length === 0) {
+  // Filtrar solo productos activos
+  const activeProducts = products.filter(product => product.is_active)
+  
+  if (activeProducts.length === 0) {
     return (
       <div className="text-center py-12">
         <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-        <p className="text-lg text-muted-foreground">No se encontraron productos</p>
-        <p className="text-sm text-muted-foreground">Intenta con otro término de búsqueda</p>
+        <p className="text-lg text-muted-foreground">No se encontraron productos activos</p>
+        <p className="text-sm text-muted-foreground">Los productos inactivos no se muestran en ventas</p>
       </div>
     )
   }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {products.map((product) => (
+      {activeProducts.map((product) => (
         <Card 
           key={product.id} 
           className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer border-2 hover:border-primary/50"
@@ -45,9 +50,17 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
             {/* Información del producto */}
             <div className="space-y-2">
               <div className="flex items-start justify-between gap-2">
-                <h3 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors">
-                  {product.name}
-                </h3>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors">
+                    {product.name}
+                  </h3>
+                  {product.stock <= product.alert_stock && product.stock > 0 && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <AlertTriangle className="h-3 w-3 text-yellow-500" />
+                      <span className="text-xs text-yellow-600">Stock Bajo</span>
+                    </div>
+                  )}
+                </div>
                 <Badge variant="outline" className="text-xs whitespace-nowrap">
                   {product.sku}
                 </Badge>
@@ -68,10 +81,16 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
                     Stock: {product.stock}
                   </p>
                   <Badge 
-                    variant={product.stock > 10 ? "secondary" : product.stock > 0 ? "destructive" : "outline"}
+                    variant={
+                      product.stock === 0 ? "destructive" :
+                      product.stock <= product.alert_stock ? "secondary" : 
+                      "outline"
+                    }
                     className="text-xs"
                   >
-                    {product.stock > 10 ? "Disponible" : product.stock > 0 ? "Poco stock" : "Agotado"}
+                    {product.stock === 0 ? "Agotado" : 
+                     product.stock <= product.alert_stock ? "Stock Bajo" : 
+                     "Disponible"}
                   </Badge>
                 </div>
               </div>

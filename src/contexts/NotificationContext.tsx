@@ -11,6 +11,8 @@ export interface AppNotification {
   timestamp: Date
   read: boolean
   category: 'inventory' | 'sales' | 'users' | 'system'
+  actionUrl?: string
+  actionData?: any
 }
 
 interface NotificationContextType {

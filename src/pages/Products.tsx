@@ -23,6 +23,7 @@ import {
   DollarSign,
   BarChart3
 } from 'lucide-react'
+import { Switch } from '@/components/ui/switch'
 
 interface Product {
   id: string
@@ -32,6 +33,8 @@ interface Product {
   price: number
   stock: number
   unit: string
+  alert_stock: number
+  is_active: boolean
   created_at: string
   updated_at: string
 }
@@ -43,6 +46,8 @@ interface ProductFormData {
   price: string
   stock: string
   unit: string
+  alert_stock: string
+  is_active: boolean
 }
 
 const Products = () => {
@@ -57,7 +62,9 @@ const Products = () => {
     sku: '',
     price: '',
     stock: '',
-    unit: 'unidad'
+    unit: 'unidad',
+    alert_stock: '10',
+    is_active: true
   })
 
   const { toast } = useToast()
@@ -67,6 +74,28 @@ const Products = () => {
   useEffect(() => {
     fetchProducts()
   }, [])
+
+  // Verificar productos con stock bajo y generar notificaciones
+  useEffect(() => {
+    if (products.length > 0 && hasRole('admin')) {
+      const lowStockProductsForNotification = products.filter(product => 
+        product.is_active && 
+        product.stock <= product.alert_stock && 
+        product.stock > 0
+      )
+      
+      lowStockProductsForNotification.forEach(product => {
+        addNotification({
+          title: 'Stock Bajo',
+          message: `${product.name} tiene solo ${product.stock} unidades restantes (Alerta: ${product.alert_stock})`,
+          type: 'warning',
+          category: 'inventory',
+          actionUrl: '/products',
+          actionData: { productId: product.id }
+        })
+      })
+    }
+  }, [products, hasRole, addNotification])
 
   const fetchProducts = async () => {
     try {
@@ -108,7 +137,9 @@ const Products = () => {
         sku: formData.sku,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock) || 0,
-        unit: formData.unit
+        unit: formData.unit,
+        alert_stock: parseInt(formData.alert_stock) || 10,
+        is_active: formData.is_active
       }
 
       if (editingProduct) {
@@ -151,7 +182,9 @@ const Products = () => {
         sku: '',
         price: '',
         stock: '',
-        unit: 'unidad'
+        unit: 'unidad',
+        alert_stock: '10',
+        is_active: true
       })
       fetchProducts()
     } catch (error: any) {
@@ -171,7 +204,9 @@ const Products = () => {
       sku: product.sku,
       price: product.price.toString(),
       stock: product.stock.toString(),
-      unit: product.unit
+      unit: product.unit,
+      alert_stock: product.alert_stock.toString(),
+      is_active: product.is_active
     })
     setIsDialogOpen(true)
   }
@@ -216,14 +251,14 @@ const Products = () => {
     product.sku.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const lowStockProducts = products.filter(product => product.stock <= 10)
+  const lowStockProducts = products.filter(product => product.stock <= product.alert_stock)
   const totalValue = products.reduce((sum, product) => sum + (product.price * product.stock), 0)
   const totalProducts = products.length
 
-  const getStockBadge = (stock: number) => {
-    if (stock === 0) return <Badge variant="destructive">Agotado</Badge>
-    if (stock <= 5) return <Badge variant="destructive">Crítico</Badge>
-    if (stock <= 10) return <Badge variant="secondary">Bajo</Badge>
+  const getStockBadge = (product: Product) => {
+    if (product.stock === 0) return <Badge variant="destructive">Agotado</Badge>
+    if (product.stock <= Math.floor(product.alert_stock * 0.5)) return <Badge variant="destructive">Crítico</Badge>
+    if (product.stock <= product.alert_stock) return <Badge variant="secondary">Stock Bajo</Badge>
     return <Badge variant="outline">Normal</Badge>
   }
 
@@ -252,7 +287,9 @@ const Products = () => {
                     sku: '',
                     price: '',
                     stock: '',
-                    unit: 'unidad'
+                    unit: 'unidad',
+                    alert_stock: '10',
+                    is_active: true
                   })
                 }}
               >
@@ -343,6 +380,39 @@ const Products = () => {
                       onChange={(e) => setFormData(prev => ({ ...prev, unit: e.target.value }))}
                       placeholder="unidad"
                     />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="alert_stock">Alerta de Stock</Label>
+                    <Input
+                      id="alert_stock"
+                      type="number"
+                      value={formData.alert_stock}
+                      onChange={(e) => setFormData(prev => ({ ...prev, alert_stock: e.target.value }))}
+                      placeholder="10"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Nivel mínimo para recibir alertas
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="is_active">Estado del Producto</Label>
+                    <div className="flex items-center space-x-2 h-10">
+                      <Switch
+                        id="is_active"
+                        checked={formData.is_active}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+                      />
+                      <Label htmlFor="is_active" className="text-sm">
+                        {formData.is_active ? 'Activo' : 'Inactivo'}
+                      </Label>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Los productos inactivos no aparecen en ventas
+                    </p>
                   </div>
                 </div>
 
@@ -472,6 +542,7 @@ const Products = () => {
                     <TableHead>SKU</TableHead>
                     <TableHead>Precio</TableHead>
                     <TableHead>Stock</TableHead>
+                    <TableHead>Stock Status</TableHead>
                     <TableHead>Estado</TableHead>
                     <TableHead>Unidad</TableHead>
                     <TableHead className="text-right">Acciones</TableHead>
@@ -498,9 +569,17 @@ const Products = () => {
                       </TableCell>
                       <TableCell className="font-mono">
                         {product.stock}
+                        <div className="text-xs text-muted-foreground">
+                          Alerta: {product.alert_stock}
+                        </div>
                       </TableCell>
                       <TableCell>
-                        {getStockBadge(product.stock)}
+                        {getStockBadge(product)}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={product.is_active ? "default" : "secondary"}>
+                          {product.is_active ? "Activo" : "Inactivo"}
+                        </Badge>
                       </TableCell>
                       <TableCell>{product.unit}</TableCell>
                       <TableCell className="text-right">

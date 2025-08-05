@@ -32,6 +32,8 @@ interface Product {
   stock: number
   sku: string
   unit: string
+  alert_stock: number
+  is_active: boolean
 }
 
 interface CartItem {

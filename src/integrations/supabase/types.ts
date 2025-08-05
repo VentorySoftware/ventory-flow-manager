@@ -46,9 +46,11 @@ export type Database = {
       }
       products: {
         Row: {
+          alert_stock: number | null
           created_at: string
           description: string | null
           id: string
+          is_active: boolean | null
           name: string
           price: number
           sku: string
@@ -57,9 +59,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          alert_stock?: number | null
           created_at?: string
           description?: string | null
           id?: string
+          is_active?: boolean | null
           name: string
           price: number
           sku: string
@@ -68,9 +72,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          alert_stock?: number | null
           created_at?: string
           description?: string | null
           id?: string
+          is_active?: boolean | null
           name?: string
           price?: number
           sku?: string
