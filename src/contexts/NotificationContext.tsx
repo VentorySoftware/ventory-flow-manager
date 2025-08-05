@@ -57,7 +57,9 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
           type: 'warning',
           category: 'inventory',
           timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutos atrás
-          read: false
+          read: false,
+          actionUrl: '/products',
+          actionData: { productId: 'demo-product-id' }
         },
         {
           id: '2', 
@@ -66,7 +68,9 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
           type: 'success',
           category: 'sales',
           timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutos atrás
-          read: false
+          read: false,
+          actionUrl: '/sales',
+          actionData: { saleId: 'demo-sale-id' }
         },
         {
           id: '3',
@@ -75,23 +79,24 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
           type: 'info',
           category: 'users',
           timestamp: new Date(Date.now() - 5 * 60 * 1000), // 5 minutos atrás
-          read: userRole !== 'admin' // Solo admin puede ver notificaciones de usuarios
+          read: false,
+          actionUrl: '/users'
         }
       ]
       
-      // Filtrar notificaciones según el rol
-      const filteredNotifications = initialNotifications.filter(notif => {
-        if (notif.category === 'users' && userRole !== 'admin') {
-          return false
-        }
-        return true
-      })
+  // Solo mostrar notificaciones a administradores
+  const filteredNotifications = userRole === 'admin' ? initialNotifications : []
       
       setNotifications(filteredNotifications)
     }
   }, [user, userRole])
 
   const addNotification = async (notificationData: Omit<AppNotification, 'id' | 'timestamp' | 'read'>) => {
+    // Solo agregar notificaciones si el usuario es administrador
+    if (userRole !== 'admin') {
+      return
+    }
+
     const newNotification: AppNotification = {
       ...notificationData,
       id: Date.now().toString(),
@@ -162,12 +167,17 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
           table: 'sales'
         },
         (payload) => {
-          addNotification({
-            title: 'Nueva Venta Realizada',
-            message: `Se ha registrado una nueva venta por $${payload.new.total}`,
-            type: 'success',
-            category: 'sales'
-          })
+          // Solo notificar a administradores
+          if (userRole === 'admin') {
+            addNotification({
+              title: 'Nueva Venta Realizada',
+              message: `Se ha registrado una nueva venta por $${payload.new.total}`,
+              type: 'success',
+              category: 'sales',
+              actionUrl: '/sales',
+              actionData: { saleId: payload.new.id }
+            })
+          }
         }
       )
       .subscribe()

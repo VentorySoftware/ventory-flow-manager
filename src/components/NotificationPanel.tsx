@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/enhanced-button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,6 +24,7 @@ import { es } from 'date-fns/locale'
 
 const NotificationPanel = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
   const {
     notifications,
     unreadCount,
@@ -62,10 +64,22 @@ const NotificationPanel = () => {
     }
   }
 
-  const handleNotificationClick = (notificationId: string) => {
-    console.log('Clicking notification:', notificationId)
-    markAsRead(notificationId)
-    console.log('Notification marked as read')
+  const handleNotificationClick = (notification: any) => {
+    markAsRead(notification.id)
+    setIsOpen(false)
+    
+    // Redirigir según el tipo de notificación
+    if (notification.actionUrl) {
+      if (notification.category === 'inventory' && notification.actionData?.productId) {
+        navigate(`${notification.actionUrl}?edit=${notification.actionData.productId}`)
+      } else if (notification.category === 'sales' && notification.actionData?.saleId) {
+        navigate(`${notification.actionUrl}?view=${notification.actionData.saleId}`)
+      } else if (notification.category === 'users') {
+        navigate('/users')
+      } else {
+        navigate(notification.actionUrl)
+      }
+    }
   }
 
   return (
@@ -150,7 +164,7 @@ const NotificationPanel = () => {
                         className={`p-4 cursor-pointer transition-colors hover:bg-muted/50 ${
                           !notification.read ? 'bg-primary/5 border-l-2 border-l-primary' : ''
                         }`}
-                        onClick={() => handleNotificationClick(notification.id)}
+                        onClick={() => handleNotificationClick(notification)}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-start space-x-3 flex-1">

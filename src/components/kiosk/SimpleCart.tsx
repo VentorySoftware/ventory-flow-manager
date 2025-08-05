@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
+import { useNotificationContext } from '@/contexts/NotificationContext'
 import { 
   ShoppingCart, 
   Trash2, 
@@ -30,6 +31,7 @@ interface Product {
   stock: number
   sku: string
   unit: string
+  alert_stock: number
 }
 
 interface CartItem {
@@ -67,6 +69,7 @@ interface SimpleCartProps {
 const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRefreshProducts, onRefreshSales }: SimpleCartProps) => {
   const { user } = useAuth()
   const { toast } = useToast()
+  const { addNotification } = useNotificationContext()
   const [paymentMethod, setPaymentMethod] = useState('efectivo')
   const [receivedAmount, setReceivedAmount] = useState('')
   const [processing, setProcessing] = useState(false)
@@ -157,6 +160,18 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
           .eq('id', item.product.id)
 
         if (stockError) throw stockError
+
+        // Verificar si el stock actualizado está bajo y notificar al administrador
+        if (newStock <= item.product.alert_stock) {
+          addNotification({
+            title: 'Stock Bajo',
+            message: `El producto "${item.product.name}" tiene solo ${newStock} unidades restantes`,
+            type: 'warning',
+            category: 'inventory',
+            actionUrl: '/products',
+            actionData: { productId: item.product.id }
+          })
+        }
       }
 
       // Preparar datos de la venta completada
