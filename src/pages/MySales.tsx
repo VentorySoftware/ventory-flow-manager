@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import { format, startOfDay, endOfDay } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 import KioskNavbar from '@/components/kiosk/KioskNavbar'
 import { 
   Receipt, 
@@ -62,6 +63,7 @@ interface Category {
 }
 
 const MySalesPage = () => {
+  const navigate = useNavigate()
   const { user } = useAuth()
   const { toast } = useToast()
   const [sales, setSales] = useState<Sale[]>([])
@@ -350,16 +352,28 @@ const MySalesPage = () => {
       <div className="container mx-auto p-6">
         {/* Header Section */}
         <div className="mb-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Receipt className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">Mis Ventas</h1>
-                <p className="text-muted-foreground">Consulta y gestiona tu historial de transacciones</p>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Receipt className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold">Mis Ventas</h1>
+                  <p className="text-muted-foreground">Consulta y gestiona tu historial de transacciones</p>
+                </div>
               </div>
             </div>
+            
+            {/* Botón para volver al kiosco */}
+            <Button
+              variant="outline"
+              onClick={() => navigate('/kiosk')}
+              className="flex items-center gap-2 hover:bg-primary/10"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Volver al Kiosco</span>
+            </Button>
           </div>
 
           {/* Summary Cards */}
