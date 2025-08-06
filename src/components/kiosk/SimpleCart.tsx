@@ -107,6 +107,7 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
       const { data: sale, error: saleError } = await supabase
         .from('sales')
         .insert({
+          seller_id: user?.id || null,
           subtotal: total,
           tax: tax,
           total: finalTotal,
