@@ -54,9 +54,6 @@ export function CategoryFilter({ selectedCategoryId, onCategoryChange }: Categor
     <div className="w-full mb-6">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold">Categorías</h3>
-        <Badge variant="secondary" className="text-xs">
-          Top 10 más vendidas
-        </Badge>
       </div>
       
       <ScrollArea className="w-full whitespace-nowrap">
@@ -76,12 +73,9 @@ export function CategoryFilter({ selectedCategoryId, onCategoryChange }: Categor
               variant={selectedCategoryId === category.category_id ? "default" : "outline"}
               size="sm"
               onClick={() => onCategoryChange(category.category_id)}
-              className="shrink-0 flex flex-col h-auto py-2 px-3"
+              className="shrink-0 flex h-auto py-2 px-3"
             >
               <span className="text-sm font-medium">{category.category_name}</span>
-              <span className="text-xs text-muted-foreground">
-                {category.total_quantity} vendidos
-              </span>
             </Button>
           ))}
         </div>
