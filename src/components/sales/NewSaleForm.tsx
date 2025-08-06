@@ -196,19 +196,26 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
     try {
       const { subtotal, tax, total } = calculateTotals()
       
+      console.log('User from auth context:', user)
+      console.log('User ID:', user?.id)
+      
       // Crear la venta
+      const saleData = {
+        customer_id: (selectedCustomer && selectedCustomer !== "general") ? selectedCustomer : null,
+        seller_id: user?.id || null,
+        subtotal,
+        tax,
+        total,
+        payment_method: paymentMethod,
+        notes: notes || null,
+        status: 'completed'
+      }
+      
+      console.log('Sale data to insert:', saleData)
+      
       const { data: sale, error: saleError } = await supabase
         .from('sales')
-        .insert({
-          customer_id: (selectedCustomer && selectedCustomer !== "general") ? selectedCustomer : null,
-          seller_id: user?.id || null,
-          subtotal,
-          tax,
-          total,
-          payment_method: paymentMethod,
-          notes: notes || null,
-          status: 'completed'
-        })
+        .insert(saleData)
         .select()
         .single()
 
