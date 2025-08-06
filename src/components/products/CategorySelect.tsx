@@ -53,8 +53,8 @@ export function CategorySelect({
     <div className="space-y-2">
       <Label htmlFor="category-select">{label}</Label>
       <Select 
-        value={value || ""} 
-        onValueChange={(val) => onValueChange(val === "" ? undefined : val)}
+        value={value || "none"} 
+        onValueChange={(val) => onValueChange(val === "none" ? undefined : val)}
         disabled={loading}
       >
         <SelectTrigger id="category-select">
@@ -62,7 +62,7 @@ export function CategorySelect({
         </SelectTrigger>
         <SelectContent>
           {!required && (
-            <SelectItem value="">Sin categoría</SelectItem>
+            <SelectItem value="none">Sin categoría</SelectItem>
           )}
           {categories.map((category) => (
             <SelectItem key={category.id} value={category.id}>
