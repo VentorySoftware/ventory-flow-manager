@@ -382,12 +382,12 @@ const MySales = ({ refreshTrigger }: MySalesProps) => {
             {/* Categoría */}
             <div className="space-y-2">
               <Label className="text-xs">Categoría</Label>
-              <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
+              <Select value={selectedCategoryId || "all"} onValueChange={(value) => setSelectedCategoryId(value === "all" ? "" : value)}>
                 <SelectTrigger className="h-8 text-sm">
                   <SelectValue placeholder="Todas las categorías" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todas las categorías</SelectItem>
+                  <SelectItem value="all">Todas las categorías</SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name}
