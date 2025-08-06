@@ -23,10 +23,15 @@ const ImageCarousel = ({
   aspectRatio = 'square',
   size = 'md'
 }: ImageCarouselProps) => {
+  // Prioritize primary image or default to first image
+  const sortedImages = primaryImage && images.includes(primaryImage) 
+    ? [primaryImage, ...images.filter(img => img !== primaryImage)]
+    : images
+    
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showFullscreen, setShowFullscreen] = useState(false)
 
-  if (!images || images.length === 0) {
+  if (!sortedImages || sortedImages.length === 0) {
     return (
       <Card className={`${className}`}>
         <CardContent className={`p-0 ${getAspectClass(aspectRatio)}`}>
@@ -37,11 +42,6 @@ const ImageCarousel = ({
       </Card>
     )
   }
-
-  // Sort images to show primary first
-  const sortedImages = primaryImage 
-    ? [primaryImage, ...images.filter(img => img !== primaryImage)]
-    : images
 
   const nextImage = () => {
     setCurrentIndex((prev) => (prev + 1) % sortedImages.length)

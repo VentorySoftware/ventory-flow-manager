@@ -60,7 +60,8 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                   productName={product.name}
                   size="md"
                   className="w-full h-full"
-                  showControls={false}
+                  showControls={product.image_urls.length > 1}
+                  aspectRatio="square"
                 />
               ) : (
                 <Package className="h-12 w-12 text-primary opacity-50" />

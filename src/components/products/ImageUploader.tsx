@@ -27,6 +27,7 @@ interface ImageUploaderProps {
   maxImages?: number
   primaryImage?: string
   onPrimaryImageChange?: (imageUrl: string) => void
+  onUploadingChange?: (uploading: boolean) => void
 }
 
 const ImageUploader = ({ 
@@ -35,7 +36,8 @@ const ImageUploader = ({
   onImagesChange, 
   maxImages = 3,
   primaryImage,
-  onPrimaryImageChange
+  onPrimaryImageChange,
+  onUploadingChange
 }: ImageUploaderProps) => {
   const [uploading, setUploading] = useState(false)
   const [editingImage, setEditingImage] = useState<string | null>(null)
@@ -105,6 +107,7 @@ const ImageUploader = ({
       })
     } finally {
       setUploading(false)
+      onUploadingChange?.(false)
       // Clear the file input
       if (fileInputRef.current) {
         fileInputRef.current.value = ''

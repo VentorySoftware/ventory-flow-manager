@@ -81,6 +81,8 @@ const Products = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [activeTab, setActiveTab] = useState('inventory')
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [isUploadingImages, setIsUploadingImages] = useState(false)
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
@@ -358,7 +360,21 @@ const Products = () => {
             <p className="text-muted-foreground">Gestiona tus productos</p>
           </div>
           
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            if (!open && (hasUnsavedChanges || isUploadingImages)) {
+              if (window.confirm('¿Estás seguro? Se perderán los cambios no guardados.')) {
+                setIsDialogOpen(false)
+                setHasUnsavedChanges(false)
+                setIsUploadingImages(false)
+              }
+            } else {
+              setIsDialogOpen(open)
+              if (!open) {
+                setHasUnsavedChanges(false)
+                setIsUploadingImages(false)
+              }
+            }
+          }}>
             <DialogTrigger asChild>
               <Button 
                 variant="gradient" 
@@ -388,7 +404,13 @@ const Products = () => {
               </Button>
             </DialogTrigger>
             
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto"
+              onPointerDownOutside={(e) => {
+                if (hasUnsavedChanges || isUploadingImages) {
+                  e.preventDefault()
+                }
+              }}
+            >
               <DialogHeader>
                 <DialogTitle>
                   {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
@@ -401,7 +423,7 @@ const Products = () => {
                 </DialogDescription>
               </DialogHeader>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" onChange={() => setHasUnsavedChanges(true)}>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Nombre *</Label>
@@ -576,22 +598,45 @@ const Products = () => {
                 <ImageUploader
                   productId={editingProduct?.id}
                   images={formData.image_urls}
-                  onImagesChange={(images) => setFormData(prev => ({ ...prev, image_urls: images }))}
+                  onImagesChange={(images) => {
+                    setFormData(prev => ({ ...prev, image_urls: images }))
+                    setHasUnsavedChanges(true)
+                  }}
                   primaryImage={formData.primary_image_url}
-                  onPrimaryImageChange={(imageUrl) => setFormData(prev => ({ ...prev, primary_image_url: imageUrl }))}
+                  onPrimaryImageChange={(imageUrl) => {
+                    setFormData(prev => ({ ...prev, primary_image_url: imageUrl }))
+                    setHasUnsavedChanges(true)
+                  }}
+                  onUploadingChange={(uploading) => setIsUploadingImages(uploading)}
                   maxImages={3}
                 />
 
-                <div className="flex justify-end space-x-3 pt-4">
+                {/* Action Buttons - Always visible at bottom */}
+                <div className="sticky bottom-0 bg-background border-t pt-4 mt-6 flex justify-end space-x-3">
                   <Button 
                     type="button" 
                     variant="outline" 
-                    onClick={() => setIsDialogOpen(false)}
+                    onClick={() => {
+                      if (hasUnsavedChanges || isUploadingImages) {
+                        if (window.confirm('¿Estás seguro? Se perderán los cambios no guardados.')) {
+                          setIsDialogOpen(false)
+                          setHasUnsavedChanges(false)
+                          setIsUploadingImages(false)
+                        }
+                      } else {
+                        setIsDialogOpen(false)
+                      }
+                    }}
+                    disabled={isUploadingImages}
                   >
                     Cancelar
                   </Button>
-                  <Button type="submit" variant="gradient">
-                    {editingProduct ? 'Actualizar' : 'Crear'} Producto
+                  <Button 
+                    type="submit" 
+                    variant="gradient"
+                    disabled={isUploadingImages}
+                  >
+                    {isUploadingImages ? 'Subiendo imágenes...' : (editingProduct ? 'Actualizar' : 'Crear') + ' Producto'}
                   </Button>
                 </div>
               </form>
