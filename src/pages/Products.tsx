@@ -182,7 +182,9 @@ const Products = () => {
         is_active: formData.is_active,
         barcode: formData.barcode || null,
         weight_unit: formData.weight_unit,
-        category_id: formData.category_id || null
+        category_id: formData.category_id || null,
+        image_urls: formData.image_urls,
+        primary_image_url: formData.primary_image_url || null
       }
 
       if (editingProduct) {
