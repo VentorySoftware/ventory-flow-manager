@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Button } from '@/components/ui/enhanced-button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -78,20 +78,22 @@ const MySales = ({ refreshTrigger }: MySalesProps) => {
   const [dateTo, setDateTo] = useState<Date | undefined>()
   const [searchTerm, setSearchTerm] = useState('')
 
+  // Optimized useEffect - only fetch categories once
   useEffect(() => {
     if (user) {
       fetchCategories()
+    }
+  }, [user])
+
+  // Separate useEffect for initial sales fetch
+  useEffect(() => {
+    if (user) {
       fetchUserSales()
     }
   }, [user, refreshTrigger])
 
-  useEffect(() => {
-    if (user) {
-      fetchUserSales()
-    }
-  }, [selectedCategoryId, singleDate, dateFrom, dateTo, searchTerm])
-
-  const fetchCategories = async () => {
+  // Optimized fetchCategories with useCallback
+  const fetchCategories = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('categories')
@@ -104,9 +106,10 @@ const MySales = ({ refreshTrigger }: MySalesProps) => {
     } catch (error) {
       console.error('Error fetching categories:', error)
     }
-  }
+  }, [])
 
-  const fetchUserSales = async () => {
+  // Optimized fetchUserSales with useCallback
+  const fetchUserSales = useCallback(async () => {
     try {
       setLoading(true)
       
@@ -193,14 +196,22 @@ const MySales = ({ refreshTrigger }: MySalesProps) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedCategoryId, singleDate, dateFrom, dateTo, searchTerm])
 
-  const handleViewSale = (sale: Sale) => {
+  // Trigger filter-based refetch when filters change
+  useEffect(() => {
+    if (user) {
+      fetchUserSales()
+    }
+  }, [fetchUserSales, user])
+
+  // Optimized handlers with useCallback
+  const handleViewSale = useCallback((sale: Sale) => {
     setSelectedSale(sale)
     setShowDetails(true)
-  }
+  }, [])
 
-  const handlePrintReceipt = (sale: Sale) => {
+  const handlePrintReceipt = useCallback((sale: Sale) => {
     const printWindow = window.open('', '_blank')
     if (!printWindow) return
 
@@ -288,9 +299,9 @@ const MySales = ({ refreshTrigger }: MySalesProps) => {
     printWindow.document.close()
     printWindow.focus()
     printWindow.print()
-  }
+  }, [])
 
-  const getPaymentMethodIcon = (method: string) => {
+  const getPaymentMethodIcon = useCallback((method: string) => {
     switch (method) {
       case 'efectivo':
         return '💵'
@@ -303,22 +314,25 @@ const MySales = ({ refreshTrigger }: MySalesProps) => {
       default:
         return '💰'
     }
-  }
+  }, [])
 
-  const closeDetails = () => {
+  const closeDetails = useCallback(() => {
     setShowDetails(false)
     setSelectedSale(null)
-  }
+  }, [])
 
-  const clearAllFilters = () => {
+  const clearAllFilters = useCallback(() => {
     setSelectedCategoryId('')
     setSingleDate(undefined)
     setDateFrom(undefined)
     setDateTo(undefined)
     setSearchTerm('')
-  }
+  }, [])
 
-  const hasActiveFilters = selectedCategoryId || singleDate || dateFrom || dateTo || searchTerm
+  // Memoized calculations to prevent unnecessary re-renders
+  const hasActiveFilters = useMemo(() => {
+    return !!(selectedCategoryId || singleDate || dateFrom || dateTo || searchTerm)
+  }, [selectedCategoryId, singleDate, dateFrom, dateTo, searchTerm])
 
   if (loading) {
     return (
