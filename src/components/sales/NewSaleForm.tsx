@@ -200,7 +200,7 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
       const { data: sale, error: saleError } = await supabase
         .from('sales')
         .insert({
-          customer_id: selectedCustomer || null,
+          customer_id: (selectedCustomer && selectedCustomer !== "general") ? selectedCustomer : null,
           seller_id: user?.id || null,
           subtotal,
           tax,
@@ -272,7 +272,7 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
             <SelectValue placeholder="Seleccionar cliente o venta general" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Cliente General</SelectItem>
+            <SelectItem value="general">Cliente General</SelectItem>
             {customers.map(customer => (
               <SelectItem key={customer.id} value={customer.id}>
                 {customer.name} {customer.email && `(${customer.email})`}
