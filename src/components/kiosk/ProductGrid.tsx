@@ -47,22 +47,26 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
       {activeProducts.map((product) => (
         <Card 
           key={product.id} 
-          className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer border-2 hover:border-primary/50"
-          onClick={() => onAddToCart(product)}
+          className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary/50"
         >
           <CardContent className="p-4">
-            {/* Imagen del producto */}
-            <div className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center overflow-hidden">
+            {/* Imagen del producto - Clickeable */}
+            <div 
+              className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+              onClick={() => onAddToCart(product)}
+            >
               {product.image_urls && product.image_urls.length > 0 ? (
-                <ImageCarousel
-                  images={product.image_urls}
-                  primaryImage={product.primary_image_url || undefined}
-                  productName={product.name}
-                  size="md"
-                  className="w-full h-full"
-                  showControls={product.image_urls.length > 1}
-                  aspectRatio="square"
-                />
+                <div className="w-full h-full pointer-events-none">
+                  <ImageCarousel
+                    images={product.image_urls}
+                    primaryImage={product.primary_image_url || undefined}
+                    productName={product.name}
+                    size="md"
+                    className="w-full h-full"
+                    showControls={false}
+                    aspectRatio="square"
+                  />
+                </div>
               ) : (
                 <Package className="h-12 w-12 text-primary opacity-50" />
               )}
@@ -122,10 +126,7 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                 variant="outline"
                 size="sm"
                 disabled={product.stock === 0}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onAddToCart(product)
-                }}
+                onClick={() => onAddToCart(product)}
               >
                 <Plus className="h-4 w-4 mr-1" />
                 {product.stock === 0 ? 'Agotado' : 'Agregar'}
