@@ -196,9 +196,6 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
     try {
       const { subtotal, tax, total } = calculateTotals()
       
-      console.log('Creating sale with user:', user)
-      console.log('User ID:', user?.id)
-      
       // Crear la venta
       const { data: sale, error: saleError } = await supabase
         .from('sales')
@@ -215,7 +212,6 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
         .select()
         .single()
 
-      console.log('Created sale:', sale)
       if (saleError) throw saleError
 
       // Crear los items de venta
