@@ -10,7 +10,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import KioskNavbar from '@/components/kiosk/KioskNavbar'
 import ProductGrid from '@/components/kiosk/ProductGrid'
 import SimpleCart from '@/components/kiosk/SimpleCart'
-import CollapsibleMySales from '@/components/kiosk/CollapsibleMySales'
 import { CategoryFilter } from '@/components/kiosk/CategoryFilter'
 import { 
   Search, 
@@ -275,14 +274,9 @@ const KioskView = () => {
       <KioskNavbar />
       
       <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-8rem)]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
           
-          {/* Panel de Mis Ventas Colapsible */}
-          <div className="lg:col-span-1 space-y-4">
-            <CollapsibleMySales refreshTrigger={salesRefreshTrigger} />
-          </div>
-          
-          {/* Panel de Productos - 2/4 del ancho en desktop */}
+          {/* Panel de Productos - 2/3 del ancho en desktop */}
           <div className="lg:col-span-2 space-y-4">
             
             {/* Barra de búsqueda y acciones rápidas */}
@@ -350,7 +344,7 @@ const KioskView = () => {
             </Card>
           </div>
 
-          {/* Panel del Carrito - 1/4 del ancho en desktop */}
+          {/* Panel del Carrito - 1/3 del ancho en desktop */}
           <div className="lg:col-span-1">
             <SimpleCart
               cart={cart}

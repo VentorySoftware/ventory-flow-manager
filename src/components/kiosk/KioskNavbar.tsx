@@ -5,7 +5,9 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { 
   LayoutDashboard, 
-  PackageOpen
+  PackageOpen,
+  Receipt,
+  TrendingUp
 } from 'lucide-react'
 
 const KioskNavbar = () => {
@@ -31,6 +33,15 @@ const KioskNavbar = () => {
 
         {/* Navegación central */}
         <div className="hidden md:flex items-center space-x-2">
+          <Button
+            variant={location.pathname === '/my-sales' ? "default" : "ghost"}
+            onClick={() => navigate('/my-sales')}
+            className="flex items-center space-x-2"
+          >
+            <Receipt className="h-4 w-4" />
+            <span>Mis Ventas</span>
+          </Button>
+          
           {hasRole('admin') && (
             <Button
               variant={location.pathname === '/' ? "default" : "ghost"}

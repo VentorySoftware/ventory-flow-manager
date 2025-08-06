@@ -10,6 +10,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
+import MySales from "./pages/MySales";
 import Users from "./pages/Users";
 import Customers from "./pages/Customers";
 import Categories from "./pages/Categories";
@@ -43,6 +44,11 @@ const App = () => (
             <Route path="/kiosk" element={
               <ProtectedRoute>
                 <KioskView />
+              </ProtectedRoute>
+            } />
+            <Route path="/my-sales" element={
+              <ProtectedRoute>
+                <MySales />
               </ProtectedRoute>
             } />
             <Route path="/products" element={
