@@ -32,6 +32,7 @@ import {
 } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
+import { useNavigate } from "react-router-dom"
 import { demoSales, demoProducts, demoCustomers } from "@/lib/demo-data"
 import NewSaleForm from "@/components/sales/NewSaleForm"
 import SaleDetails from "@/components/sales/SaleDetails"
@@ -72,6 +73,7 @@ const Sales = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [filterStatus, setFilterStatus] = useState<string>("all")
   const { toast } = useToast()
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchSales()
@@ -159,7 +161,7 @@ const Sales = () => {
   }
 
   const handleNewSale = () => {
-    setIsNewSaleOpen(true)
+    navigate('/kiosk')
   }
 
   const handleSaleCreated = () => {
