@@ -143,6 +143,7 @@ const MySalesPage = () => {
             )
           )
         `)
+        .eq('seller_id', user?.id)
         .order('created_at', { ascending: false })
 
       // Aplicar filtros de fecha
