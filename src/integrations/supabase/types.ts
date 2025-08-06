@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           address: string | null
@@ -48,6 +75,7 @@ export type Database = {
         Row: {
           alert_stock: number | null
           barcode: string | null
+          category_id: string | null
           cost_price: number | null
           created_at: string
           description: string | null
@@ -66,6 +94,7 @@ export type Database = {
         Insert: {
           alert_stock?: number | null
           barcode?: string | null
+          category_id?: string | null
           cost_price?: number | null
           created_at?: string
           description?: string | null
@@ -84,6 +113,7 @@ export type Database = {
         Update: {
           alert_stock?: number | null
           barcode?: string | null
+          category_id?: string | null
           cost_price?: number | null
           created_at?: string
           description?: string | null
@@ -99,7 +129,15 @@ export type Database = {
           updated_at?: string
           weight_unit?: boolean | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -261,6 +299,24 @@ export type Database = {
       calculate_product_profit: {
         Args: { sale_price: number; cost_price: number; quantity: number }
         Returns: number
+      }
+      get_products_with_inactive_categories: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          product_id: string
+          product_name: string
+          category_id: string
+          category_name: string
+        }[]
+      }
+      get_top_categories_by_sales: {
+        Args: { limit_count?: number }
+        Returns: {
+          category_id: string
+          category_name: string
+          total_quantity: number
+          total_revenue: number
+        }[]
       }
       get_user_role: {
         Args: { _user_id: string }

@@ -10,6 +10,7 @@ import {
   BarChart3,
   Settings,
   LayoutGrid,
+  Tags,
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -24,7 +25,10 @@ const Navbar = () => {
     { name: "Productos", icon: Package, path: "/products" },
     { name: "Ventas", icon: ShoppingCart, path: "/sales" },
     { name: "Clientes", icon: Users, path: "/customers" },
-    ...(hasRole('admin') ? [{ name: "Usuarios", icon: Users, path: "/users" }] : []),
+    ...(hasRole('admin') ? [
+      { name: "Usuarios", icon: Users, path: "/users" },
+      { name: "Categorías", icon: Tags, path: "/categories" }
+    ] : []),
     { name: "Reportes", icon: BarChart3, path: "/reports" },
   ]
 

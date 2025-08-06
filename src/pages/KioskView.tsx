@@ -11,6 +11,7 @@ import KioskNavbar from '@/components/kiosk/KioskNavbar'
 import ProductGrid from '@/components/kiosk/ProductGrid'
 import SimpleCart from '@/components/kiosk/SimpleCart'
 import SalesPanel from '@/components/kiosk/SalesPanel'
+import { CategoryFilter } from '@/components/kiosk/CategoryFilter'
 import { 
   Search, 
   ShoppingCart, 
@@ -34,6 +35,9 @@ interface Product {
   unit: string
   alert_stock: number
   is_active: boolean
+  category_id: string | null
+  image_urls: string[]
+  primary_image_url: string | null
 }
 
 interface CartItem {
@@ -48,6 +52,7 @@ const KioskView = () => {
   const [cart, setCart] = useState<CartItem[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>()
   const [showCalculator, setShowCalculator] = useState(false)
   const [calculatorDisplay, setCalculatorDisplay] = useState('0')
   const [calculatorPrevValue, setCalculatorPrevValue] = useState('')
@@ -63,7 +68,13 @@ const KioskView = () => {
     try {
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select(`
+          *,
+          categories (
+            id,
+            name
+          )
+        `)
         .gt('stock', 0)
         .order('name')
 
@@ -314,6 +325,12 @@ const KioskView = () => {
               </Card>
             </div>
 
+            {/* Filtro de categorías */}
+            <CategoryFilter
+              selectedCategoryId={selectedCategoryId}
+              onCategoryChange={setSelectedCategoryId}
+            />
+
             {/* Grid de productos */}
             <Card className="flex-1">
               <CardHeader>
@@ -327,6 +344,7 @@ const KioskView = () => {
                 <ProductGrid 
                   products={filteredProducts}
                   onAddToCart={addToCart}
+                  selectedCategoryId={selectedCategoryId}
                 />
               </CardContent>
             </Card>

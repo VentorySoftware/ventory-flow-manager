@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/enhanced-button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Plus, Package, AlertTriangle } from 'lucide-react'
+import ImageCarousel from '@/components/products/ImageCarousel'
 
 interface Product {
   id: string
@@ -12,16 +13,24 @@ interface Product {
   unit: string
   alert_stock: number
   is_active: boolean
+  category_id: string | null
+  image_urls: string[]
+  primary_image_url: string | null
 }
 
 interface ProductGridProps {
   products: Product[]
   onAddToCart: (product: Product, quantity?: number) => void
+  selectedCategoryId?: string
 }
 
-const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
-  // Filtrar solo productos activos
-  const activeProducts = products.filter(product => product.is_active)
+const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridProps) => {
+  // Filtrar solo productos activos y por categoría si está seleccionada
+  const activeProducts = products.filter(product => {
+    if (!product.is_active) return false
+    if (selectedCategoryId && product.category_id !== selectedCategoryId) return false
+    return true
+  })
   
   if (activeProducts.length === 0) {
     return (
@@ -42,9 +51,20 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
           onClick={() => onAddToCart(product)}
         >
           <CardContent className="p-4">
-            {/* Imagen placeholder o icono */}
-            <div className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center">
-              <Package className="h-12 w-12 text-primary opacity-50" />
+            {/* Imagen del producto */}
+            <div className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center overflow-hidden">
+              {product.image_urls && product.image_urls.length > 0 ? (
+                <ImageCarousel
+                  images={product.image_urls}
+                  primaryImage={product.primary_image_url || undefined}
+                  productName={product.name}
+                  size="md"
+                  className="w-full h-full"
+                  showControls={false}
+                />
+              ) : (
+                <Package className="h-12 w-12 text-primary opacity-50" />
+              )}
             </div>
             
             {/* Información del producto */}

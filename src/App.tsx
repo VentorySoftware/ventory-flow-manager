@@ -12,6 +12,7 @@ import Products from "./pages/Products";
 import Sales from "./pages/Sales";
 import Users from "./pages/Users";
 import Customers from "./pages/Customers";
+import Categories from "./pages/Categories";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import KioskView from "./pages/KioskView";
@@ -62,6 +63,11 @@ const App = () => (
             <Route path="/users" element={
               <ProtectedRoute requiredRole="admin">
                 <Users />
+              </ProtectedRoute>
+            } />
+            <Route path="/categories" element={
+              <ProtectedRoute requiredRole="admin">
+                <Categories />
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />

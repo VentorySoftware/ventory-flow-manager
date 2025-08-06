@@ -29,6 +29,7 @@ import MassPriceUpdate from '@/components/products/MassPriceUpdate'
 import ProfitAnalysis from '@/components/products/ProfitAnalysis'
 import ImageUploader from '@/components/products/ImageUploader'
 import ImageCarousel from '@/components/products/ImageCarousel'
+import { CategorySelect } from '@/components/products/CategorySelect'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 
@@ -47,6 +48,11 @@ interface Product {
   weight_unit: boolean
   image_urls: string[]
   primary_image_url: string | null
+  category_id: string | null
+  categories?: {
+    id: string
+    name: string
+  }
   created_at: string
   updated_at: string
 }
@@ -65,6 +71,7 @@ interface ProductFormData {
   weight_unit: boolean
   image_urls: string[]
   primary_image_url: string
+  category_id: string
 }
 
 const Products = () => {
@@ -87,7 +94,8 @@ const Products = () => {
     barcode: '',
     weight_unit: false,
     image_urls: [],
-    primary_image_url: ''
+    primary_image_url: '',
+    category_id: ''
   })
 
   const { toast } = useToast()
@@ -125,7 +133,13 @@ const Products = () => {
       setLoading(true)
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select(`
+          *,
+          categories (
+            id,
+            name
+          )
+        `)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -165,7 +179,8 @@ const Products = () => {
         alert_stock: parseInt(formData.alert_stock) || 10,
         is_active: formData.is_active,
         barcode: formData.barcode || null,
-        weight_unit: formData.weight_unit
+        weight_unit: formData.weight_unit,
+        category_id: formData.category_id || null
       }
 
       if (editingProduct) {
@@ -215,7 +230,8 @@ const Products = () => {
         barcode: '',
         weight_unit: false,
         image_urls: [],
-        primary_image_url: ''
+        primary_image_url: '',
+        category_id: ''
       })
       fetchProducts()
     } catch (error: any) {
@@ -242,7 +258,8 @@ const Products = () => {
       barcode: product.barcode || '',
       weight_unit: product.weight_unit,
       image_urls: product.image_urls || [],
-      primary_image_url: product.primary_image_url || ''
+      primary_image_url: product.primary_image_url || '',
+      category_id: product.category_id || ''
     })
     setIsDialogOpen(true)
   }
@@ -361,7 +378,8 @@ const Products = () => {
                     barcode: '',
                     weight_unit: false,
                     image_urls: [],
-                    primary_image_url: ''
+                    primary_image_url: '',
+                    category_id: ''
                   })
                 }}
               >
@@ -547,6 +565,13 @@ const Products = () => {
                   </div>
                 </div>
 
+                {/* Category Selection */}
+                <CategorySelect
+                  value={formData.category_id}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value || '' }))}
+                  placeholder="Seleccionar categoría"
+                />
+
                 {/* Image Upload Section */}
                 <ImageUploader
                   productId={editingProduct?.id}
@@ -681,6 +706,7 @@ const Products = () => {
                   <TableRow>
                     <TableHead>Producto</TableHead>
                     <TableHead>SKU</TableHead>
+                    <TableHead>Categoría</TableHead>
                     <TableHead>Precio</TableHead>
                     <TableHead>Stock</TableHead>
                     <TableHead>Stock Status</TableHead>
@@ -720,6 +746,13 @@ const Products = () => {
                        </TableCell>
                       <TableCell>
                         <Badge variant="outline">{product.sku}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {product.categories ? (
+                          <Badge variant="secondary">{product.categories.name}</Badge>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">Sin categoría</span>
+                        )}
                       </TableCell>
                       <TableCell className="font-mono">
                         ${product.price.toLocaleString('es-MX')}
