@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Plus, Minus, Search, X } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/contexts/AuthContext"
 import { demoProducts, demoCustomers } from "@/lib/demo-data"
 
 interface Product {
@@ -66,6 +67,7 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
   const [loading, setLoading] = useState(false)
   const [searchResults, setSearchResults] = useState<Product[]>([])
   const { toast } = useToast()
+  const { user } = useAuth()
 
   useEffect(() => {
     fetchProducts()
@@ -199,6 +201,7 @@ const NewSaleForm = ({ onSaleCreated, onCancel }: NewSaleFormProps) => {
         .from('sales')
         .insert({
           customer_id: selectedCustomer || null,
+          seller_id: user?.id || null,
           subtotal,
           tax,
           total,

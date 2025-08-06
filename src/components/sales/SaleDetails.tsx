@@ -23,6 +23,7 @@ interface Sale {
   notes: string | null
   created_at: string
   customer_id: string | null
+  seller_name?: string
   customers?: {
     name: string
     email: string | null
@@ -142,6 +143,18 @@ const SaleDetails = ({ sale, onClose }: SaleDetailsProps) => {
           </CardHeader>
           <CardContent>
             <p className="font-medium capitalize">{sale.payment_method}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <User className="h-5 w-5" />
+              <span>Vendedor</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="font-medium">{sale.seller_name || 'N/A'}</p>
           </CardContent>
         </Card>
 

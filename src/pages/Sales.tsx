@@ -46,6 +46,7 @@ interface Sale {
   notes: string | null
   created_at: string
   customer_id: string | null
+  seller_name?: string
   customers?: {
     name: string
     email: string | null
@@ -103,11 +104,26 @@ const Sales = () => {
       
       if (error) throw error
       
-      // Transform data to match interface
-      const transformedSales = data?.map(sale => ({
-        ...sale,
-        sale_number: `V${sale.id.slice(-8).toUpperCase()}` // Generate sale number from ID
-      })) || []
+      // Get seller information for each sale
+      const transformedSales = await Promise.all((data || []).map(async (sale) => {
+        let sellerName = 'N/A'
+        
+        if (sale.seller_id) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('user_id', sale.seller_id)
+            .single()
+          
+          sellerName = profile?.full_name || 'N/A'
+        }
+        
+        return {
+          ...sale,
+          sale_number: `V${sale.id.slice(-8).toUpperCase()}`,
+          seller_name: sellerName
+        }
+      }))
       
       setSales(transformedSales)
       
@@ -282,6 +298,7 @@ const Sales = () => {
                     <TableRow>
                       <TableHead>Número</TableHead>
                       <TableHead>Cliente</TableHead>
+                      <TableHead>Vendedor</TableHead>
                       <TableHead>Total</TableHead>
                       <TableHead>Estado</TableHead>
                       <TableHead>Método de Pago</TableHead>
@@ -291,19 +308,20 @@ const Sales = () => {
                   </TableHeader>
                   <TableBody>
                     {filteredSales.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-center py-8">
-                          <div className="flex flex-col items-center space-y-2">
-                            <ShoppingCart className="h-8 w-8 text-muted-foreground" />
-                            <p className="text-muted-foreground">No se encontraron ventas</p>
-                          </div>
-                        </TableCell>
-                      </TableRow>
+                        <TableRow>
+                          <TableCell colSpan={8} className="text-center py-8">
+                            <div className="flex flex-col items-center space-y-2">
+                              <ShoppingCart className="h-8 w-8 text-muted-foreground" />
+                              <p className="text-muted-foreground">No se encontraron ventas</p>
+                            </div>
+                          </TableCell>
+                        </TableRow>
                     ) : (
                       filteredSales.map((sale) => (
                         <TableRow key={sale.id} className="hover:bg-accent/50">
                           <TableCell className="font-medium">{sale.sale_number}</TableCell>
                           <TableCell>{sale.customers?.name || 'Cliente General'}</TableCell>
+                          <TableCell>{sale.seller_name || 'N/A'}</TableCell>
                           <TableCell className="font-semibold">
                             ${sale.total.toLocaleString('es-MX')}
                           </TableCell>

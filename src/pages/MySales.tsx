@@ -54,6 +54,7 @@ interface Sale {
   status: string
   notes?: string | null
   created_at: string
+  seller_name?: string
   sale_items: SaleItem[]
 }
 
