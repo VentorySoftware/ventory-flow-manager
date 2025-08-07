@@ -26,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: "Ventory Manager <onboarding@resend.dev>",
       to: [email],
-      subject: "Recuperación de contraseña - Ventory Manager",
+      subject: "RESETEO DE CONTRASEÑA - VENTORY MANAGER",
         html: `
         <!DOCTYPE html>
         <html lang="es">
@@ -54,14 +54,14 @@ const handler = async (req: Request): Promise<Response> => {
             <!-- Contenido principal -->
             <div style="padding: 40px;">
               <div style="text-align: center; margin-bottom: 30px;">
-                <h2 style="color: #1e293b; font-size: 24px; font-weight: 600; margin-bottom: 16px;">Recuperación de Contraseña</h2>
-                <p style="color: #64748b; font-size: 16px;">Recibimos una solicitud para restablecer tu contraseña</p>
+                <h2 style="color: #1e293b; font-size: 24px; font-weight: 600; margin-bottom: 16px;">Reseteo de Contraseña</h2>
+                <p style="color: #64748b; font-size: 16px;">Solicitud para restablecer tu contraseña</p>
               </div>
               
               <div style="background: #f8fafc; border-radius: 12px; padding: 30px; margin: 30px 0; border-left: 4px solid #667eea;">
                 <p style="color: #475569; font-size: 16px; margin-bottom: 20px;">¡Hola!</p>
-                <p style="color: #475569; font-size: 16px; margin-bottom: 20px;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en <strong>Ventory Manager</strong>.</p>
-                <p style="color: #475569; font-size: 16px; margin-bottom: 30px;">Si solicitaste este cambio, haz clic en el siguiente botón para crear una nueva contraseña:</p>
+                <p style="color: #475569; font-size: 16px; margin-bottom: 20px;">Hemos recibido una solicitud para restablecer tu contraseña. Si no fuiste tú, puedes ignorar este mensaje.</p>
+                <p style="color: #475569; font-size: 16px; margin-bottom: 30px;">Para continuar, haz clic en el siguiente enlace:</p>
                 
                 <div style="text-align: center; margin: 40px 0;">
                   <a href="${resetUrl}" 
@@ -90,11 +90,11 @@ const handler = async (req: Request): Promise<Response> => {
             
             <!-- Footer -->
             <div style="background: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 12px; margin-bottom: 8px;">
-                Este es un email automático de <strong>Ventory Manager</strong>
+              <p style="color: #64748b; font-size: 14px; margin-bottom: 8px;">
+                <strong>Ventory Manager</strong> - Sistema de Gestión de Inventario
               </p>
               <p style="color: #94a3b8; font-size: 12px;">
-                Por favor, no respondas a este mensaje
+                Ventory Manager – Todos los derechos reservados
               </p>
             </div>
           </div>

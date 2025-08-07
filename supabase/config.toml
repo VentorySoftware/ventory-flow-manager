@@ -1,1 +1,19 @@
 project_id = "vklghnfhqguzrtwinarv"
+
+[auth]
+enable_signup = true
+enable_confirmations = false
+enable_recoveries = true
+recovery_expiry = 3600
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = false
+enable_confirmations = false
+
+[auth.email.template.recovery]
+subject = "RESETEO DE CONTRASEÑA - VENTORY MANAGER"
+content_path = "./supabase/templates/recovery.html"
+
+[functions.reset-password]
+verify_jwt = false

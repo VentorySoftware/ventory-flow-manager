@@ -27,12 +27,19 @@ const ResetPassword = () => {
   const passwordValidation = validatePassword(password)
 
   useEffect(() => {
-    // Check if we have the necessary parameters
+    // Check if we have the necessary parameters from URL
     const token = searchParams.get('token')
     const type = searchParams.get('type')
     
     if (!token || type !== 'recovery') {
-      setError('Enlace de recuperación inválido o expirado')
+      // Also check hash fragment for token (common in some flows)
+      const hashParams = new URLSearchParams(window.location.hash.substring(1))
+      const hashToken = hashParams.get('access_token')
+      const hashType = hashParams.get('type')
+      
+      if (!hashToken || hashType !== 'recovery') {
+        setError('Enlace de recuperación inválido o expirado')
+      }
     }
   }, [searchParams])
 
