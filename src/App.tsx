@@ -15,6 +15,7 @@ import Users from "./pages/Users";
 import Customers from "./pages/Customers";
 import Categories from "./pages/Categories";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import KioskView from "./pages/KioskView";
 
@@ -36,6 +37,7 @@ const App = () => (
           <NotificationProvider>
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Index />

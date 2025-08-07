@@ -141,9 +141,18 @@ const Users = () => {
     if (!selectedUser || !newRole) return
 
     try {
+      // First, delete existing role
+      const { error: deleteError } = await supabase
+        .from('user_roles')
+        .delete()
+        .eq('user_id', selectedUser.user_id)
+
+      if (deleteError) throw deleteError
+
+      // Then insert new role
       const { error } = await supabase
         .from('user_roles')
-        .upsert({
+        .insert({
           user_id: selectedUser.user_id,
           role: newRole as 'admin' | 'moderator' | 'user',
           assigned_by: currentUser?.id
