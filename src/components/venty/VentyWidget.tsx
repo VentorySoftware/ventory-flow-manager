@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
+import ventyBot from "@/assets/venty-bot.webp";
 
 interface ChatMessage {
   id?: string;
@@ -24,6 +25,7 @@ const VentyWidget = () => {
 
   const canChat = useMemo(() => !!user && !authLoading, [user, authLoading]);
   const endRef = useRef<HTMLDivElement>(null);
+  const hasNew = useMemo(() => !open && messages.length > 0, [open, messages]);
 
   // Fetch history when opening
   useEffect(() => {
@@ -120,9 +122,16 @@ const VentyWidget = () => {
             size="lg"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Cerrar chat Venty" : "Abrir chat Venty"}
-            className="rounded-full px-5 py-3 bg-gradient-to-tr from-primary/90 to-primary text-primary-foreground shadow-lg ring-1 ring-primary/30 hover:ring-primary/50 hover:shadow-xl hover-scale transition-all animate-fade-in"
+            className={`rounded-full pl-3 pr-4 py-2 bg-gradient-primary text-primary-foreground shadow-lg ring-1 ring-primary/30 hover:ring-primary/50 hover:shadow-xl hover-scale transition-smooth ${hasNew ? 'animate-breathing-glow' : ''}`}
           >
-            <MessageCircle className="mr-2 h-5 w-5" />
+            <img
+              src={ventyBot}
+              alt="Asistente Venty, chatbot inteligente"
+              className="h-6 w-6 rounded-full ring-1 ring-primary/30 shadow-glow mr-2"
+              loading="lazy"
+              width={24}
+              height={24}
+            />
             <span className="font-medium">Venty</span>
           </Button>
         </div>
