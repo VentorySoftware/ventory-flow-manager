@@ -72,17 +72,19 @@ serve(async (req) => {
       });
     }
 
-    // Try to parse JSON response and extract reply
+    // Try to parse JSON response and extract reply and timestamp
     let reply: string | null = null;
+    let createdAt: string = new Date().toISOString();
     try {
       const parsed = JSON.parse(n8nResponseText);
       reply = parsed?.response ?? parsed?.reply ?? parsed?.generatedText ?? null;
+      createdAt = parsed?.created_at ?? parsed?.timestamp ?? createdAt;
     } catch {
-      // If it's plain text, use that
+      // If it's plain text, use that and keep createdAt as now
       reply = n8nResponseText || null;
     }
 
-    return new Response(JSON.stringify({ response: reply }), {
+    return new Response(JSON.stringify({ response: reply, created_at: createdAt }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error: any) {
