@@ -8,7 +8,6 @@ import {
   ShoppingCart,
   Users,
   BarChart3,
-  Settings,
   LayoutGrid,
   Tags,
 } from "lucide-react"
@@ -25,7 +24,6 @@ const Navbar = () => {
     { name: "Productos", icon: Package, path: "/products" },
     { name: "Ventas", icon: ShoppingCart, path: "/sales" },
     ...(hasRole('admin') ? [
-      { name: "Configuración", icon: Settings, path: "/settings" },
       { name: "Categorías", icon: Tags, path: "/categories" }
     ] : []),
     { name: "Reportes", icon: BarChart3, path: "/reports" },
