@@ -9,7 +9,7 @@ const corsHeaders = {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-const N8N_VENTY_WEBHOOK = Deno.env.get("N8N_VENTY_WEBHOOK");
+const N8N_VENTY_WEBHOOK = Deno.env.get("N8N_VENTY_WEBHOOK") ?? Deno.env.get("venty_secret");
 
 const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -29,7 +29,7 @@ serve(async (req) => {
     }
 
     if (!N8N_VENTY_WEBHOOK) {
-      const err = "Falta configurar N8N_VENTY_WEBHOOK en Secrets de Edge Functions";
+      const err = "Falta configurar el secret N8N_VENTY_WEBHOOK o venty_secret en Secrets de Edge Functions";
       console.error(err);
       await supabase.from("venty_failures").insert({ user_id, message, error: err });
       return new Response(JSON.stringify({ error: err }), {
