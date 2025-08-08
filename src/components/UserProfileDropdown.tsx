@@ -40,11 +40,13 @@ import {
   ZoomIn,
   ZoomOut
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useTheme } from 'next-themes'
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 
 const UserProfileDropdown = () => {
+  const navigate = useNavigate()
   const { user, userRole, userProfile, signOut, hasRole } = useAuth()
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
@@ -490,7 +492,7 @@ const UserProfileDropdown = () => {
 
           {/* Settings - Solo para Admin */}
           {hasRole('admin') && (
-            <DropdownMenuItem className="flex items-center space-x-3 p-3">
+            <DropdownMenuItem className="flex items-center space-x-3 p-3" onClick={() => navigate('/settings')}>
               <Settings className="h-4 w-4" />
               <span>Configuración del Sistema</span>
             </DropdownMenuItem>

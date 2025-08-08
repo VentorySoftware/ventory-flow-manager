@@ -19,6 +19,7 @@ import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import KioskView from "./pages/KioskView";
 import VentyWidget from "@/components/venty/VentyWidget";
+import SettingsPage from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,11 @@ const App = () => (
             <Route path="/users" element={
               <ProtectedRoute requiredRole="admin">
                 <Users />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute requiredRole="admin">
+                <SettingsPage />
               </ProtectedRoute>
             } />
             <Route path="/categories" element={

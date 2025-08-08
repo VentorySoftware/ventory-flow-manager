@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
+import { useLocation } from 'react-router-dom'
 import {
   Table,
   TableBody,
@@ -80,6 +81,8 @@ const Users = () => {
   })
   const { toast } = useToast()
   const { hasRole, user: currentUser } = useAuth()
+  const location = useLocation()
+  const embedded = location.pathname.startsWith('/settings')
 
   useEffect(() => {
     fetchUsers()
@@ -354,7 +357,7 @@ const Users = () => {
   if (!hasRole('admin')) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+        {!embedded && <Navbar />}
         <div className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
           <div className="max-w-7xl mx-auto">
             <Card className="shadow-elegant">
@@ -377,7 +380,7 @@ const Users = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+        {!embedded && <Navbar />}
         <div className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-center py-20">
@@ -394,7 +397,7 @@ const Users = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      {!embedded && <Navbar />}
       <div className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Header */}

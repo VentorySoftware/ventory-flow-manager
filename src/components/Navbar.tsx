@@ -25,7 +25,7 @@ const Navbar = () => {
     { name: "Productos", icon: Package, path: "/products" },
     { name: "Ventas", icon: ShoppingCart, path: "/sales" },
     ...(hasRole('admin') ? [
-      { name: "Usuarios", icon: Users, path: "/users" },
+      { name: "Configuración", icon: Settings, path: "/settings" },
       { name: "Categorías", icon: Tags, path: "/categories" }
     ] : []),
     { name: "Reportes", icon: BarChart3, path: "/reports" },
