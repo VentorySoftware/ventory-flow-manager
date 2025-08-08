@@ -107,16 +107,25 @@ const VentyWidget = () => {
     <>
       {/* Floating Button */}
       <div className="fixed bottom-4 right-4 z-50">
-        <Button
-          variant="default"
-          size="lg"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Cerrar chat Venty" : "Abrir chat Venty"}
-          className="shadow-md hover-scale"
-        >
-          <MessageCircle className="mr-2" />
-          Venty
-        </Button>
+        <div className="relative group">
+          {/* Online pulse indicator */}
+          {canChat && (
+            <span className="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/40" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-primary" />
+            </span>
+          )}
+          <Button
+            variant="default"
+            size="lg"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Cerrar chat Venty" : "Abrir chat Venty"}
+            className="rounded-full px-5 py-3 bg-gradient-to-tr from-primary/90 to-primary text-primary-foreground shadow-lg ring-1 ring-primary/30 hover:ring-primary/50 hover:shadow-xl hover-scale transition-all animate-fade-in"
+          >
+            <MessageCircle className="mr-2 h-5 w-5" />
+            <span className="font-medium">Venty</span>
+          </Button>
+        </div>
       </div>
 
       {/* Slide-over Chat Panel */}
