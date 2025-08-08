@@ -17,3 +17,6 @@ content_path = "./supabase/templates/recovery.html"
 
 [functions.reset-password]
 verify_jwt = false
+
+[functions.venty-chat]
+verify_jwt = true

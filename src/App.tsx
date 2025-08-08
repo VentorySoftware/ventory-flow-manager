@@ -18,6 +18,7 @@ import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import KioskView from "./pages/KioskView";
+import VentyWidget from "@/components/venty/VentyWidget";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,9 @@ const App = () => (
             } />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          {/* Venty chat widget is global */}
+          {/* ... keep existing code (providers and routes above) */}
+          <VentyWidget />
         </NotificationProvider>
       </AuthProvider>
       </BrowserRouter>
