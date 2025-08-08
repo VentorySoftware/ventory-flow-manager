@@ -157,7 +157,7 @@ const VentyWidget = () => {
             <div className="rounded-xl border bg-background text-foreground shadow-xl overflow-hidden">
               <header className="flex items-center justify-between px-4 py-3 border-b">
                 <div className="flex items-center gap-2">
-                  <MessageCircle />
+                  <img src={ventyBot} alt="Venty asistente" className="h-6 w-6 rounded-full ring-1 ring-primary/30" width={24} height={24} loading="lazy" />
                   <h1 className="text-sm font-semibold">Venty</h1>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Cerrar">
