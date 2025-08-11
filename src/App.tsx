@@ -39,6 +39,8 @@ const App = () => (
         <AuthProvider>
           <NotificationProvider>
           <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<Navigate to="/caja" replace />} />
             <Route path="/caja" element={
               <ProtectedRoute>
