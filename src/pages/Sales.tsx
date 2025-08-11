@@ -161,7 +161,7 @@ const Sales = () => {
   }
 
   const handleNewSale = () => {
-    navigate('/kiosk')
+    navigate('/caja')
   }
 
   const handleSaleCreated = () => {

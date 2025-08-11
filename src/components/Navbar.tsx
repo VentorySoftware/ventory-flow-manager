@@ -8,6 +8,7 @@ import {
   LayoutGrid,
   Tags,
   Receipt,
+  BarChart3,
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -21,6 +22,7 @@ const Navbar = () => {
     { name: "Caja", icon: LayoutGrid, path: "/caja" },
     { name: "Mis Ventas", icon: Receipt, path: "/my-sales" },
     ...(hasRole('admin') ? [
+      { name: "Reportes", icon: BarChart3, path: "/reports" },
       { name: "Productos", icon: Package, path: "/products" },
       { name: "Categorías", icon: Tags, path: "/categories" },
       { name: "Ventas", icon: ShoppingCart, path: "/sales" },

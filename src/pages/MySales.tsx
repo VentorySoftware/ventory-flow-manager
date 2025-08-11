@@ -15,7 +15,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import { format, startOfDay, endOfDay } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
-import KioskNavbar from '@/components/kiosk/KioskNavbar'
+import Navbar from '@/components/Navbar'
 import { 
   Receipt, 
   Calendar as CalendarIcon,
@@ -349,7 +349,7 @@ const MySalesPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <KioskNavbar />
+      <Navbar />
       
       <div className="container mx-auto p-6">
         {/* Header Section */}
@@ -370,11 +370,11 @@ const MySalesPage = () => {
             {/* Botón para volver al kiosco */}
             <Button
               variant="outline"
-              onClick={() => navigate('/kiosk')}
+              onClick={() => navigate('/caja')}
               className="flex items-center gap-2 hover:bg-primary/10"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>Volver al Kiosco</span>
+              <span>Volver a Caja</span>
             </Button>
           </div>
 

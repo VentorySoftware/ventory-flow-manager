@@ -7,13 +7,14 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Index from "./pages/Index";
+// import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
 import MySales from "./pages/MySales";
 import Users from "./pages/Users";
 import Customers from "./pages/Customers";
 import Categories from "./pages/Categories";
+import Reports from "./pages/Reports";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
@@ -73,6 +74,11 @@ const App = () => (
             <Route path="/settings" element={
               <ProtectedRoute requiredRole="admin">
                 <SettingsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/reports" element={
+              <ProtectedRoute requiredRole="admin">
+                <Reports />
               </ProtectedRoute>
             } />
             <Route path="/categories" element={
