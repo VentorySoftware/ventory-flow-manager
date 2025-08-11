@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
@@ -38,30 +38,25 @@ const App = () => (
         <AuthProvider>
           <NotificationProvider>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Index />
-              </ProtectedRoute>
-            } />
-            <Route path="/kiosk" element={
+            <Route path="/" element={<Navigate to="/caja" replace />} />
+            <Route path="/caja" element={
               <ProtectedRoute>
                 <KioskView />
               </ProtectedRoute>
             } />
+            <Route path="/kiosk" element={<Navigate to="/caja" replace />} />
             <Route path="/my-sales" element={
               <ProtectedRoute>
                 <MySales />
               </ProtectedRoute>
             } />
             <Route path="/products" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <Products />
               </ProtectedRoute>
             } />
             <Route path="/sales" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <Sales />
               </ProtectedRoute>
             } />

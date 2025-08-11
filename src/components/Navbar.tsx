@@ -3,13 +3,11 @@ import UserProfileDropdown from "@/components/UserProfileDropdown"
 import NotificationPanel from "@/components/NotificationPanel"
 import {
   PackageOpen,
-  LayoutDashboard,
   Package,
   ShoppingCart,
-  Users,
-  BarChart3,
   LayoutGrid,
   Tags,
+  Receipt,
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -20,13 +18,13 @@ const Navbar = () => {
   const { hasRole } = useAuth()
 
   const navigation = [
-    { name: "Dashboard", icon: LayoutDashboard, path: "/" },
-    { name: "Productos", icon: Package, path: "/products" },
-    { name: "Ventas", icon: ShoppingCart, path: "/sales" },
+    { name: "Caja", icon: LayoutGrid, path: "/caja" },
+    { name: "Mis Ventas", icon: Receipt, path: "/my-sales" },
     ...(hasRole('admin') ? [
-      { name: "Categorías", icon: Tags, path: "/categories" }
+      { name: "Productos", icon: Package, path: "/products" },
+      { name: "Categorías", icon: Tags, path: "/categories" },
+      { name: "Ventas", icon: ShoppingCart, path: "/sales" },
     ] : []),
-    { name: "Reportes", icon: BarChart3, path: "/reports" },
   ]
 
   return (
@@ -64,18 +62,6 @@ const Navbar = () => {
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
-            {/* Botón Modo Caja - Solo para admins */}
-            {hasRole('admin') && (
-              <Button
-                variant={location.pathname === '/kiosk' ? "business" : "outline"}
-                size="sm"
-                className="flex items-center space-x-2"
-                onClick={() => navigate('/kiosk')}
-              >
-                <LayoutGrid className="h-4 w-4" />
-                <span className="hidden lg:block">Modo Caja</span>
-              </Button>
-            )}
             
             {/* User Profile Dropdown */}
             <UserProfileDropdown />

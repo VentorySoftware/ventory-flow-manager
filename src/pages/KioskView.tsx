@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
-import KioskNavbar from '@/components/kiosk/KioskNavbar'
+import Navbar from '@/components/Navbar'
 import ProductGrid from '@/components/kiosk/ProductGrid'
 import SimpleCart from '@/components/kiosk/SimpleCart'
 import { CategoryFilter } from '@/components/kiosk/CategoryFilter'
@@ -261,7 +261,7 @@ const KioskView = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <KioskNavbar />
+        <Navbar />
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
@@ -271,7 +271,7 @@ const KioskView = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <KioskNavbar />
+      <Navbar />
       
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
