@@ -89,7 +89,7 @@ const SaleDetails = ({ sale, onClose }: SaleDetailsProps) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h3 className="text-2xl font-bold">{sale.sale_number}</h3>
           <p className="text-muted-foreground">Detalles de la venta</p>
@@ -192,44 +192,46 @@ const SaleDetails = ({ sale, onClose }: SaleDetailsProps) => {
           <CardTitle>Productos Vendidos</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Producto</TableHead>
-                <TableHead>SKU</TableHead>
-                <TableHead className="text-right">Precio Unit.</TableHead>
-                <TableHead className="text-right">Cantidad</TableHead>
-                <TableHead className="text-right">Subtotal</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sale.sale_items?.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">
-                    {item.products.name}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {item.products.sku}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    ${item.unit_price.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {item.quantity}
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    ${item.subtotal.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              )) || (
+          <div className="overflow-x-auto">
+            <Table className="min-w-[640px]">
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4 text-muted-foreground">
-                    No se encontraron items para esta venta
-                  </TableCell>
+                  <TableHead>Producto</TableHead>
+                  <TableHead>SKU</TableHead>
+                  <TableHead className="text-right">Precio Unit.</TableHead>
+                  <TableHead className="text-right">Cantidad</TableHead>
+                  <TableHead className="text-right">Subtotal</TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {sale.sale_items?.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">
+                      {item.products.name}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {item.products.sku}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      ${item.unit_price.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {item.quantity}
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      ${item.subtotal.toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                )) || (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-4 text-muted-foreground">
+                      No se encontraron items para esta venta
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -255,11 +257,11 @@ const SaleDetails = ({ sale, onClose }: SaleDetailsProps) => {
       </Card>
 
       {/* Actions */}
-      <div className="flex justify-end space-x-4">
-        <Button variant="outline" onClick={onClose}>
+      <div className="flex flex-col sm:flex-row justify-end gap-3">
+        <Button variant="outline" onClick={onClose} className="w-full sm:w-auto">
           Cerrar
         </Button>
-        <Button variant="business">
+        <Button variant="business" className="w-full sm:w-auto">
           Imprimir Recibo
         </Button>
       </div>

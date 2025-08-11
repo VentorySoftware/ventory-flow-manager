@@ -381,7 +381,8 @@ const Sales = () => {
 
       {/* Sale Details Dialog */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="sm:max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto">
+
           <DialogHeader>
             <DialogTitle>Detalles de Venta</DialogTitle>
             <DialogDescription>
