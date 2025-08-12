@@ -323,34 +323,37 @@ const Products = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="space-y-8">
+      <main className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Header */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
                 Gestión de Productos
               </h1>
-              <p className="text-muted-foreground mt-1">
+              <p className="text-muted-foreground mt-1 text-sm sm:text-base">
                 Administra tu inventario, precios y ganancias
               </p>
             </div>
           </div>
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="inventory" className="flex items-center gap-2">
-                <Package className="h-4 w-4" />
-                Inventario
+              <TabsTrigger value="inventory" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <Package className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Inventario</span>
+                <span className="xs:hidden">Inv.</span>
               </TabsTrigger>
-              <TabsTrigger value="pricing" className="flex items-center gap-2">
-                <Calculator className="h-4 w-4" />
-                Precios
+              <TabsTrigger value="pricing" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <Calculator className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Precios</span>
+                <span className="xs:hidden">$</span>
               </TabsTrigger>
-              <TabsTrigger value="profits" className="flex items-center gap-2">
-                <Target className="h-4 w-4" />
-                Ganancias
+              <TabsTrigger value="profits" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <Target className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Ganancias</span>
+                <span className="xs:hidden">%</span>
               </TabsTrigger>
             </TabsList>
 

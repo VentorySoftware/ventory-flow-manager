@@ -190,13 +190,13 @@ const Sales = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <div className="min-h-screen bg-gradient-dashboard p-2 sm:p-4 lg:p-6 animate-fade-in">
+        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
           {/* Header */}
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold text-foreground">Ventas</h1>
-              <p className="text-muted-foreground">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Ventas</h1>
+              <p className="text-muted-foreground text-sm sm:text-base">
                 Gestiona y registra las ventas de tu negocio
               </p>
             </div>
@@ -204,15 +204,15 @@ const Sales = () => {
               onClick={handleNewSale}
               variant="gradient" 
               size="lg"
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 w-full sm:w-auto"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
               <span>Nueva Venta</span>
             </Button>
           </div>
 
           {/* Stats Cards */}
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <Card className="shadow-soft">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -267,23 +267,23 @@ const Sales = () => {
 
           {/* Filters and Search */}
           <Card className="shadow-soft">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Lista de Ventas</span>
-                <div className="flex items-center space-x-4">
-                  <div className="relative">
+            <CardHeader className="p-3 sm:p-6">
+              <CardTitle className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <span className="text-lg sm:text-xl">Lista de Ventas</span>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+                  <div className="relative flex-1 sm:flex-none">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Buscar por número de venta o cliente..."
+                      placeholder="Buscar venta o cliente..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-8 w-80"
+                      className="pl-8 w-full sm:w-64 lg:w-80"
                     />
                   </div>
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border border-input rounded-md bg-background"
+                    className="px-3 py-2 border border-input rounded-md bg-background text-sm"
                   >
                     <option value="all">Todos los estados</option>
                     <option value="completed">Completada</option>
@@ -293,19 +293,19 @@ const Sales = () => {
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="rounded-md border">
-                <Table>
+            <CardContent className="p-0 sm:p-6">
+              <div className="rounded-md border overflow-x-auto">
+                <Table className="min-w-[800px]">
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Número</TableHead>
-                      <TableHead>Cliente</TableHead>
-                      <TableHead>Vendedor</TableHead>
+                      <TableHead className="w-[100px]">Número</TableHead>
+                      <TableHead className="hidden sm:table-cell">Cliente</TableHead>
+                      <TableHead className="hidden lg:table-cell">Vendedor</TableHead>
                       <TableHead>Total</TableHead>
-                      <TableHead>Estado</TableHead>
-                      <TableHead>Método de Pago</TableHead>
-                      <TableHead>Fecha</TableHead>
-                      <TableHead className="text-right">Acciones</TableHead>
+                      <TableHead className="hidden md:table-cell">Estado</TableHead>
+                      <TableHead className="hidden lg:table-cell">Método</TableHead>
+                      <TableHead className="hidden sm:table-cell">Fecha</TableHead>
+                      <TableHead className="text-right w-[80px]">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -313,33 +313,34 @@ const Sales = () => {
                         <TableRow>
                           <TableCell colSpan={8} className="text-center py-8">
                             <div className="flex flex-col items-center space-y-2">
-                              <ShoppingCart className="h-8 w-8 text-muted-foreground" />
-                              <p className="text-muted-foreground">No se encontraron ventas</p>
+                              <ShoppingCart className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground" />
+                              <p className="text-muted-foreground text-sm sm:text-base">No se encontraron ventas</p>
                             </div>
                           </TableCell>
                         </TableRow>
                     ) : (
                       filteredSales.map((sale) => (
                         <TableRow key={sale.id} className="hover:bg-accent/50">
-                          <TableCell className="font-medium">{sale.sale_number}</TableCell>
-                          <TableCell>{sale.customers?.name || 'Cliente General'}</TableCell>
-                          <TableCell>{sale.seller_name || 'N/A'}</TableCell>
-                          <TableCell className="font-semibold">
+                          <TableCell className="font-medium text-xs sm:text-sm">{sale.sale_number}</TableCell>
+                          <TableCell className="hidden sm:table-cell text-sm">{sale.customers?.name || 'Cliente General'}</TableCell>
+                          <TableCell className="hidden lg:table-cell text-sm">{sale.seller_name || 'N/A'}</TableCell>
+                          <TableCell className="font-semibold text-sm">
                             ${sale.total.toLocaleString('es-MX')}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <Badge 
                               variant={
                                 sale.status === 'completed' ? 'default' :
                                 sale.status === 'pending' ? 'secondary' : 'destructive'
                               }
+                              className="text-xs"
                             >
-                              {sale.status === 'completed' ? 'Completada' :
-                               sale.status === 'pending' ? 'Pendiente' : 'Cancelada'}
+                              {sale.status === 'completed' ? 'OK' :
+                               sale.status === 'pending' ? 'Pend.' : 'Cancel.'}
                             </Badge>
                           </TableCell>
-                          <TableCell className="capitalize">{sale.payment_method}</TableCell>
-                          <TableCell>
+                          <TableCell className="capitalize text-xs hidden lg:table-cell">{sale.payment_method}</TableCell>
+                          <TableCell className="text-xs hidden sm:table-cell">
                             {new Date(sale.created_at).toLocaleDateString('es-MX')}
                           </TableCell>
                           <TableCell className="text-right">
@@ -347,9 +348,10 @@ const Sales = () => {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleViewDetails(sale)}
+                              className="h-8 w-8 p-0"
                             >
-                              <Eye className="h-4 w-4" />
-                              Ver
+                              <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <span className="sr-only">Ver detalles</span>
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -365,7 +367,7 @@ const Sales = () => {
 
       {/* New Sale Dialog */}
       <Dialog open={isNewSaleOpen} onOpenChange={setIsNewSaleOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Nueva Venta</DialogTitle>
             <DialogDescription>

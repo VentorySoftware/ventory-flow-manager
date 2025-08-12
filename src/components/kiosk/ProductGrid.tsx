@@ -45,17 +45,16 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
 
   return (
     <TooltipProvider>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
         {activeProducts.map((product) => (
           <Card 
             key={product.id} 
             className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary/50 h-full relative"
           >
-            <CardContent className="p-4 flex flex-col justify-between h-full">
-              {/* Quitar estado flotante arriba a la derecha */}
+            <CardContent className="p-2 sm:p-3 lg:p-4 flex flex-col justify-between h-full">
               {/* Imagen del producto */}
               <div 
-                className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+                className="aspect-square bg-gradient-card rounded-lg mb-2 sm:mb-3 flex items-center justify-center overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-200"
                 onClick={() => onAddToCart(product)}
               >
                 {product.image_urls && product.image_urls.length > 0 ? (
@@ -79,14 +78,15 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
               <div className="flex flex-col flex-1 justify-between">
                 <div>
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors">
+                  <div className="flex-1">
+                      <h3 className="font-semibold text-xs sm:text-sm leading-tight group-hover:text-primary transition-colors line-clamp-2">
                         {product.name}
                       </h3>
                       {product.stock <= product.alert_stock && product.stock > 0 && (
                         <div className="flex items-center gap-1 mt-1">
-                          <AlertTriangle className="h-3 w-3 text-yellow-500" />
-                          <span className="text-xs text-yellow-600">Stock Bajo</span>
+                          <AlertTriangle className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-500" />
+                          <span className="text-xs text-yellow-600 hidden sm:inline">Stock Bajo</span>
+                          <span className="text-xs text-yellow-600 sm:hidden">Bajo</span>
                         </div>
                       )}
                     </div>
@@ -97,10 +97,10 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                   </div>
                   
                   {/* Precio con tooltip y truncado */}
-                  <div className="mt-2">
+                  <div className="mt-1 sm:mt-2">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <p className="text-2xl font-bold text-primary truncate max-w-[110px] cursor-pointer select-text">
+                        <p className="text-lg sm:text-xl lg:text-2xl font-bold text-primary truncate cursor-pointer select-text">
                           ${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                         </p>
                       </TooltipTrigger>
@@ -110,7 +110,7 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                         </span>
                       </TooltipContent>
                     </Tooltip>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground hidden sm:block">
                       por {product.unit}
                     </p>
                   </div>
@@ -122,16 +122,17 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                   </div>
                 </div>
                 {/* Botón de agregar alineado abajo */}
-                <div className="mt-4 flex items-end">
+                <div className="mt-2 sm:mt-3 lg:mt-4 flex items-end">
                   <Button 
-                    className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all"
+                    className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all text-xs sm:text-sm"
                     variant="outline"
                     size="sm"
                     disabled={product.stock === 0 || !product.is_active}
                     onClick={() => onAddToCart(product)}
                   >
-                    <Plus className="h-4 w-4 mr-1" />
-                    {product.stock === 0 ? 'Agotado' : 'Agregar'}
+                    <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    <span className="hidden sm:inline">{product.stock === 0 ? 'Agotado' : 'Agregar'}</span>
+                    <span className="sm:hidden">+</span>
                   </Button>
                 </div>
               </div>

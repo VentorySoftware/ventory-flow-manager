@@ -273,28 +273,34 @@ const KioskView = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
+      <div className="container mx-auto p-2 sm:p-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 min-h-[calc(100vh-8rem)]">
           
           {/* Panel de Productos - 2/3 del ancho en desktop */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="xl:col-span-2 space-y-4 order-2 xl:order-1">
             
             {/* Barra de búsqueda y acciones rápidas */}
             <Card>
-              <CardHeader className="pb-3">
-                <div className="flex flex-col sm:flex-row gap-4">
+              <CardHeader className="pb-3 p-3 sm:p-6">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Buscar por nombre o código..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 text-lg h-12"
+                      className="pl-10 text-base sm:text-lg h-10 sm:h-12"
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="lg" onClick={() => setShowCalculator(!showCalculator)}>
-                      <Calculator className="h-5 w-5" />
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="sm:size-lg" 
+                      onClick={() => setShowCalculator(!showCalculator)}
+                    >
+                      <Calculator className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span className="hidden sm:inline ml-2">Calculadora</span>
                     </Button>
                   </div>
                 </div>
@@ -302,20 +308,20 @@ const KioskView = () => {
             </Card>
 
             {/* Información rápida */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <Card className="text-center p-4">
-                <Package className="h-6 w-6 mx-auto mb-2 text-primary" />
-                <p className="text-2xl font-bold">{products.length}</p>
-                <p className="text-sm text-muted-foreground">Productos</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <Card className="text-center p-3 sm:p-4">
+                <Package className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-primary" />
+                <p className="text-lg sm:text-2xl font-bold">{products.length}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Productos</p>
               </Card>
-              <Card className="text-center p-4">
-                <ShoppingCart className="h-6 w-6 mx-auto mb-2 text-primary" />
-                <p className="text-2xl font-bold">{cartItemsCount}</p>
-                <p className="text-sm text-muted-foreground">En Carrito</p>
+              <Card className="text-center p-3 sm:p-4">
+                <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-primary" />
+                <p className="text-lg sm:text-2xl font-bold">{cartItemsCount}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">En Carrito</p>
               </Card>
-              <Card className="text-center p-4 sm:col-span-2">
-                <p className="text-sm text-muted-foreground">Total</p>
-                <p className="text-3xl font-bold text-primary">${cartTotal.toFixed(2)}</p>
+              <Card className="text-center p-3 sm:p-4 col-span-2">
+                <p className="text-xs sm:text-sm text-muted-foreground">Total</p>
+                <p className="text-xl sm:text-3xl font-bold text-primary">${cartTotal.toFixed(2)}</p>
               </Card>
             </div>
 
@@ -327,14 +333,14 @@ const KioskView = () => {
 
             {/* Grid de productos */}
             <Card className="flex-1">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
+              <CardHeader className="p-3 sm:p-6">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5" />
                   Productos Disponibles
                   <Badge variant="secondary">{filteredProducts.length}</Badge>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="max-h-[60vh] overflow-y-auto">
+              <CardContent className="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto p-3 sm:p-6">
                 <ProductGrid 
                   products={filteredProducts}
                   onAddToCart={addToCart}
@@ -345,7 +351,7 @@ const KioskView = () => {
           </div>
 
           {/* Panel del Carrito - 1/3 del ancho en desktop */}
-          <div className="lg:col-span-1">
+          <div className="xl:col-span-1 order-1 xl:order-2">
             <SimpleCart
               cart={cart}
               onUpdateQuantity={updateCartQuantity}
@@ -361,7 +367,7 @@ const KioskView = () => {
 
       {/* Modal de Calculadora */}
       <Dialog open={showCalculator} onOpenChange={setShowCalculator}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-[95vw] max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Calculator className="h-5 w-5" />
