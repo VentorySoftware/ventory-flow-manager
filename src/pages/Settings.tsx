@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, Users as UsersIcon } from "lucide-react";
+import { Settings, Users as UsersIcon, Upload as UploadIcon } from "lucide-react";
 import Users from "./Users";
+import ImportModule from "./Settings/ImportModule";
 
 const SettingsPage = () => {
   useEffect(() => {
@@ -31,12 +32,20 @@ const SettingsPage = () => {
                   <UsersIcon className="h-4 w-4" />
                   Usuarios
                 </TabsTrigger>
+                <TabsTrigger value="imports" className="flex items-center gap-2">
+                  <UploadIcon className="h-4 w-4" />
+                  Importación
+                </TabsTrigger>
               </TabsList>
 
               {/* Usuarios */}
               <TabsContent value="users" className="mt-4">
-                {/* Renderizamos Users dentro, que ocultará su Navbar en modo embebido */}
                 <Users />
+              </TabsContent>
+
+              {/* Importación */}
+              <TabsContent value="imports" className="mt-4">
+                <ImportModule />
               </TabsContent>
             </Tabs>
           </section>

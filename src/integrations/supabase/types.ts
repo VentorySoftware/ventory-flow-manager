@@ -71,6 +71,103 @@ export type Database = {
         }
         Relationships: []
       }
+      import_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_summary: Json | null
+          failed_records: number
+          file_name: string
+          file_url: string
+          id: string
+          import_type: string
+          processed_records: number
+          status: string
+          successful_records: number
+          total_records: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_summary?: Json | null
+          failed_records?: number
+          file_name: string
+          file_url: string
+          id?: string
+          import_type: string
+          processed_records?: number
+          status?: string
+          successful_records?: number
+          total_records?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_summary?: Json | null
+          failed_records?: number
+          file_name?: string
+          file_url?: string
+          id?: string
+          import_type?: string
+          processed_records?: number
+          status?: string
+          successful_records?: number
+          total_records?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_jobs_user_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      import_records: {
+        Row: {
+          created_at: string
+          created_record_id: string | null
+          error_message: string | null
+          id: string
+          import_job_id: string
+          record_data: Json
+          row_number: number
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_record_id?: string | null
+          error_message?: string | null
+          id?: string
+          import_job_id: string
+          record_data: Json
+          row_number: number
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_record_id?: string | null
+          error_message?: string | null
+          id?: string
+          import_job_id?: string
+          record_data?: Json
+          row_number?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_records_import_job_id_fkey"
+            columns: ["import_job_id"]
+            isOneToOne: false
+            referencedRelation: "import_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           alert_stock: number | null
@@ -344,7 +441,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      venty_sales: {
+        Row: {
+          cantidad: number | null
+          fechaventa: string | null
+          metodopago: string | null
+          monto: number | null
+          preciounidad: number | null
+          proucto: string | null
+          vendedor: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_product_profit: {
