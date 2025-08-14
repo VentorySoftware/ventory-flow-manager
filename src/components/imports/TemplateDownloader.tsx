@@ -1,6 +1,28 @@
 import { Button } from "@/components/ui/enhanced-button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
+// Función para convertir array de objetos a CSV
+function arrayToCSV(data: any[]): string {
+  if (data.length === 0) return '';
+  
+  const headers = Object.keys(data[0]);
+  const csvContent = [
+    headers.join(','),
+    ...data.map(row => 
+      headers.map(header => {
+        const value = row[header];
+        // Escapar comillas y envolver en comillas si contiene comas, comillas o saltos de línea
+        if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      }).join(',')
+    )
+  ].join('\n');
+  
+  return csvContent;
+}
+
 function download(name: string, content: string) {
   const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -12,20 +34,63 @@ function download(name: string, content: string) {
 }
 
 const TemplateDownloader = () => {
-  const productsTemplate = `name,sku,price,cost_price,stock,unit,category,description,barcode,alert_stock,weight_unit,is_active
-Smartphone Samsung Galaxy,SAMS-001,299999.99,150000.00,25,unit,Celulares,Smartphone de alta gama con cámara triple,7890123456789,5,false,true
-Laptop Lenovo ThinkPad,LENO-001,1299999.99,800000.00,10,unit,Computadoras,Laptop empresarial con procesador Intel i7,7890123456790,3,false,true
-Auriculares Bluetooth,AURI-001,89999.99,45000.00,50,unit,Accesorios,Auriculares inalámbricos con cancelación de ruido,7890123456791,10,false,true`;
+  // Plantilla productos - mapeo exacto a campos de la entidad products
+  const productsTemplate = [
+    {
+      name: "Smartphone Samsung Galaxy S23",
+      sku: "SAMS-S23-001",
+      price: 299999.99,
+      cost_price: 150000.00,
+      stock: 25,
+      unit: "unit",
+      category: "Celulares",
+      description: "Smartphone de alta gama con cámara triple de 108MP",
+      barcode: "7890123456789",
+      alert_stock: 5,
+      weight_unit: false,
+      is_active: true
+    },
+    {
+      name: "Laptop Lenovo ThinkPad X1",
+      sku: "LENO-X1-001", 
+      price: 1299999.99,
+      cost_price: 800000.00,
+      stock: 10,
+      unit: "unit",
+      category: "Computadoras",
+      description: "Laptop empresarial con procesador Intel i7 de 11va gen",
+      barcode: "7890123456790",
+      alert_stock: 3,
+      weight_unit: false,
+      is_active: true
+    }
+  ];
 
-  const stockTemplate = `sku,stock
-SAMS-001,30
-LENO-001,15
-AURI-001,75`;
+  // Plantilla stock - mapeo exacto para actualización de inventario
+  const stockTemplate = [
+    { sku: "SAMS-S23-001", stock: 30 },
+    { sku: "LENO-X1-001", stock: 15 },
+    { sku: "AURI-BT-001", stock: 75 }
+  ];
 
-  const usersTemplate = `email,full_name,role
-juan.perez@empresa.com,Juan Pérez López,user
-ana.garcia@empresa.com,Ana García Rodríguez,moderator
-admin@empresa.com,Administrador Sistema,admin`;
+  // Plantilla usuarios - mapeo exacto a profiles y user_roles
+  const usersTemplate = [
+    { 
+      email: "juan.perez@empresa.com", 
+      full_name: "Juan Pérez López", 
+      role: "user" 
+    },
+    { 
+      email: "ana.garcia@empresa.com", 
+      full_name: "Ana García Rodríguez", 
+      role: "moderator" 
+    },
+    { 
+      email: "admin@empresa.com", 
+      full_name: "Administrador del Sistema", 
+      role: "admin" 
+    }
+  ];
 
   return (
     <Card className="shadow-soft h-full">
@@ -39,36 +104,36 @@ admin@empresa.com,Administrador Sistema,admin`;
         <div className="space-y-2">
           <Button variant="outline" className="w-full justify-start" onClick={() => download(
             "plantilla_productos.csv",
-            productsTemplate
+            arrayToCSV(productsTemplate)
           )}>
             📦 Descargar plantilla de Productos
           </Button>
           <p className="text-xs text-muted-foreground ml-4">
-            Campos: name, sku, price, cost_price, stock, unit, category, description, barcode, alert_stock, weight_unit, is_active
+            12 campos mapeados: name, sku, price, cost_price, stock, unit, category, description, barcode, alert_stock, weight_unit, is_active
           </p>
         </div>
         
         <div className="space-y-2">
           <Button variant="outline" className="w-full justify-start" onClick={() => download(
             "plantilla_stock.csv",
-            stockTemplate
+            arrayToCSV(stockTemplate)
           )}>
             📊 Descargar plantilla de Stock
           </Button>
           <p className="text-xs text-muted-foreground ml-4">
-            Campos: sku (debe existir), stock (cantidad nueva)
+            2 campos mapeados: sku (debe existir en productos), stock (cantidad nueva)
           </p>
         </div>
         
         <div className="space-y-2">
           <Button variant="outline" className="w-full justify-start" onClick={() => download(
             "plantilla_usuarios.csv",
-            usersTemplate
+            arrayToCSV(usersTemplate)
           )}>
             👥 Descargar plantilla de Usuarios
           </Button>
           <p className="text-xs text-muted-foreground ml-4">
-            Campos: email, full_name, role (user/moderator/admin)
+            3 campos mapeados: email, full_name, role (user/moderator/admin)
           </p>
         </div>
       </CardContent>
