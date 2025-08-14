@@ -34,61 +34,38 @@ function download(name: string, content: string) {
 }
 
 const TemplateDownloader = () => {
-  // Plantilla productos - mapeo exacto a campos de la entidad products
+  // Plantilla productos - SOLO HEADERS, sin datos de ejemplo
   const productsTemplate = [
     {
-      name: "Smartphone Samsung Galaxy S23",
-      sku: "SAMS-S23-001",
-      price: 299999.99,
-      cost_price: 150000.00,
-      stock: 25,
-      unit: "unit",
-      category: "Celulares",
-      description: "Smartphone de alta gama con cámara triple de 108MP",
-      barcode: "7890123456789",
-      alert_stock: 5,
-      weight_unit: false,
-      is_active: true
-    },
-    {
-      name: "Laptop Lenovo ThinkPad X1",
-      sku: "LENO-X1-001", 
-      price: 1299999.99,
-      cost_price: 800000.00,
-      stock: 10,
-      unit: "unit",
-      category: "Computadoras",
-      description: "Laptop empresarial con procesador Intel i7 de 11va gen",
-      barcode: "7890123456790",
-      alert_stock: 3,
-      weight_unit: false,
-      is_active: true
+      name: "",
+      sku: "",
+      price: "",
+      cost_price: "",
+      stock: "",
+      unit: "",
+      category: "",
+      description: "",
+      barcode: "",
+      alert_stock: "",
+      weight_unit: "",
+      is_active: ""
     }
   ];
 
-  // Plantilla stock - mapeo exacto para actualización de inventario
+  // Plantilla stock - SOLO HEADERS, sin datos de ejemplo
   const stockTemplate = [
-    { sku: "SAMS-S23-001", stock: 30 },
-    { sku: "LENO-X1-001", stock: 15 },
-    { sku: "AURI-BT-001", stock: 75 }
+    { 
+      sku: "", 
+      stock: "" 
+    }
   ];
 
-  // Plantilla usuarios - mapeo exacto a profiles y user_roles
+  // Plantilla usuarios - SOLO HEADERS, sin datos de ejemplo
   const usersTemplate = [
     { 
-      email: "juan.perez@empresa.com", 
-      full_name: "Juan Pérez López", 
-      role: "user" 
-    },
-    { 
-      email: "ana.garcia@empresa.com", 
-      full_name: "Ana García Rodríguez", 
-      role: "moderator" 
-    },
-    { 
-      email: "admin@empresa.com", 
-      full_name: "Administrador del Sistema", 
-      role: "admin" 
+      email: "", 
+      full_name: "", 
+      role: "" 
     }
   ];
 
@@ -97,7 +74,7 @@ const TemplateDownloader = () => {
       <CardHeader>
         <CardTitle>Plantillas de Importación</CardTitle>
         <CardDescription>
-          Descarga plantillas CSV con formato exacto requerido. Cada columna corresponde a un campo de la entidad.
+          Descarga plantillas Excel en blanco. Solo contienen headers - completa con tus datos y vuelve a importar.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -109,7 +86,10 @@ const TemplateDownloader = () => {
             📦 Descargar plantilla de Productos
           </Button>
           <p className="text-xs text-muted-foreground ml-4">
-            12 campos mapeados: name, sku, price, cost_price, stock, unit, category, description, barcode, alert_stock, weight_unit, is_active
+            <strong>12 columnas:</strong> name, sku, price, cost_price, stock, unit, category, description, barcode, alert_stock, weight_unit, is_active
+          </p>
+          <p className="text-xs text-yellow-600 ml-4">
+            ⚠️ Plantilla vacía - completa cada fila con un nuevo producto
           </p>
         </div>
         
@@ -121,7 +101,10 @@ const TemplateDownloader = () => {
             📊 Descargar plantilla de Stock
           </Button>
           <p className="text-xs text-muted-foreground ml-4">
-            2 campos mapeados: sku (debe existir en productos), stock (cantidad nueva)
+            <strong>2 columnas:</strong> sku (debe existir en productos), stock (cantidad nueva)
+          </p>
+          <p className="text-xs text-yellow-600 ml-4">
+            ⚠️ Plantilla vacía - completa con SKUs existentes y nuevas cantidades
           </p>
         </div>
         
@@ -133,8 +116,22 @@ const TemplateDownloader = () => {
             👥 Descargar plantilla de Usuarios
           </Button>
           <p className="text-xs text-muted-foreground ml-4">
-            3 campos mapeados: email, full_name, role (user/moderator/admin)
+            <strong>3 columnas:</strong> email, full_name, role (user/moderator/admin)
           </p>
+          <p className="text-xs text-yellow-600 ml-4">
+            ⚠️ Plantilla vacía - completa cada fila con un nuevo usuario
+          </p>
+        </div>
+
+        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <h4 className="font-medium text-blue-900 mb-2">📋 Instrucciones de uso:</h4>
+          <ul className="text-sm text-blue-800 space-y-1">
+            <li>• Descarga la plantilla correspondiente (solo headers, sin datos)</li>
+            <li>• Completa cada fila con un nuevo registro</li>
+            <li>• Cada columna debe coincidir exactamente con el campo de la entidad</li>
+            <li>• Guarda como CSV y vuelve a importar al sistema</li>
+            <li>• El sistema validará formato y valores durante el procesamiento</li>
+          </ul>
         </div>
       </CardContent>
     </Card>
