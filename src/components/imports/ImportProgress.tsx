@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/enhanced-button";
 import { useNotificationContext } from "@/contexts/NotificationContext";
+import { useToast } from "@/hooks/use-toast";
 import { AlertCircle, CheckCircle, Clock, XCircle, RefreshCw, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -14,6 +15,7 @@ const ImportProgress = ({ jobId }: ImportProgressProps) => {
   const [isRetrying, setIsRetrying] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const { addNotification } = useNotificationContext();
+  const { toast } = useToast();
 
   useEffect(() => {
     let mounted = true;
@@ -37,16 +39,30 @@ const ImportProgress = ({ jobId }: ImportProgressProps) => {
         if (mounted) {
           setJob(payload.new as any);
           
-          // Show notifications on status changes
+          // Show animated toast notifications on status changes
           const newStatus = (payload.new as any)?.status;
           if (newStatus === 'completed') {
+            const jobData = payload.new as any;
+            toast({
+              title: "🎉 ¡Importación Completada!",
+              description: `${jobData.successful_records} registros importados exitosamente${jobData.failed_records > 0 ? `, ${jobData.failed_records} con errores` : ''}`,
+              duration: 5000,
+              className: "animate-fade-in"
+            });
             addNotification({
               title: "Importación completada",
-              message: `Procesados: ${(payload.new as any)?.successful_records} éxitos, ${(payload.new as any)?.failed_records} errores`,
+              message: `Procesados: ${jobData.successful_records} éxitos, ${jobData.failed_records} errores`,
               type: "success",
               category: "system"
             });
           } else if (newStatus === 'failed') {
+            toast({
+              title: "❌ Error en Importación",
+              description: "La importación falló. Revisa los detalles del error",
+              duration: 5000,
+              variant: "destructive",
+              className: "animate-fade-in"
+            });
             addNotification({
               title: "Importación falló",
               message: "Revisa los detalles del error",
