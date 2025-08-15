@@ -219,59 +219,82 @@ const Users = () => {
       // Generate a generic password
       const genericPassword = 'Usuario123!'
       
-      // Create user in auth
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      // Create user in auth with service role
+      const { data, error: signUpError } = await supabase.auth.admin.createUser({
         email: newUser.email,
         password: genericPassword,
-        options: {
-          data: {
-            full_name: newUser.full_name
-          }
+        email_confirm: true,
+        user_metadata: {
+          full_name: newUser.full_name
         }
       })
 
       if (signUpError) throw signUpError
 
       if (data.user) {
-        // Create profile manually since trigger might not work in admin context
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            user_id: data.user.id,
-            full_name: newUser.full_name,
-            phone: newUser.phone,
-            email: newUser.email,
-            is_active: true
+        try {
+          // Create profile manually
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert({
+              user_id: data.user.id,
+              full_name: newUser.full_name,
+              phone: newUser.phone,
+              email: newUser.email,
+              is_active: true
+            })
+
+          if (profileError) {
+            console.error('Profile creation error:', profileError)
+            // Don't throw here, continue with role assignment
+          }
+
+          // Check if role already exists
+          const { data: existingRole } = await supabase
+            .from('user_roles')
+            .select('id')
+            .eq('user_id', data.user.id)
+            .eq('role', newUser.role)
+            .single()
+
+          // Only insert role if it doesn't exist
+          if (!existingRole) {
+            const { error: roleError } = await supabase
+              .from('user_roles')
+              .insert({
+                user_id: data.user.id,
+                role: newUser.role,
+                assigned_by: currentUser?.id
+              })
+
+            if (roleError) {
+              console.error('Role assignment error:', roleError)
+              // Don't throw, user was created successfully
+            }
+          }
+
+          toast({
+            title: "Usuario creado",
+            description: `Usuario ${newUser.full_name} creado exitosamente. Contraseña: ${genericPassword}`,
           })
 
-        if (profileError) {
-          console.error('Profile creation error:', profileError)
+          setIsNewUserDialogOpen(false)
+          setNewUser({
+            email: '',
+            full_name: '',
+            phone: '',
+            role: 'user'
+          })
+          fetchUsers()
+
+        } catch (profileRoleError) {
+          console.error('Error setting up user profile/role:', profileRoleError)
+          toast({
+            title: "Usuario creado parcialmente",
+            description: "El usuario fue creado pero hubo problemas con el perfil. Verifica la configuración.",
+            variant: "destructive",
+          })
         }
-
-        // Assign role
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .insert({
-            user_id: data.user.id,
-            role: newUser.role,
-            assigned_by: currentUser?.id
-          })
-
-        if (roleError) throw roleError
-
-        toast({
-          title: "Usuario creado",
-          description: `Usuario ${newUser.full_name} creado exitosamente. Contraseña: ${genericPassword}`,
-        })
-
-        setIsNewUserDialogOpen(false)
-        setNewUser({
-          email: '',
-          full_name: '',
-          phone: '',
-          role: 'user'
-        })
-        fetchUsers()
       }
       
     } catch (error) {

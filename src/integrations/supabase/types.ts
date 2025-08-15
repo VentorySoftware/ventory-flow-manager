@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
@@ -456,16 +456,16 @@ export type Database = {
     }
     Functions: {
       calculate_product_profit: {
-        Args: { sale_price: number; cost_price: number; quantity: number }
+        Args: { cost_price: number; quantity: number; sale_price: number }
         Returns: number
       }
       get_products_with_inactive_categories: {
         Args: Record<PropertyKey, never>
         Returns: {
-          product_id: string
-          product_name: string
           category_id: string
           category_name: string
+          product_id: string
+          product_name: string
         }[]
       }
       get_top_categories_by_sales: {
@@ -483,13 +483,13 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
       update_prices_by_percentage: {
-        Args: { product_ids: string[]; percentage_increase: number }
+        Args: { percentage_increase: number; product_ids: string[] }
         Returns: {
           updated_count: number
         }[]
