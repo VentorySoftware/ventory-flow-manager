@@ -12,10 +12,12 @@ interface AuthContextType {
     avatar_url: string | null 
   } | null
   loading: boolean
+  showPostLoginAnimation: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
   hasRole: (role: string) => boolean
+  completePostLoginAnimation: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -42,6 +44,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     avatar_url: string | null 
   } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showPostLoginAnimation, setShowPostLoginAnimation] = useState(false)
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -120,6 +123,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           await supabase.auth.signOut()
           throw new Error('Tu cuenta ha sido inhabilitada. Contacta al administrador.')
         }
+
+        // Trigger post-login animation on successful login
+        setShowPostLoginAnimation(true)
       }
 
       return { error: null }
@@ -146,6 +152,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = async () => {
     await supabase.auth.signOut()
+    setShowPostLoginAnimation(false) // Reset animation state on logout
+  }
+
+  const completePostLoginAnimation = () => {
+    setShowPostLoginAnimation(false)
   }
 
   const hasRole = (role: string): boolean => {
@@ -167,10 +178,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     userRole,
     userProfile,
     loading,
+    showPostLoginAnimation,
     signIn,
     signUp,
     signOut,
     hasRole,
+    completePostLoginAnimation,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

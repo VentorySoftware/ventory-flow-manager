@@ -4,9 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import SystemEntryAnimation from "@/components/SystemEntryAnimation";
 // import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
@@ -24,6 +25,80 @@ import SettingsPage from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
+// Component to handle post-login animation
+const AppContent = () => {
+  const { showPostLoginAnimation, userProfile, userRole, completePostLoginAnimation } = useAuth();
+  
+  return (
+    <>
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/" element={<Navigate to="/caja" replace />} />
+        <Route path="/caja" element={
+          <ProtectedRoute>
+            <KioskView />
+          </ProtectedRoute>
+        } />
+        <Route path="/kiosk" element={<Navigate to="/caja" replace />} />
+        <Route path="/my-sales" element={
+          <ProtectedRoute>
+            <MySales />
+          </ProtectedRoute>
+        } />
+        <Route path="/products" element={
+          <ProtectedRoute requiredRole="admin">
+            <Products />
+          </ProtectedRoute>
+        } />
+        <Route path="/sales" element={
+          <ProtectedRoute requiredRole="admin">
+            <Sales />
+          </ProtectedRoute>
+        } />
+        <Route path="/customers" element={
+          <ProtectedRoute>
+            <Customers />
+          </ProtectedRoute>
+        } />
+        <Route path="/users" element={
+          <ProtectedRoute requiredRole="admin">
+            <Users />
+          </ProtectedRoute>
+        } />
+        <Route path="/settings" element={
+          <ProtectedRoute requiredRole="admin">
+            <SettingsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/reports" element={
+          <ProtectedRoute requiredRole="admin">
+            <Reports />
+          </ProtectedRoute>
+        } />
+        <Route path="/categories" element={
+          <ProtectedRoute requiredRole="admin">
+            <Categories />
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      
+      {/* Venty chat widget is global */}
+      <VentyWidget />
+      
+      {/* Post-login animation overlay */}
+      {showPostLoginAnimation && (
+        <SystemEntryAnimation
+          userName={userProfile?.full_name || undefined}
+          userRole={userRole || undefined}
+          onComplete={completePostLoginAnimation}
+        />
+      )}
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider
@@ -33,72 +108,18 @@ const App = () => (
       disableTransitionOnChange={false}
     >
       <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <NotificationProvider>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<Navigate to="/caja" replace />} />
-            <Route path="/caja" element={
-              <ProtectedRoute>
-                <KioskView />
-              </ProtectedRoute>
-            } />
-            <Route path="/kiosk" element={<Navigate to="/caja" replace />} />
-            <Route path="/my-sales" element={
-              <ProtectedRoute>
-                <MySales />
-              </ProtectedRoute>
-            } />
-            <Route path="/products" element={
-              <ProtectedRoute requiredRole="admin">
-                <Products />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales" element={
-              <ProtectedRoute requiredRole="admin">
-                <Sales />
-              </ProtectedRoute>
-            } />
-            <Route path="/customers" element={
-              <ProtectedRoute>
-                <Customers />
-              </ProtectedRoute>
-            } />
-            <Route path="/users" element={
-              <ProtectedRoute requiredRole="admin">
-                <Users />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings" element={
-              <ProtectedRoute requiredRole="admin">
-                <SettingsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/reports" element={
-              <ProtectedRoute requiredRole="admin">
-                <Reports />
-              </ProtectedRoute>
-            } />
-            <Route path="/categories" element={
-              <ProtectedRoute requiredRole="admin">
-                <Categories />
-              </ProtectedRoute>
-            } />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          {/* Venty chat widget is global */}
-          {/* ... keep existing code (providers and routes above) */}
-          <VentyWidget />
-        </NotificationProvider>
-      </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </ThemeProvider>
-</QueryClientProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <NotificationProvider>
+              <AppContent />
+            </NotificationProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
 );
 
 export default App;
