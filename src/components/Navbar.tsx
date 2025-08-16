@@ -50,11 +50,8 @@ const Navbar = () => {
               <div className="h-8 w-8 sm:h-10 sm:w-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-glow">
                 <PackageOpen className="h-4 w-4 sm:h-6 sm:w-6 text-primary-foreground" />
               </div>
-              <span className="text-lg sm:text-xl font-heading font-bold text-gradient hidden xs:block">
+               <span className="text-sm sm:text-lg md:text-xl font-heading font-bold text-gradient">
                 Ventory Manager
-              </span>
-              <span className="text-lg font-heading font-bold text-gradient xs:hidden">
-                VM
               </span>
             </div>
           </div>
