@@ -284,41 +284,47 @@ const ImageUploader = ({
                 onDragEnd={handleDragEnd}
               >
                 <CardContent className="p-0">
-                  <div className="relative aspect-square">
+                  <div className="relative aspect-square group">
                     <img
                       src={imageUrl}
                       alt={`Producto ${index + 1}`}
                       className="w-full h-full object-cover pointer-events-none"
                     />
                     
-                    {/* Drag Indicator */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity">
-                      <div className="bg-black/50 rounded-full p-2">
-                        <Move className="h-4 w-4 text-white" />
+                    {/* Drag Indicator - Always visible */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="bg-black/70 rounded-full p-3 border-2 border-white/50">
+                        <Move className="h-5 w-5 text-white" />
                       </div>
                     </div>
                     
+                    {/* Drag Helper Text */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs p-1 text-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      Arrastra para mover
+                    </div>
+                    
                     {/* Order Number */}
-                    <Badge className="absolute bottom-2 left-2 bg-primary/80">
-                      {index + 1}
+                    <Badge className="absolute bottom-2 left-2 bg-primary/90 text-primary-foreground border border-white/20">
+                      #{index + 1}
                     </Badge>
                     
                     {/* Primary Image Badge */}
                     {primaryImage === imageUrl && (
-                      <Badge className="absolute top-2 left-2 bg-yellow-500">
-                        <Star className="h-3 w-3 mr-1" />
+                      <Badge className="absolute top-2 left-2 bg-yellow-500 text-yellow-900 border border-yellow-600">
+                        <Star className="h-3 w-3 mr-1 fill-current" />
                         Principal
                       </Badge>
                     )}
 
                     {/* Action Buttons */}
-                    <div className="absolute top-2 right-2 flex gap-1">
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                       {primaryImage !== imageUrl && onPrimaryImageChange && (
                         <Button
                           size="sm"
                           variant="secondary"
                           onClick={(e) => handleSetPrimary(imageUrl, e)}
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 shadow-md"
+                          title="Establecer como principal"
                         >
                           <Star className="h-3 w-3" />
                         </Button>
@@ -331,7 +337,8 @@ const ImageUploader = ({
                           e.preventDefault()
                           setEditingImage(imageUrl)
                         }}
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 shadow-md"
+                        title="Editar imagen"
                       >
                         <Edit3 className="h-3 w-3" />
                       </Button>
@@ -339,7 +346,8 @@ const ImageUploader = ({
                         size="sm"
                         variant="destructive"
                         onClick={(e) => handleRemoveImage(imageUrl, e)}
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 shadow-md"
+                        title="Eliminar imagen"
                       >
                         <X className="h-3 w-3" />
                       </Button>
