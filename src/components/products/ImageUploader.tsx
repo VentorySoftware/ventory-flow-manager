@@ -44,6 +44,8 @@ const ImageUploader = ({
   const [crop, setCrop] = useState<Crop>()
   const [rotation, setRotation] = useState(0)
   const [scale, setScale] = useState(1)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const { toast } = useToast()
@@ -185,6 +187,54 @@ const ImageUploader = ({
     })
   }
 
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    setDragOverIndex(index)
+  }
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null)
+  }
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault()
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null)
+      setDragOverIndex(null)
+      return
+    }
+
+    const newImages = [...images]
+    const draggedImage = newImages[draggedIndex]
+    
+    // Remove dragged item
+    newImages.splice(draggedIndex, 1)
+    
+    // Insert at new position
+    newImages.splice(dropIndex, 0, draggedImage)
+    
+    onImagesChange(newImages)
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+    
+    toast({
+      title: 'Imagen movida',
+      description: 'El orden de las imágenes se ha actualizado',
+    })
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -212,62 +262,93 @@ const ImageUploader = ({
 
       {/* Image Grid */}
       {images.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {images.map((imageUrl, index) => (
-            <Card key={index} className="relative overflow-hidden">
-              <CardContent className="p-0">
-                <div className="relative aspect-square">
-                  <img
-                    src={imageUrl}
-                    alt={`Producto ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                  
-                  {/* Primary Image Badge */}
-                  {primaryImage === imageUrl && (
-                    <Badge className="absolute top-2 left-2 bg-yellow-500">
-                      <Star className="h-3 w-3 mr-1" />
-                      Principal
+        <div className="space-y-2">
+          <div className="text-sm text-muted-foreground flex items-center gap-2">
+            <Move className="h-4 w-4" />
+            Arrastra las imágenes para reordenarlas
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {images.map((imageUrl, index) => (
+              <Card 
+                key={index} 
+                className={`relative overflow-hidden cursor-move transition-all duration-200 ${
+                  draggedIndex === index ? 'opacity-50 scale-95' : ''
+                } ${
+                  dragOverIndex === index ? 'ring-2 ring-primary scale-105' : ''
+                }`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, index)}
+                onDragEnd={handleDragEnd}
+              >
+                <CardContent className="p-0">
+                  <div className="relative aspect-square">
+                    <img
+                      src={imageUrl}
+                      alt={`Producto ${index + 1}`}
+                      className="w-full h-full object-cover pointer-events-none"
+                    />
+                    
+                    {/* Drag Indicator */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity">
+                      <div className="bg-black/50 rounded-full p-2">
+                        <Move className="h-4 w-4 text-white" />
+                      </div>
+                    </div>
+                    
+                    {/* Order Number */}
+                    <Badge className="absolute bottom-2 left-2 bg-primary/80">
+                      {index + 1}
                     </Badge>
-                  )}
+                    
+                    {/* Primary Image Badge */}
+                    {primaryImage === imageUrl && (
+                      <Badge className="absolute top-2 left-2 bg-yellow-500">
+                        <Star className="h-3 w-3 mr-1" />
+                        Principal
+                      </Badge>
+                    )}
 
-                  {/* Action Buttons */}
-                  <div className="absolute top-2 right-2 flex gap-1">
-                    {primaryImage !== imageUrl && onPrimaryImageChange && (
+                    {/* Action Buttons */}
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      {primaryImage !== imageUrl && onPrimaryImageChange && (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={(e) => handleSetPrimary(imageUrl, e)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Star className="h-3 w-3" />
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         variant="secondary"
-                        onClick={(e) => handleSetPrimary(imageUrl, e)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          e.preventDefault()
+                          setEditingImage(imageUrl)
+                        }}
                         className="h-8 w-8 p-0"
                       >
-                        <Star className="h-3 w-3" />
+                        <Edit3 className="h-3 w-3" />
                       </Button>
-                    )}
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        e.preventDefault()
-                        setEditingImage(imageUrl)
-                      }}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Edit3 className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={(e) => handleRemoveImage(imageUrl, e)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={(e) => handleRemoveImage(imageUrl, e)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       )}
 
