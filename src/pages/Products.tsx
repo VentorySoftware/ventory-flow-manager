@@ -18,6 +18,7 @@ import {
   Package, 
   Edit, 
   Trash2, 
+  Eye,
   AlertTriangle,
   TrendingUp,
   DollarSign,
@@ -29,6 +30,7 @@ import MassPriceUpdate from '@/components/products/MassPriceUpdate'
 import ProfitAnalysis from '@/components/products/ProfitAnalysis'
 import ImageUploader from '@/components/products/ImageUploader'
 import ImageCarousel from '@/components/products/ImageCarousel'
+import ProductDetailView from '@/components/products/ProductDetailView'
 import { CategorySelect } from '@/components/products/CategorySelect'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
@@ -83,6 +85,8 @@ const Products = () => {
   const [activeTab, setActiveTab] = useState('inventory')
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [isUploadingImages, setIsUploadingImages] = useState(false)
+  const [selectedProductForDetail, setSelectedProductForDetail] = useState<Product | null>(null)
+  const [isDetailViewOpen, setIsDetailViewOpen] = useState(false)
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
@@ -245,6 +249,11 @@ const Products = () => {
         variant: 'destructive'
       })
     }
+  }
+
+  const handleViewDetail = (product: Product) => {
+    setSelectedProductForDetail(product)
+    setIsDetailViewOpen(true)
   }
 
   const handleEdit = (product: Product) => {
@@ -822,27 +831,35 @@ const Products = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>{product.unit}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end space-x-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEdit(product)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          {(hasRole('admin') || hasRole('moderator')) && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDelete(product)}
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
+                       <TableCell className="text-right">
+                         <div className="flex justify-end space-x-2">
+                           <Button
+                             variant="ghost"
+                             size="sm"
+                             onClick={() => handleViewDetail(product)}
+                             className="hover-scale"
+                           >
+                             <Eye className="h-4 w-4" />
+                           </Button>
+                           <Button
+                             variant="ghost"
+                             size="sm"
+                             onClick={() => handleEdit(product)}
+                           >
+                             <Edit className="h-4 w-4" />
+                           </Button>
+                           {(hasRole('admin') || hasRole('moderator')) && (
+                             <Button
+                               variant="ghost"
+                               size="sm"
+                               onClick={() => handleDelete(product)}
+                               className="text-destructive hover:text-destructive"
+                             >
+                               <Trash2 className="h-4 w-4" />
+                             </Button>
+                           )}
+                         </div>
+                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -865,6 +882,26 @@ const Products = () => {
           </Tabs>
         </div>
       </main>
+
+      {/* Product Detail View */}
+      <ProductDetailView
+        product={selectedProductForDetail}
+        isOpen={isDetailViewOpen}
+        onClose={() => {
+          setIsDetailViewOpen(false)
+          setSelectedProductForDetail(null)
+        }}
+        onEdit={(product) => {
+          setIsDetailViewOpen(false)
+          handleEdit(product)
+        }}
+        onDelete={(product) => {
+          setIsDetailViewOpen(false)
+          handleDelete(product)
+        }}
+        canEdit={true}
+        canDelete={hasRole('admin') || hasRole('moderator')}
+      />
     </div>
   )
 }
