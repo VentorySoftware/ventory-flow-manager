@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
+import { motion } from 'framer-motion'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -12,12 +13,27 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-dashboard flex items-center justify-center">
+      <motion.div 
+        className="min-h-screen bg-gradient-dashboard flex items-center justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Verificando autenticación...</p>
+          <motion.div 
+            className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            Verificando autenticación...
+          </motion.p>
         </div>
-      </div>
+      </motion.div>
     )
   }
 

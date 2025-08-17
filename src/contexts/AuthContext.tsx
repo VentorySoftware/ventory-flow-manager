@@ -12,12 +12,13 @@ interface AuthContextType {
     avatar_url: string | null 
   } | null
   loading: boolean
-  showPostLoginAnimation: boolean
+  showLoginTransition: boolean
+  showLogoutTransition: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
   hasRole: (role: string) => boolean
-  completePostLoginAnimation: () => void
+  completeLoginTransition: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -44,7 +45,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     avatar_url: string | null 
   } | null>(null)
   const [loading, setLoading] = useState(true)
-  const [showPostLoginAnimation, setShowPostLoginAnimation] = useState(false)
+  const [showLoginTransition, setShowLoginTransition] = useState(false)
+  const [showLogoutTransition, setShowLogoutTransition] = useState(false)
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -124,8 +126,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           throw new Error('Tu cuenta ha sido inhabilitada. Contacta al administrador.')
         }
 
-        // Trigger post-login animation on successful login
-        setShowPostLoginAnimation(true)
+        // Trigger login transition on successful login
+        setShowLoginTransition(true)
       }
 
       return { error: null }
@@ -151,12 +153,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
-    setShowPostLoginAnimation(false) // Reset animation state on logout
+    // Trigger logout transition
+    setShowLogoutTransition(true)
+    
+    // Small delay to show transition, then complete logout
+    setTimeout(async () => {
+      await supabase.auth.signOut()
+      setShowLoginTransition(false)
+      setShowLogoutTransition(false)
+    }, 1800)
   }
 
-  const completePostLoginAnimation = () => {
-    setShowPostLoginAnimation(false)
+  const completeLoginTransition = () => {
+    setShowLoginTransition(false)
   }
 
   const hasRole = (role: string): boolean => {
@@ -178,12 +187,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     userRole,
     userProfile,
     loading,
-    showPostLoginAnimation,
+    showLoginTransition,
+    showLogoutTransition,
     signIn,
     signUp,
     signOut,
     hasRole,
-    completePostLoginAnimation,
+    completeLoginTransition,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

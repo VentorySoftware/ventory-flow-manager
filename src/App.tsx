@@ -7,7 +7,9 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import SystemEntryAnimation from "@/components/SystemEntryAnimation";
+import LoginTransition from "@/components/transitions/LoginTransition";
+import LogoutTransition from "@/components/transitions/LogoutTransition";
+import AnimatedLayout from "@/components/transitions/AnimatedLayout";
 // import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Sales from "./pages/Sales";
@@ -25,12 +27,40 @@ import SettingsPage from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
-// Component to handle post-login animation
+// Component to handle login/logout transitions
 const AppContent = () => {
-  const { showPostLoginAnimation, userProfile, userRole, completePostLoginAnimation } = useAuth();
+  const { 
+    showLoginTransition, 
+    showLogoutTransition, 
+    userProfile, 
+    userRole, 
+    completeLoginTransition 
+  } = useAuth();
+  
+  // Show logout transition
+  if (showLogoutTransition) {
+    return (
+      <LogoutTransition 
+        onComplete={() => {
+          // Logout transition handles the navigation automatically
+        }} 
+      />
+    );
+  }
+  
+  // Show login transition
+  if (showLoginTransition) {
+    return (
+      <LoginTransition
+        userName={userProfile?.full_name || undefined}
+        userRole={userRole || undefined}
+        onComplete={completeLoginTransition}
+      />
+    );
+  }
   
   return (
-    <>
+    <AnimatedLayout>
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
@@ -86,16 +116,7 @@ const AppContent = () => {
       
       {/* Venty chat widget is global */}
       <VentyWidget />
-      
-      {/* Post-login animation overlay */}
-      {showPostLoginAnimation && (
-        <SystemEntryAnimation
-          userName={userProfile?.full_name || undefined}
-          userRole={userRole || undefined}
-          onComplete={completePostLoginAnimation}
-        />
-      )}
-    </>
+    </AnimatedLayout>
   );
 };
 
