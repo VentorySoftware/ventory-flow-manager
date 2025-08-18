@@ -328,75 +328,75 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
   }
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3 p-4 sm:p-6">
-        <CardTitle className="flex items-center justify-between text-xl">
-          <div className="flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5" />
+    <Card className="card-responsive h-full flex flex-col">
+      <CardHeader className="p-responsive pb-3">
+        <CardTitle className="flex items-center justify-between text-responsive-lg">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" />
             <span>Carrito</span>
           </div>
           {cart.length > 0 && (
-            <Button variant="ghost" size="sm" onClick={onClear} className="min-h-[40px] px-3">
+            <Button variant="ghost" size="sm" onClick={onClear} className="btn-touch">
               <Trash2 className="h-4 w-4 mr-2" />
-              <span>Limpiar</span>
+              <span className="hide-mobile">Limpiar</span>
             </Button>
           )}
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-4 sm:p-6">
+      <CardContent className="flex-1 flex flex-col p-responsive">
         {/* Items del carrito */}
-        <div className="flex-1 space-y-3 max-h-64 sm:max-h-80 overflow-y-auto mb-4">
+        <div className="flex-1 space-y-3 scroll-area-mobile mb-4">
           {cart.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <ShoppingCart className="h-12 w-12 mx-auto mb-3 opacity-50" />
-              <p className="text-base font-medium">Carrito vacío</p>
-              <p className="text-sm">Agrega productos para comenzar</p>
+            <div className="text-center py-8 sm:py-12">
+              <ShoppingCart className="h-16 w-16 sm:h-20 sm:w-20 mx-auto mb-4 opacity-30" />
+              <p className="text-responsive-base font-medium mb-2">Carrito vacío</p>
+              <p className="text-responsive-sm text-muted-foreground">Agrega productos para comenzar</p>
             </div>
           ) : (
             cart.map((item) => (
-              <div key={item.product.id} className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+              <div key={item.product.id} className="flex items-center gap-3 p-3 sm:p-4 bg-muted/50 rounded-lg sm:rounded-xl">
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">{item.product.name}</p>
-                  <p className="text-sm text-muted-foreground">${item.product.price.toFixed(2)} c/u</p>
+                  <p className="font-medium text-responsive-sm truncate mb-1">{item.product.name}</p>
+                  <p className="text-responsive-xs text-muted-foreground">${item.product.price.toFixed(2)} c/u</p>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 sm:h-10 sm:w-10 p-0"
                     onClick={() => onUpdateQuantity(item.product.id, item.quantity - 1)}
                   >
-                    <Minus className="h-3 w-3" />
+                    <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                   
-                  <span className="w-8 text-center text-sm font-medium">
+                  <span className="w-8 sm:w-10 text-center text-responsive-sm font-medium">
                     {item.quantity}
                   </span>
                   
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 sm:h-10 sm:w-10 p-0"
                     onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
                     disabled={item.quantity >= item.product.stock}
                   >
-                    <Plus className="h-3 w-3" />
+                    <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                   
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-destructive"
+                    className="h-8 w-8 sm:h-10 sm:w-10 p-0 text-destructive ml-1 sm:ml-2"
                     onClick={() => onRemoveItem(item.product.id)}
                   >
-                    <X className="h-3 w-3" />
+                    <X className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </div>
                 
                 <div className="text-right min-w-0">
-                  <p className="font-semibold text-sm">
+                  <p className="font-semibold text-responsive-sm">
                     ${(item.product.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
@@ -410,16 +410,16 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
           <div className="space-y-4 border-t pt-4">
             {/* Totales */}
             <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-responsive-sm">
                 <span>Subtotal:</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-responsive-sm">
                 <span>IVA (21%):</span>
                 <span>${tax.toFixed(2)}</span>
               </div>
               <Separator />
-              <div className="flex justify-between font-bold text-lg">
+              <div className="flex justify-between font-bold text-responsive-lg">
                 <span>Total:</span>
                 <span className="text-primary">${finalTotal.toFixed(2)}</span>
               </div>
@@ -427,9 +427,9 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
 
             {/* Método de pago */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Método de Pago</label>
+              <label className="text-responsive-sm font-medium">Método de Pago</label>
               <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                <SelectTrigger className="h-12">
+                <SelectTrigger className="input-touch">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -444,20 +444,20 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
             {/* Cálculo de vuelto para efectivo */}
             {paymentMethod === 'efectivo' && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">Monto Recibido</label>
+                <label className="text-responsive-sm font-medium">Monto Recibido</label>
                 <Input
                   type="number"
                   step="0.01"
                   placeholder="0.00"
                   value={receivedAmount}
                   onChange={(e) => setReceivedAmount(e.target.value)}
-                  className="text-lg h-12"
+                  className="input-touch text-responsive-base"
                 />
                 {receivedAmount && parseFloat(receivedAmount) >= finalTotal && (
-                  <div className="p-3 bg-green-50 dark:bg-green-950 rounded-lg">
-                    <p className="text-sm text-green-800 dark:text-green-200">
+                  <div className="p-3 sm:p-4 bg-green-50 dark:bg-green-950 rounded-lg sm:rounded-xl">
+                    <p className="text-responsive-sm text-green-800 dark:text-green-200">
                       <Calculator className="h-4 w-4 inline mr-2" />
-                      Vuelto: <span className="font-bold text-lg">${change.toFixed(2)}</span>
+                      Vuelto: <span className="font-bold text-responsive-lg">${change.toFixed(2)}</span>
                     </p>
                   </div>
                 )}
@@ -468,17 +468,17 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
             <Button 
               onClick={handleSale}
               disabled={processing || (paymentMethod === 'efectivo' && (!receivedAmount || parseFloat(receivedAmount) < finalTotal))}
-              className="w-full h-14 text-lg font-semibold"
+              className="w-full h-touch-large text-responsive-base font-semibold"
               size="lg"
             >
               {processing ? (
                 <div className="flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-current"></div>
                   <span>Procesando...</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5" />
+                  <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span>COBRAR ${finalTotal.toFixed(2)}</span>
                 </div>
               )}
@@ -489,9 +489,9 @@ const SimpleCart = ({ cart, onUpdateQuantity, onRemoveItem, onClear, total, onRe
 
       {/* Modal de Resumen de Venta */}
       <Dialog open={showSummary} onOpenChange={() => {}}>
-        <DialogContent className="w-[95vw] max-w-md mx-auto">
+        <DialogContent className="modal-responsive">
           <DialogHeader>
-            <DialogTitle className="flex items-center justify-center gap-2 text-xl">
+            <DialogTitle className="flex items-center justify-center gap-2 text-responsive-lg">
               <CheckCircle className="h-6 w-6 text-green-500" />
               ¡Venta Completada!
             </DialogTitle>

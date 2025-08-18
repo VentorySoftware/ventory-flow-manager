@@ -416,21 +416,191 @@ All colors MUST be HSL.
   }
 }
 
-/* Animation delay utilities */
+/* Enhanced Responsive Utilities */
 @layer utilities {
-  .animation-delay-300 {
-    animation-delay: 300ms;
+  /* Container Responsive */
+  .container-responsive {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
   
-  .animation-delay-600 {
-    animation-delay: 600ms;
+  .container-tight {
+    @apply w-full mx-auto px-3 sm:px-4 lg:px-6 max-w-6xl;
   }
   
-  .animation-delay-900 {
-    animation-delay: 900ms;
+  /* Responsive Padding */
+  .p-responsive {
+    @apply p-4 sm:p-6 lg:p-8;
   }
   
-  .animation-delay-1200 {
-    animation-delay: 1200ms;
+  .px-responsive {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .py-responsive {
+    @apply py-4 sm:py-6 lg:py-8;
+  }
+  
+  /* Responsive Gaps */
+  .gap-responsive {
+    @apply gap-3 sm:gap-4 lg:gap-6;
+  }
+  
+  .gap-responsive-sm {
+    @apply gap-2 sm:gap-3 lg:gap-4;
+  }
+  
+  /* Responsive Grid Layouts */
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-responsive;
+  }
+  
+  .grid-responsive-3 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-responsive;
+  }
+  
+  .grid-responsive-4 {
+    @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-responsive-sm;
+  }
+  
+  .grid-responsive-auto {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-responsive-sm;
+  }
+  
+  /* Responsive Text Sizes */
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+  
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+  
+  .text-responsive-2xl {
+    @apply text-2xl sm:text-3xl lg:text-4xl;
+  }
+  
+  /* Responsive Heights */
+  .h-touch-target {
+    @apply h-12 min-h-[48px];
+  }
+  
+  .h-touch-large {
+    @apply h-14 min-h-[56px];
+  }
+  
+  /* Mobile-first Modal Sizes */
+  .modal-responsive {
+    @apply w-[95vw] max-w-md sm:max-w-lg lg:max-w-xl;
+  }
+  
+  .modal-responsive-lg {
+    @apply w-[95vw] max-w-lg sm:max-w-xl lg:max-w-2xl xl:max-w-4xl;
+  }
+  
+  .modal-responsive-full {
+    @apply w-[98vw] h-[95vh] max-w-7xl;
+  }
+  
+  /* Responsive Flex */
+  .flex-responsive {
+    @apply flex flex-col sm:flex-row gap-responsive;
+  }
+  
+  .flex-responsive-reverse {
+    @apply flex flex-col-reverse sm:flex-row gap-responsive;
+  }
+  
+  /* Card Responsive */
+  .card-responsive {
+    @apply rounded-xl sm:rounded-2xl shadow-soft hover:shadow-elegant transition-all duration-300;
+  }
+  
+  /* Touch-friendly Interactive Elements */
+  .btn-touch {
+    @apply min-h-[44px] min-w-[44px] px-4 py-3;
+  }
+  
+  .input-touch {
+    @apply h-12 sm:h-14 text-base px-4;
+  }
+  
+  /* Responsive Hide/Show */
+  .hide-mobile {
+    @apply hidden sm:block;
+  }
+  
+  .show-mobile {
+    @apply block sm:hidden;
+  }
+  
+  .hide-tablet {
+    @apply hidden lg:block;
+  }
+  
+  .show-tablet {
+    @apply block lg:hidden;
+  }
+  
+  /* Responsive Scrollable Areas */
+  .scroll-area-mobile {
+    @apply max-h-[40vh] sm:max-h-[50vh] lg:max-h-[60vh] overflow-y-auto;
+  }
+  
+  .scroll-area-full {
+    @apply max-h-[70vh] sm:max-h-[75vh] lg:max-h-[80vh] overflow-y-auto;
+  }
+  
+  /* Navigation responsive */
+  .nav-item-responsive {
+    @apply px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base;
+  }
+}
+
+/* Enhanced Media Queries */
+@media (max-width: 640px) {
+  /* Mobile-specific optimizations */
+  .table-responsive {
+    font-size: 14px;
+  }
+  
+  .card-mobile {
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  
+  /* Ensure touch targets are adequate */
+  button, .clickable {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Tablet-specific optimizations */
+  .grid-tablet-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-tablet-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Desktop-specific optimizations */
+  .desktop-grid-dense {
+    grid-auto-flow: dense;
   }
 }

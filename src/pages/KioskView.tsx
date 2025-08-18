@@ -273,33 +273,33 @@ const KioskView = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <div className="container mx-auto p-2 sm:p-4 lg:p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 min-h-[calc(100vh-8rem)]">
+      <div className="container-responsive py-responsive">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-responsive min-h-[calc(100vh-8rem)]">
           
           {/* Panel de Productos - 2/3 del ancho en desktop */}
-          <div className="lg:col-span-2 space-y-4 order-2 lg:order-1">
+          <div className="xl:col-span-2 space-y-4 order-2 xl:order-1">
             
             {/* Barra de búsqueda y acciones rápidas */}
-            <Card>
-              <CardHeader className="pb-3 p-4 sm:p-6">
-                <div className="flex flex-col gap-3 sm:gap-4">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Card className="card-responsive">
+              <CardHeader className="p-responsive pb-3">
+                <div className="flex-responsive">
+                  <div className="relative flex-1 min-w-0">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                     <Input
                       placeholder="Buscar por nombre o código..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 text-base h-12 sm:h-14"
+                      className="pl-10 sm:pl-12 input-touch text-responsive-sm"
                     />
                   </div>
-                  <div className="flex gap-2 justify-center sm:justify-start">
+                  <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
                     <Button 
                       variant="outline" 
                       size="default" 
-                      className="flex-1 sm:flex-none min-h-[48px]" 
+                      className="btn-touch flex-1 sm:flex-none text-responsive-sm" 
                       onClick={() => setShowCalculator(!showCalculator)}
                     >
-                      <Calculator className="h-5 w-5" />
+                      <Calculator className="h-4 w-4 sm:h-5 sm:w-5" />
                       <span className="ml-2">Calculadora</span>
                     </Button>
                   </div>
@@ -308,23 +308,23 @@ const KioskView = () => {
             </Card>
 
             {/* Información rápida */}
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="text-center p-4 sm:p-6">
-                <Package className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 text-primary" />
-                <p className="text-xl sm:text-2xl font-bold">{products.length}</p>
-                <p className="text-sm text-muted-foreground">Productos</p>
+            <div className="grid-responsive-2">
+              <Card className="card-responsive text-center p-responsive">
+                <Package className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 mx-auto mb-3 text-primary" />
+                <p className="text-responsive-xl font-bold">{products.length}</p>
+                <p className="text-responsive-xs text-muted-foreground mt-1">Productos Disponibles</p>
               </Card>
-              <Card className="text-center p-4 sm:p-6">
-                <ShoppingCart className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 text-primary" />
-                <p className="text-xl sm:text-2xl font-bold">{cartItemsCount}</p>
-                <p className="text-sm text-muted-foreground">En Carrito</p>
+              <Card className="card-responsive text-center p-responsive">
+                <ShoppingCart className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 mx-auto mb-3 text-primary" />
+                <p className="text-responsive-xl font-bold">{cartItemsCount}</p>
+                <p className="text-responsive-xs text-muted-foreground mt-1">Items en Carrito</p>
               </Card>
             </div>
 
             {/* Total destacado */}
-            <Card className="text-center p-6 bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-              <p className="text-sm text-muted-foreground mb-2">Total del Carrito</p>
-              <p className="text-3xl sm:text-4xl font-bold text-primary">${cartTotal.toFixed(2)}</p>
+            <Card className="card-responsive text-center p-6 sm:p-8 bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+              <p className="text-responsive-sm text-muted-foreground mb-2">Total del Carrito</p>
+              <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">${cartTotal.toFixed(2)}</p>
             </Card>
 
             {/* Filtro de categorías */}
@@ -334,15 +334,15 @@ const KioskView = () => {
             />
 
             {/* Grid de productos */}
-            <Card className="flex-1">
-              <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <Package className="h-5 w-5" />
-                  Productos Disponibles
-                  <Badge variant="secondary" className="ml-auto">{filteredProducts.length}</Badge>
+            <Card className="card-responsive flex-1">
+              <CardHeader className="p-responsive">
+                <CardTitle className="flex items-center gap-3 text-responsive-lg">
+                  <Package className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <span>Productos Disponibles</span>
+                  <Badge variant="secondary" className="ml-auto text-responsive-xs">{filteredProducts.length}</Badge>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="max-h-[50vh] lg:max-h-[60vh] overflow-y-auto p-4 sm:p-6">
+              <CardContent className="scroll-area-mobile p-responsive">
                 <ProductGrid 
                   products={filteredProducts}
                   onAddToCart={addToCart}
@@ -353,7 +353,7 @@ const KioskView = () => {
           </div>
 
           {/* Panel del Carrito - 1/3 del ancho en desktop */}
-          <div className="lg:col-span-1 order-1 lg:order-2">
+          <div className="xl:col-span-1 order-1 xl:order-2">
             <SimpleCart
               cart={cart}
               onUpdateQuantity={updateCartQuantity}
@@ -369,102 +369,114 @@ const KioskView = () => {
 
       {/* Modal de Calculadora */}
       <Dialog open={showCalculator} onOpenChange={setShowCalculator}>
-        <DialogContent className="w-[95vw] max-w-md">
+        <DialogContent className="modal-responsive">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-responsive-base">
               <Calculator className="h-5 w-5" />
               Calculadora
             </DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-4">
+          <div className="space-y-4 sm:space-y-6">
             {/* Display */}
-            <div className="p-4 bg-muted rounded-lg">
+            <div className="p-4 sm:p-6 bg-muted rounded-lg sm:rounded-xl">
               <div className="text-right">
                 {calculatorOperation && calculatorPrevValue && (
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-responsive-xs text-muted-foreground">
                     {calculatorPrevValue} {calculatorOperation}
                   </div>
                 )}
-                <div className="text-3xl font-mono font-bold">{calculatorDisplay}</div>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-mono font-bold">{calculatorDisplay}</div>
               </div>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={copyCalculatorResult}
-                className="mt-2 w-full"
+                className="mt-3 w-full btn-touch text-responsive-sm"
               >
                 Copiar resultado
               </Button>
             </div>
 
             {/* Botones */}
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2 sm:gap-3">
               {/* Fila 1 */}
-              <Button variant="outline" onClick={handleCalculatorClear} className="h-12">
+              <Button variant="outline" onClick={handleCalculatorClear} className="btn-touch text-responsive-sm">
                 C
               </Button>
               <Button variant="outline" onClick={() => {
                 setCalculatorDisplay(calculatorDisplay.slice(0, -1) || '0')
-              }} className="h-12">
+              }} className="btn-touch text-responsive-sm">
                 ⌫
               </Button>
-              <Button variant="outline" onClick={() => handleCalculatorOperation('/')} className="h-12">
+              <Button variant="outline" onClick={() => handleCalculatorOperation('/')} className="btn-touch text-responsive-sm">
                 ÷
               </Button>
-              <Button variant="outline" onClick={() => handleCalculatorOperation('*')} className="h-12">
+              <Button variant="outline" onClick={() => handleCalculatorOperation('*')} className="btn-touch text-responsive-sm">
                 ×
               </Button>
 
-              {/* Fila 2 */}
-              <Button variant="outline" onClick={() => handleCalculatorInput('7')} className="h-12">
-                7
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorInput('8')} className="h-12">
-                8
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorInput('9')} className="h-12">
-                9
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorOperation('-')} className="h-12">
-                -
-              </Button>
-
-              {/* Fila 3 */}
-              <Button variant="outline" onClick={() => handleCalculatorInput('4')} className="h-12">
-                4
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorInput('5')} className="h-12">
-                5
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorInput('6')} className="h-12">
-                6
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorOperation('+')} className="h-12">
-                +
-              </Button>
-
-              {/* Fila 4 */}
-              <Button variant="outline" onClick={() => handleCalculatorInput('1')} className="h-12">
-                1
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorInput('2')} className="h-12">
-                2
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorInput('3')} className="h-12">
-                3
-              </Button>
-              <Button variant="default" onClick={handleCalculatorEquals} className="h-12 row-span-2">
-                =
-              </Button>
-
-              {/* Fila 5 */}
-              <Button variant="outline" onClick={() => handleCalculatorInput('0')} className="h-12 col-span-2">
-                0
-              </Button>
-              <Button variant="outline" onClick={() => handleCalculatorInput('.')} className="h-12">
-                .
-              </Button>
+              {/* Fila 2-5 */}
+              {[
+                ['7', '8', '9', '-'],
+                ['4', '5', '6', '+'],
+                ['1', '2', '3'],
+                ['0', '0', '.']
+              ].map((row, rowIndex) => (
+                row.map((btn, btnIndex) => {
+                  if (rowIndex === 2 && btnIndex === 3) {
+                    return (
+                      <Button 
+                        key={`${rowIndex}-${btnIndex}`}
+                        variant="default" 
+                        onClick={handleCalculatorEquals} 
+                        className="btn-touch row-span-2 text-responsive-sm"
+                      >
+                        =
+                      </Button>
+                    )
+                  }
+                  if (rowIndex === 3 && btnIndex === 0) {
+                    return (
+                      <Button 
+                        key={`${rowIndex}-${btnIndex}`}
+                        variant="outline" 
+                        onClick={() => handleCalculatorInput('0')} 
+                        className="btn-touch col-span-2 text-responsive-sm"
+                      >
+                        0
+                      </Button>
+                    )
+                  }
+                  if (rowIndex === 3 && btnIndex === 1) return null
+                  if (rowIndex === 3 && btnIndex === 2) {
+                    return (
+                      <Button 
+                        key={`${rowIndex}-${btnIndex}`}
+                        variant="outline" 
+                        onClick={() => handleCalculatorInput('.')} 
+                        className="btn-touch text-responsive-sm"
+                      >
+                        .
+                      </Button>
+                    )
+                  }
+                  
+                  return (
+                    <Button 
+                      key={`${rowIndex}-${btnIndex}`}
+                      variant="outline" 
+                      onClick={() => ['7','8','9','4','5','6','1','2','3'].includes(btn) 
+                        ? handleCalculatorInput(btn) 
+                        : handleCalculatorOperation(btn)
+                      } 
+                      className="btn-touch text-responsive-sm"
+                    >
+                      {btn}
+                    </Button>
+                  )
+                })
+              ))}
             </div>
           </div>
         </DialogContent>

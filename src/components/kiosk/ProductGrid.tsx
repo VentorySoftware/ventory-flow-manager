@@ -45,13 +45,13 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
 
   return (
     <TooltipProvider>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid-responsive-auto">
         {activeProducts.map((product) => (
           <Card 
             key={product.id} 
-            className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 border-2 hover:border-primary/50 h-full relative"
+            className="group card-responsive hover:-translate-y-1 border-2 hover:border-primary/50 h-full relative"
           >
-            <CardContent className="p-3 sm:p-4 flex flex-col justify-between h-full">
+            <CardContent className="p-3 sm:p-4 lg:p-5 flex flex-col justify-between h-full">
               {/* Imagen del producto */}
               <div 
                 className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-200"
@@ -70,7 +70,7 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                     />
                   </div>
                 ) : (
-                  <Package className="h-16 w-16 sm:h-20 sm:w-20 text-primary opacity-50" />
+                  <Package className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-primary opacity-50" />
                 )}
               </div>
               
@@ -78,28 +78,24 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
               <div className="flex flex-col flex-1 justify-between">
                 <div>
                   <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                      <h3 className="font-semibold text-sm sm:text-base leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-responsive-sm leading-tight group-hover:text-primary transition-colors line-clamp-2 mb-1">
                         {product.name}
                       </h3>
                       {product.stock <= product.alert_stock && product.stock > 0 && (
-                        <div className="flex items-center gap-1 mt-1">
+                        <div className="flex items-center gap-1 mb-2">
                           <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500" />
-                          <span className="text-xs sm:text-sm text-yellow-600">Stock Bajo</span>
+                          <span className="text-responsive-xs text-yellow-600">Stock Bajo</span>
                         </div>
                       )}
                     </div>
-                    {/* Quitar SKU */}
-                    {/* <Badge variant="outline" className="text-xs whitespace-nowrap">
-                      {product.sku}
-                    </Badge> */}
                   </div>
                   
                   {/* Precio con tooltip y truncado */}
-                  <div className="mt-2">
+                  <div className="mt-2 mb-3">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <p className="text-xl sm:text-2xl font-bold text-primary truncate cursor-pointer select-text">
+                        <p className="text-lg sm:text-xl lg:text-2xl font-bold text-primary truncate cursor-pointer select-text">
                           ${product.price.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                         </p>
                       </TooltipTrigger>
@@ -109,21 +105,23 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                         </span>
                       </TooltipContent>
                     </Tooltip>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-responsive-xs text-muted-foreground">
                       por {product.unit}
                     </p>
                   </div>
+                  
                   {/* Stock debajo del precio */}
-                  <div className="mt-1">
-                    <span className="text-sm text-muted-foreground block">
+                  <div className="mb-3">
+                    <span className="text-responsive-xs text-muted-foreground block">
                       Stock: {product.stock}
                     </span>
                   </div>
                 </div>
+                
                 {/* Botón de agregar alineado abajo */}
-                <div className="mt-3 flex items-end">
+                <div className="mt-auto">
                   <Button 
-                    className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all text-sm min-h-[44px]"
+                    className="w-full btn-touch group-hover:bg-primary group-hover:text-primary-foreground transition-all text-responsive-sm"
                     variant="outline"
                     size="default"
                     disabled={product.stock === 0 || !product.is_active}
