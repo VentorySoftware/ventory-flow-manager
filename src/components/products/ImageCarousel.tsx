@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/enhanced-button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ChevronLeft, ChevronRight, X, Star } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface ImageCarouselProps {
   images: string[]
@@ -76,12 +77,17 @@ const ImageCarousel = ({
       <Card className={`relative overflow-hidden ${className}`}>
         <CardContent className={`p-0 ${getAspectClass(aspectRatio)}`}>
           {/* Main Image */}
-          <div className="relative w-full h-full">
-            <img
+          <div className="relative w-full h-full group">
+            <motion.img
               src={sortedImages[currentIndex]}
               alt={`${productName} - Imagen ${currentIndex + 1}`}
-              className="w-full h-full object-cover cursor-pointer transition-transform hover:scale-105"
+              className="w-full h-full object-cover cursor-pointer"
               onClick={() => setShowFullscreen(true)}
+              whileHover={{ 
+                scale: 1.1,
+                transition: { duration: 0.3, ease: "easeInOut" }
+              }}
+              whileTap={{ scale: 0.98 }}
             />
 
             {/* Primary Badge */}
@@ -95,22 +101,22 @@ const ImageCarousel = ({
             {/* Navigation Arrows */}
             {showControls && sortedImages.length > 1 && (
               <>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 opacity-80 hover:opacity-100"
+                <motion.button
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/70 transition-all duration-200 z-10"
                   onClick={prevImage}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 opacity-80 hover:opacity-100"
+                  <ChevronLeft className="h-5 w-5" />
+                </motion.button>
+                <motion.button
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/70 transition-all duration-200 z-10"
                   onClick={nextImage}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                  <ChevronRight className="h-5 w-5" />
+                </motion.button>
               </>
             )}
 
@@ -156,57 +162,82 @@ const ImageCarousel = ({
       </Card>
 
       {/* Fullscreen Modal */}
-      {showFullscreen && (
-        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
-          <div className="relative max-w-[90vw] max-h-[90vh]">
-            {/* Close Button */}
-            <Button
-              size="sm"
-              variant="secondary"
-              className="absolute top-4 right-4 z-10 h-10 w-10 p-0"
-              onClick={() => setShowFullscreen(false)}
+      <AnimatePresence>
+        {showFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4"
+            onClick={() => setShowFullscreen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="relative max-w-[90vw] max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X className="h-5 w-5" />
-            </Button>
+              {/* Close Button */}
+              <motion.button
+                className="absolute top-4 right-4 z-20 h-12 w-12 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/80 transition-all duration-200"
+                onClick={() => setShowFullscreen(false)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <X className="h-6 w-6" />
+              </motion.button>
 
-            {/* Navigation in Fullscreen */}
-            {sortedImages.length > 1 && (
-              <>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 h-12 w-12 p-0 z-10"
-                  onClick={prevImage}
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 h-12 w-12 p-0 z-10"
-                  onClick={nextImage}
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-              </>
-            )}
+              {/* Navigation in Fullscreen */}
+              {sortedImages.length > 1 && (
+                <>
+                  <motion.button
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/80 transition-all duration-200 z-20"
+                    onClick={prevImage}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <ChevronLeft className="h-7 w-7" />
+                  </motion.button>
+                  <motion.button
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/80 transition-all duration-200 z-20"
+                    onClick={nextImage}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <ChevronRight className="h-7 w-7" />
+                  </motion.button>
+                </>
+              )}
 
-            {/* Fullscreen Image */}
-            <img
-              src={sortedImages[currentIndex]}
-              alt={`${productName} - Imagen ${currentIndex + 1}`}
-              className="max-w-full max-h-full object-contain"
-            />
+              {/* Fullscreen Image */}
+              <motion.img
+                src={sortedImages[currentIndex]}
+                alt={`${productName} - Imagen ${currentIndex + 1}`}
+                className="max-w-full max-h-full object-contain cursor-pointer"
+                whileHover={{ 
+                  scale: 1.05,
+                  transition: { duration: 0.3, ease: "easeInOut" }
+                }}
+                onClick={() => setShowFullscreen(false)}
+              />
 
-            {/* Image Info */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-              <Badge variant="secondary" className="text-sm">
-                {productName} - {currentIndex + 1} de {sortedImages.length}
-              </Badge>
-            </div>
-          </div>
-        </div>
-      )}
+              {/* Image Info */}
+              <motion.div 
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Badge className="bg-black/60 backdrop-blur-sm border border-white/20 text-white text-sm px-3 py-1">
+                  {productName} - {currentIndex + 1} de {sortedImages.length}
+                </Badge>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }
