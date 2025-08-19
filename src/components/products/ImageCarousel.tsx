@@ -102,49 +102,61 @@ const ImageCarousel = ({
             {showControls && sortedImages.length > 1 && (
               <>
                 <motion.button
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/70 transition-all duration-200 z-10"
+                  className="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center hover:bg-black/80 transition-all duration-200 z-10 shadow-lg"
                   onClick={prevImage}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
                 </motion.button>
                 <motion.button
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/70 transition-all duration-200 z-10"
+                  className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center hover:bg-black/80 transition-all duration-200 z-10 shadow-lg"
                   onClick={nextImage}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                 </motion.button>
               </>
             )}
 
             {/* Image Counter */}
             {sortedImages.length > 1 && (
-              <Badge 
-                variant="secondary" 
-                className="absolute bottom-2 right-2 text-xs"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2"
               >
-                {currentIndex + 1} / {sortedImages.length}
-              </Badge>
+                <Badge 
+                  className="bg-black/60 backdrop-blur-sm border border-white/30 text-white text-xs sm:text-sm px-2 py-1 shadow-lg"
+                >
+                  {currentIndex + 1} / {sortedImages.length}
+                </Badge>
+              </motion.div>
             )}
           </div>
         </CardContent>
 
         {/* Thumbnail Navigation */}
         {showControls && sortedImages.length > 1 && (
-          <div className="p-2 bg-muted/30">
-            <div className="flex gap-1 justify-center">
+          <motion.div 
+            className="p-1 sm:p-2 bg-muted/20 backdrop-blur-sm"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex gap-1 justify-center overflow-x-auto scrollbar-hide">
               {sortedImages.map((image, index) => (
-                <button
+                <motion.button
                   key={index}
                   onClick={() => goToImage(index)}
-                  className={`relative w-8 h-8 rounded overflow-hidden border-2 transition-all ${
+                  className={`relative w-6 h-6 sm:w-8 sm:h-8 rounded overflow-hidden border-2 transition-all flex-shrink-0 ${
                     index === currentIndex 
-                      ? 'border-primary scale-110' 
-                      : 'border-transparent opacity-60 hover:opacity-80'
+                      ? 'border-primary scale-110 shadow-lg' 
+                      : 'border-transparent opacity-60 hover:opacity-80 hover:border-white/30'
                   }`}
+                  whileHover={{ scale: index === currentIndex ? 1.1 : 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <img
                     src={image}
@@ -152,12 +164,18 @@ const ImageCarousel = ({
                     className="w-full h-full object-cover"
                   />
                   {image === primaryImage && (
-                    <Star className="absolute top-0 right-0 h-2 w-2 text-yellow-500 fill-current" />
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute top-0 right-0"
+                    >
+                      <Star className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-400 fill-current drop-shadow-sm" />
+                    </motion.div>
                   )}
-                </button>
+                </motion.button>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
       </Card>
 
