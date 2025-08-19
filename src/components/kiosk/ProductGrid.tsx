@@ -52,27 +52,31 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
             className="group card-responsive hover:-translate-y-1 border-2 hover:border-primary/50 h-full relative"
           >
             <CardContent className="p-3 sm:p-4 lg:p-5 flex flex-col justify-between h-full">
-              {/* Imagen del producto */}
-              <div 
-                className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-200"
-                onClick={() => onAddToCart(product)}
-              >
-                {product.image_urls && product.image_urls.length > 0 ? (
-                  <div className="w-full h-full pointer-events-none">
-                    <ImageCarousel
-                      images={product.image_urls}
-                      primaryImage={product.primary_image_url || undefined}
-                      productName={product.name}
-                      size="md"
-                      className="w-full h-full"
-                      showControls={false}
-                      aspectRatio="square"
-                    />
-                  </div>
-                ) : (
-                  <Package className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-primary opacity-50" />
-                )}
-              </div>
+               {/* Imagen del producto */}
+               <div 
+                 className="aspect-square bg-gradient-card rounded-lg mb-3 flex items-center justify-center overflow-hidden"
+               >
+                 {product.image_urls && product.image_urls.length > 0 ? (
+                   <div className="w-full h-full">
+                     <ImageCarousel
+                       images={product.image_urls}
+                       primaryImage={product.primary_image_url || undefined}
+                       productName={product.name}
+                       size="md"
+                       className="w-full h-full"
+                       showControls={product.image_urls.length > 1}
+                       aspectRatio="square"
+                     />
+                   </div>
+                 ) : (
+                   <div 
+                     className="w-full h-full flex items-center justify-center cursor-pointer transition-transform hover:scale-[1.02]"
+                     onClick={() => onAddToCart(product)}
+                   >
+                     <Package className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-primary opacity-50" />
+                   </div>
+                 )}
+               </div>
               
               {/* Información del producto */}
               <div className="flex flex-col flex-1 justify-between">
