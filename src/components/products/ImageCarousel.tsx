@@ -45,21 +45,27 @@ const ImageCarousel = ({
     )
   }
 
-  const nextImage = useCallback(() => {
+  const nextImage = useCallback((e?: React.MouseEvent | React.TouchEvent) => {
+    e?.preventDefault()
+    e?.stopPropagation()
     if (isNavigating) return
     setIsNavigating(true)
     setCurrentIndex((prev) => (prev + 1) % sortedImages.length)
     setTimeout(() => setIsNavigating(false), 150)
   }, [sortedImages.length, isNavigating])
 
-  const prevImage = useCallback(() => {
+  const prevImage = useCallback((e?: React.MouseEvent | React.TouchEvent) => {
+    e?.preventDefault()
+    e?.stopPropagation()
     if (isNavigating) return
     setIsNavigating(true)
     setCurrentIndex((prev) => (prev - 1 + sortedImages.length) % sortedImages.length)
     setTimeout(() => setIsNavigating(false), 150)
   }, [sortedImages.length, isNavigating])
 
-  const goToImage = useCallback((index: number) => {
+  const goToImage = useCallback((index: number, e?: React.MouseEvent | React.TouchEvent) => {
+    e?.preventDefault()
+    e?.stopPropagation()
     if (isNavigating || index === currentIndex) return
     setIsNavigating(true)
     setCurrentIndex(index)
