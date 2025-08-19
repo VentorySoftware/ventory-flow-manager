@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/enhanced-button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -31,6 +31,7 @@ const ImageCarousel = ({
     
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showFullscreen, setShowFullscreen] = useState(false)
+  const [isNavigating, setIsNavigating] = useState(false)
 
   if (!sortedImages || sortedImages.length === 0) {
     return (
@@ -44,17 +45,26 @@ const ImageCarousel = ({
     )
   }
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
+    if (isNavigating) return
+    setIsNavigating(true)
     setCurrentIndex((prev) => (prev + 1) % sortedImages.length)
-  }
+    setTimeout(() => setIsNavigating(false), 150)
+  }, [sortedImages.length, isNavigating])
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
+    if (isNavigating) return
+    setIsNavigating(true)
     setCurrentIndex((prev) => (prev - 1 + sortedImages.length) % sortedImages.length)
-  }
+    setTimeout(() => setIsNavigating(false), 150)
+  }, [sortedImages.length, isNavigating])
 
-  const goToImage = (index: number) => {
+  const goToImage = useCallback((index: number) => {
+    if (isNavigating || index === currentIndex) return
+    setIsNavigating(true)
     setCurrentIndex(index)
-  }
+    setTimeout(() => setIsNavigating(false), 150)
+  }, [currentIndex, isNavigating])
 
   function getAspectClass(aspect: string) {
     switch (aspect) {
@@ -78,16 +88,12 @@ const ImageCarousel = ({
         <CardContent className={`p-0 ${getAspectClass(aspectRatio)}`}>
           {/* Main Image */}
           <div className="relative w-full h-full group">
-            <motion.img
+            <img
+              key={`image-${currentIndex}`}
               src={sortedImages[currentIndex]}
               alt={`${productName} - Imagen ${currentIndex + 1}`}
-              className="w-full h-full object-cover cursor-pointer"
+              className="w-full h-full object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
               onClick={() => setShowFullscreen(true)}
-              whileHover={{ 
-                scale: 1.1,
-                transition: { duration: 0.3, ease: "easeInOut" }
-              }}
-              whileTap={{ scale: 0.98 }}
             />
 
             {/* Primary Badge */}
@@ -101,62 +107,52 @@ const ImageCarousel = ({
             {/* Navigation Arrows */}
             {showControls && sortedImages.length > 1 && (
               <>
-                <motion.button
-                  className="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center hover:bg-black/80 transition-all duration-200 z-10 shadow-lg"
+                <button
+                  className="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black/70 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center hover:bg-black/90 transition-all duration-200 z-20 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={prevImage}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
+                  disabled={isNavigating}
+                  onMouseDown={(e) => e.stopPropagation()}
                 >
                   <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-                </motion.button>
-                <motion.button
-                  className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center hover:bg-black/80 transition-all duration-200 z-10 shadow-lg"
+                </button>
+                <button
+                  className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black/70 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center hover:bg-black/90 transition-all duration-200 z-20 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={nextImage}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
+                  disabled={isNavigating}
+                  onMouseDown={(e) => e.stopPropagation()}
                 >
                   <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                </motion.button>
+                </button>
               </>
             )}
 
             {/* Image Counter */}
             {sortedImages.length > 1 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2"
-              >
+              <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2">
                 <Badge 
-                  className="bg-black/60 backdrop-blur-sm border border-white/30 text-white text-xs sm:text-sm px-2 py-1 shadow-lg"
+                  className="bg-black/70 backdrop-blur-sm border border-white/30 text-white text-xs sm:text-sm px-2 py-1 shadow-lg"
                 >
                   {currentIndex + 1} / {sortedImages.length}
                 </Badge>
-              </motion.div>
+              </div>
             )}
           </div>
         </CardContent>
 
         {/* Thumbnail Navigation */}
         {showControls && sortedImages.length > 1 && (
-          <motion.div 
-            className="p-1 sm:p-2 bg-muted/20 backdrop-blur-sm"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <div className="p-1 sm:p-2 bg-muted/20 backdrop-blur-sm">
             <div className="flex gap-1 justify-center overflow-x-auto scrollbar-hide">
               {sortedImages.map((image, index) => (
-                <motion.button
-                  key={index}
+                <button
+                  key={`thumb-${index}`}
                   onClick={() => goToImage(index)}
-                  className={`relative w-6 h-6 sm:w-8 sm:h-8 rounded overflow-hidden border-2 transition-all flex-shrink-0 ${
+                  disabled={isNavigating}
+                  className={`relative w-6 h-6 sm:w-8 sm:h-8 rounded overflow-hidden border-2 transition-all flex-shrink-0 disabled:cursor-not-allowed ${
                     index === currentIndex 
                       ? 'border-primary scale-110 shadow-lg' 
                       : 'border-transparent opacity-60 hover:opacity-80 hover:border-white/30'
                   }`}
-                  whileHover={{ scale: index === currentIndex ? 1.1 : 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   <img
                     src={image}
@@ -164,18 +160,14 @@ const ImageCarousel = ({
                     className="w-full h-full object-cover"
                   />
                   {image === primaryImage && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute top-0 right-0"
-                    >
+                    <div className="absolute top-0 right-0">
                       <Star className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-400 fill-current drop-shadow-sm" />
-                    </motion.div>
+                    </div>
                   )}
-                </motion.button>
+                </button>
               ))}
             </div>
-          </motion.div>
+          </div>
         )}
       </Card>
 
