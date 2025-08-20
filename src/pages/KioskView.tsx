@@ -7,7 +7,6 @@ import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
-import Navbar from '@/components/Navbar'
 import ProductGrid from '@/components/kiosk/ProductGrid'
 import SimpleCart from '@/components/kiosk/SimpleCart'
 import { CategoryFilter } from '@/components/kiosk/CategoryFilter'
@@ -261,7 +260,6 @@ const KioskView = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
@@ -271,8 +269,6 @@ const KioskView = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      
       <div className="container-responsive py-responsive">
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-responsive min-h-[calc(100vh-8rem)]">
           

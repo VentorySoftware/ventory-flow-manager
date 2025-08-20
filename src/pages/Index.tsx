@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import Navbar from "@/components/Navbar"
 import Dashboard from "@/components/Dashboard"
 import { useAuth } from "@/contexts/AuthContext"
 
@@ -11,7 +10,7 @@ const Index = () => {
   useEffect(() => {
     if (!loading && !hasRole('admin')) {
       // Si no es admin (es vendedor), redirigir al modo kiosco
-      navigate('/kiosk')
+      navigate('/caja')
     }
   }, [hasRole, loading, navigate])
 
@@ -26,7 +25,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <Dashboard />
     </div>
   );

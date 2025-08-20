@@ -15,7 +15,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import { format, startOfDay, endOfDay } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
-import Navbar from '@/components/Navbar'
 import { 
   Receipt, 
   Calendar as CalendarIcon,
@@ -349,8 +348,6 @@ const MySalesPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      
       <div className="container mx-auto p-6">
         {/* Header Section */}
         <div className="mb-6">
