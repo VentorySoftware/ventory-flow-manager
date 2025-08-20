@@ -27,6 +27,7 @@ import NotFound from "./pages/NotFound";
 import KioskView from "./pages/KioskView";
 import VentyWidget from "@/components/venty/VentyWidget";
 import SettingsPage from "./pages/Settings";
+import { FloatingSidebarTrigger } from "@/components/FloatingSidebarTrigger";
 
 const queryClient = new QueryClient();
 
@@ -132,6 +133,9 @@ const AppContent = () => {
               
               {/* Venty chat widget solo en rutas protegidas */}
               <VentyWidget />
+              
+              {/* Botón flotante para sidebar colapsado */}
+              <FloatingSidebarTrigger />
             </div>
           </SidebarProvider>
         } />

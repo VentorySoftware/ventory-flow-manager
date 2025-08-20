@@ -5,7 +5,8 @@ import {
   LayoutGrid,
   Tags,
   Receipt,
-  BarChart3
+  BarChart3,
+  PanelLeft
 } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -24,7 +25,7 @@ import {
 
 export function AppSidebar() {
   const { hasRole } = useAuth()
-  const { state } = useSidebar()
+  const { state, toggleSidebar } = useSidebar()
   const location = useLocation()
   const currentPath = location.pathname
 
@@ -62,9 +63,24 @@ export function AppSidebar() {
     >
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-3">
+          {/* Botón de hamburguesa para colapsar/expandir sidebar */}
+          <button
+            onClick={() => toggleSidebar()}
+            className="p-2 rounded-md hover:bg-sidebar-accent/50 transition-colors"
+            title={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-sidebar-foreground">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          {/* Logo y nombre */}
           <div className="h-8 w-8 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-glow">
             <PackageOpen className="h-5 w-5 text-primary-foreground" />
           </div>
+
           {!collapsed && (
             <div className="flex flex-col">
               <span className="text-sm font-heading font-bold text-gradient">
