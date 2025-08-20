@@ -2,7 +2,9 @@ import { Button } from '@/components/ui/enhanced-button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Plus, Package, AlertTriangle } from 'lucide-react'
-import ImageCarousel from '@/components/products/ImageCarousel'
+import KioskImageCarousel from './KioskImageCarousel'
+import ImagePreviewModal from './ImagePreviewModal'
+import { useState } from 'react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface Product {
@@ -58,14 +60,12 @@ const ProductGrid = ({ products, onAddToCart, selectedCategoryId }: ProductGridP
                >
                  {product.image_urls && product.image_urls.length > 0 ? (
                    <div className="w-full h-full">
-                     <ImageCarousel
+                     <KioskImageCarousel
                        images={product.image_urls}
                        primaryImage={product.primary_image_url || undefined}
                        productName={product.name}
-                       size="md"
                        className="w-full h-full"
-                       showControls={product.image_urls.length > 1}
-                       aspectRatio="square"
+                       onImageClick={() => onAddToCart(product)}
                      />
                    </div>
                  ) : (
