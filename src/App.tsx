@@ -63,73 +63,80 @@ const AppContent = () => {
   }
   
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-dashboard">
-        <AppSidebar />
-        <div className="flex-1 flex flex-col">
-          <AppHeader />
-          <main className="flex-1 overflow-auto">
-            <AnimatedLayout>
-              <Routes>
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/" element={<Navigate to="/caja" replace />} />
-                <Route path="/caja" element={
-                  <ProtectedRoute>
-                    <KioskView />
-                  </ProtectedRoute>
-                } />
-                <Route path="/kiosk" element={<Navigate to="/caja" replace />} />
-                <Route path="/my-sales" element={
-                  <ProtectedRoute>
-                    <MySales />
-                  </ProtectedRoute>
-                } />
-                <Route path="/products" element={
-                  <ProtectedRoute requiredRole="admin">
-                    <Products />
-                  </ProtectedRoute>
-                } />
-                <Route path="/sales" element={
-                  <ProtectedRoute requiredRole="admin">
-                    <Sales />
-                  </ProtectedRoute>
-                } />
-                <Route path="/customers" element={
-                  <ProtectedRoute>
-                    <Customers />
-                  </ProtectedRoute>
-                } />
-                <Route path="/users" element={
-                  <ProtectedRoute requiredRole="admin">
-                    <Users />
-                  </ProtectedRoute>
-                } />
-                <Route path="/settings" element={
-                  <ProtectedRoute requiredRole="admin">
-                    <SettingsPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/reports" element={
-                  <ProtectedRoute requiredRole="admin">
-                    <Reports />
-                  </ProtectedRoute>
-                } />
-                <Route path="/categories" element={
-                  <ProtectedRoute requiredRole="admin">
-                    <Categories />
-                  </ProtectedRoute>
-                } />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AnimatedLayout>
-          </main>
-        </div>
+    <AnimatedLayout>
+      <Routes>
+        {/* Rutas de autenticación sin sidebar */}
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         
-        {/* Venty chat widget is global */}
-        <VentyWidget />
-      </div>
-    </SidebarProvider>
+        {/* Rutas protegidas con sidebar */}
+        <Route path="/*" element={
+          <SidebarProvider>
+            <div className="min-h-screen flex w-full bg-gradient-dashboard">
+              <AppSidebar />
+              <div className="flex-1 flex flex-col">
+                <AppHeader />
+                <main className="flex-1 overflow-auto">
+                  <Routes>
+                    <Route path="/" element={<Navigate to="/caja" replace />} />
+                    <Route path="/caja" element={
+                      <ProtectedRoute>
+                        <KioskView />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/kiosk" element={<Navigate to="/caja" replace />} />
+                    <Route path="/my-sales" element={
+                      <ProtectedRoute>
+                        <MySales />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/products" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <Products />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/sales" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <Sales />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/customers" element={
+                      <ProtectedRoute>
+                        <Customers />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/users" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <Users />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/settings" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <SettingsPage />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/reports" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <Reports />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/categories" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <Categories />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </div>
+              
+              {/* Venty chat widget solo en rutas protegidas */}
+              <VentyWidget />
+            </div>
+          </SidebarProvider>
+        } />
+      </Routes>
+    </AnimatedLayout>
   );
 };
 
