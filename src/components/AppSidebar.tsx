@@ -54,45 +54,57 @@ export function AppSidebar() {
   return (
     <Sidebar
       className={`
-        ${collapsed ? "w-20" : "w-64"} 
+        ${collapsed 
+          ? "w-20 fixed left-0 top-0 h-screen z-40 shadow-2xl" 
+          : "w-64"
+        } 
         transition-all duration-300 ease-in-out 
         border-r border-sidebar-border
         bg-sidebar/95 backdrop-blur-md
       `}
       collapsible="icon"
     >
-      <SidebarHeader className={`border-b border-sidebar-border ${collapsed ? 'p-2' : 'p-4'}`}>
-        <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
-          {/* Botón de hamburguesa para colapsar/expandir sidebar */}
-          <button
-            onClick={() => toggleSidebar()}
-            className={`${collapsed ? 'p-1' : 'p-2'} rounded-md hover:bg-sidebar-accent/50 transition-colors`}
-            title={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
-          >
-            <Menu className="h-5 w-5 text-sidebar-foreground" />
-          </button>
+      <SidebarHeader className={`border-b border-sidebar-border ${collapsed ? 'h-16 px-2 py-0' : 'p-4'}`}>
+        {collapsed ? (
+          <div className="flex items-center justify-center w-full h-full">
+            {/* Botón de hamburguesa centrado cuando está colapsado */}
+            <button
+              onClick={() => toggleSidebar()}
+              className="h-10 w-10 flex items-center justify-center rounded-md hover:bg-sidebar-accent/50 transition-colors"
+              title="Expandir sidebar"
+            >
+              <Menu className="h-5 w-5 text-sidebar-foreground" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            {/* Botón de hamburguesa para colapsar sidebar */}
+            <button
+              onClick={() => toggleSidebar()}
+              className="p-2 rounded-md hover:bg-sidebar-accent/50 transition-colors"
+              title="Colapsar sidebar"
+            >
+              <Menu className="h-5 w-5 text-sidebar-foreground" />
+            </button>
 
-          {!collapsed && (
-            <>
-              {/* Logo */}
-              <div className="h-8 w-8 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-glow">
-                <PackageOpen className="h-5 w-5 text-primary-foreground" />
-              </div>
+            {/* Logo */}
+            <div className="h-8 w-8 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-glow">
+              <PackageOpen className="h-5 w-5 text-primary-foreground" />
+            </div>
 
-              <div className="flex flex-col">
-                <span className="text-sm font-heading font-bold text-gradient">
-                  Ventory Manager
-                </span>
-                <span className="text-xs text-sidebar-foreground/70">
-                  Sistema de Gestión
-                </span>
-              </div>
-            </>
-          )}
-        </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-heading font-bold text-gradient">
+                Ventory Manager
+              </span>
+              <span className="text-xs text-sidebar-foreground/70">
+                Sistema de Gestión
+              </span>
+            </div>
+          </div>
+        )}
       </SidebarHeader>
 
-      <SidebarContent className="px-2 py-4">
+      <SidebarContent className={`${collapsed ? "px-0" : "px-2"} py-4`}>
         {/* Sección Principal */}
         <SidebarGroup>
           {!collapsed && (
@@ -104,14 +116,14 @@ export function AppSidebar() {
             <SidebarMenu className="space-y-1">
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "px-0" : "px-3"}`}>
+                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "w-full px-0 mx-1" : "px-3"}`}>
                       <NavLink 
                         to={item.path} 
                         end 
                         className={({ isActive }) => `
                           ${getNavCls({ isActive })}
                           flex items-center rounded-lg transition-all duration-200
-                          ${collapsed ? "justify-center px-0" : "justify-start px-3"}
+                          ${collapsed ? "justify-center w-full" : "justify-start px-3"}
                         `}
                         title={collapsed ? item.name : undefined}
                       >
@@ -143,14 +155,14 @@ export function AppSidebar() {
               <SidebarMenu className="space-y-1">
                 {adminItems.map((item) => (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "px-0" : "px-3"}`}>
+                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "w-full px-0 mx-1" : "px-3"}`}>
                       <NavLink 
                         to={item.path} 
                         end 
                         className={({ isActive }) => `
                           ${getNavCls({ isActive })}
                           flex items-center rounded-lg transition-all duration-200
-                          ${collapsed ? "justify-center px-0" : "justify-start px-3"}
+                          ${collapsed ? "justify-center w-full" : "justify-start px-3"}
                         `}
                         title={collapsed ? item.name : undefined}
                       >
