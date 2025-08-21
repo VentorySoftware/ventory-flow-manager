@@ -6,7 +6,7 @@ import {
   Tags,
   Receipt,
   BarChart3,
-  PanelLeft
+  Menu
 } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -69,11 +69,7 @@ export function AppSidebar() {
             className="p-2 rounded-md hover:bg-sidebar-accent/50 transition-colors"
             title={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-sidebar-foreground">
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+            <Menu className="h-5 w-5 text-sidebar-foreground" />
           </button>
 
           {/* Logo y nombre */}
