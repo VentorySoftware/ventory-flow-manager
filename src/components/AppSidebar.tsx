@@ -104,25 +104,27 @@ export function AppSidebar() {
             <SidebarMenu className="space-y-1">
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild className="h-10 px-3">
-                    <NavLink 
-                      to={item.path} 
-                      end 
-                      className={({ isActive }) => `
-                        ${getNavCls({ isActive })}
-                        flex items-center gap-3 rounded-lg transition-all duration-200
-                        ${collapsed ? "justify-center" : "justify-start"}
-                      `}
-                      title={collapsed ? item.name : undefined}
-                    >
-                      <item.icon className="h-5 w-5 shrink-0" />
-                      {!collapsed && (
-                        <span className="text-sm font-medium">
-                          {item.name}
-                        </span>
-                      )}
-                    </NavLink>
-                  </SidebarMenuButton>
+                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "px-0" : "px-3"}`}>
+                      <NavLink 
+                        to={item.path} 
+                        end 
+                        className={({ isActive }) => `
+                          ${getNavCls({ isActive })}
+                          flex items-center rounded-lg transition-all duration-200
+                          ${collapsed ? "justify-center px-0" : "justify-start px-3"}
+                        `}
+                        title={collapsed ? item.name : undefined}
+                      >
+                        <div className={`flex items-center justify-center ${collapsed ? "w-full h-full" : "w-5 h-5"}`}>
+                          <item.icon className="h-5 w-5 shrink-0" />
+                        </div>
+                        {!collapsed && (
+                          <span className="text-sm font-medium ml-3">
+                            {item.name}
+                          </span>
+                        )}
+                      </NavLink>
+                    </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -141,20 +143,22 @@ export function AppSidebar() {
               <SidebarMenu className="space-y-1">
                 {adminItems.map((item) => (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild className="h-10 px-3">
+                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "px-0" : "px-3"}`}>
                       <NavLink 
                         to={item.path} 
                         end 
                         className={({ isActive }) => `
                           ${getNavCls({ isActive })}
-                          flex items-center gap-3 rounded-lg transition-all duration-200
-                          ${collapsed ? "justify-center" : "justify-start"}
+                          flex items-center rounded-lg transition-all duration-200
+                          ${collapsed ? "justify-center px-0" : "justify-start px-3"}
                         `}
                         title={collapsed ? item.name : undefined}
                       >
-                        <item.icon className="h-5 w-5 shrink-0" />
+                        <div className={`flex items-center justify-center ${collapsed ? "w-full h-full" : "w-5 h-5"}`}>
+                          <item.icon className="h-5 w-5 shrink-0" />
+                        </div>
                         {!collapsed && (
-                          <span className="text-sm font-medium">
+                          <span className="text-sm font-medium ml-3">
                             {item.name}
                           </span>
                         )}
