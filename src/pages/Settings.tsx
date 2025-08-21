@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Navbar from "@/components/Navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, Users as UsersIcon, Upload as UploadIcon } from "lucide-react";
 import Users from "./Users";
@@ -11,9 +10,8 @@ const SettingsPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
+    <div className="bg-background">
+      <main className="bg-gradient-dashboard p-6 animate-fade-in">
         <div className="max-w-7xl mx-auto space-y-6">
           <header className="flex items-center gap-3">
             <div className="h-10 w-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow">

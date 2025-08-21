@@ -10,7 +10,6 @@ import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNotificationContext } from '@/contexts/NotificationContext'
-import Navbar from '@/components/Navbar'
 import { 
   Plus, 
   Search, 
@@ -211,9 +210,7 @@ const Customers = () => {
   const customersWithPhone = customers.filter(c => c.phone).length
 
   return (
-    <div className="min-h-screen bg-gradient-dashboard">
-      <Navbar />
-      
+    <div className="bg-gradient-dashboard">
       <div className="container mx-auto p-6 space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">

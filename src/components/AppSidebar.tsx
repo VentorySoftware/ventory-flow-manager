@@ -64,7 +64,7 @@ export function AppSidebar() {
       `}
       collapsible="icon"
     >
-      <SidebarHeader className={`border-b border-sidebar-border ${collapsed ? 'h-16 px-2 py-0' : 'p-4'}`}>
+      <SidebarHeader className={`border-b border-sidebar-border ${collapsed ? 'h-16 px-2 py-0' : 'h-16 p-4'}`}>
         {collapsed ? (
           <div className="flex items-center justify-center w-full h-full">
             {/* Botón de hamburguesa centrado cuando está colapsado */}

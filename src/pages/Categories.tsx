@@ -12,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useNotificationContext } from '@/contexts/NotificationContext';
-import Navbar from '@/components/Navbar';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search } from 'lucide-react';
 
 interface Category {
@@ -226,9 +225,8 @@ export default function Categories() {
 
   if (userRole !== 'admin') {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="container mx-auto px-4 py-8 text-center">
+      <div className="bg-background">
+        <div className="container mx-auto px-4 py-6 text-center">
           <h1 className="text-2xl font-bold text-destructive">Acceso Denegado</h1>
           <p className="text-muted-foreground mt-2">
             Solo los administradores pueden acceder a la gestión de categorías.
@@ -239,9 +237,8 @@ export default function Categories() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container mx-auto px-4 py-8">
+    <div className="bg-background">
+      <div className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold">Gestión de Categorías</h1>

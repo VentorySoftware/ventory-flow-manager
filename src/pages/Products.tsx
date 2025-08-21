@@ -11,7 +11,6 @@ import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNotificationContext } from '@/contexts/NotificationContext'
-import Navbar from '@/components/Navbar'
 import { 
   Plus, 
   Search, 
@@ -329,10 +328,8 @@ const Products = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
-      <Navbar />
-      
-      <main className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+    <div className="bg-gradient-to-br from-background via-background to-muted/30">
+      <main className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
         <div className="space-y-6 sm:space-y-8">
           {/* Header */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">

@@ -36,7 +36,6 @@ import { useNavigate } from "react-router-dom"
 import { demoSales, demoProducts, demoCustomers } from "@/lib/demo-data"
 import NewSaleForm from "@/components/sales/NewSaleForm"
 import SaleDetails from "@/components/sales/SaleDetails"
-import Navbar from "@/components/Navbar"
 
 interface Sale {
   id: string
@@ -175,9 +174,8 @@ const Sales = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="flex items-center justify-center min-h-screen">
+      <div className="bg-background">
+        <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
             <p>Cargando ventas...</p>
@@ -188,9 +186,8 @@ const Sales = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="min-h-screen bg-gradient-dashboard p-2 sm:p-4 lg:p-6 animate-fade-in">
+    <div className="bg-background">
+      <div className="bg-gradient-dashboard p-2 sm:p-4 lg:p-6 animate-fade-in">
         <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4">

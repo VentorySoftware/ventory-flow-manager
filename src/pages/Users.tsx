@@ -41,7 +41,6 @@ import { Users as UsersIcon, Search, Shield, UserCog, Crown, User, Edit, Save, X
 import { supabase } from '@/integrations/supabase/client'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/contexts/AuthContext'
-import Navbar from '@/components/Navbar'
 
 interface UserProfile {
   id: string
@@ -379,9 +378,8 @@ const Users = () => {
   // Check if user has admin permissions
   if (!hasRole('admin')) {
     return (
-      <div className="min-h-screen bg-background">
-        {!embedded && <Navbar />}
-        <div className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
+      <div className="bg-background">
+        <div className="bg-gradient-dashboard p-6 animate-fade-in">
           <div className="max-w-7xl mx-auto">
             <Card className="shadow-elegant">
               <CardContent className="flex flex-col items-center justify-center py-16">
@@ -402,9 +400,8 @@ const Users = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        {!embedded && <Navbar />}
-        <div className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
+      <div className="bg-background">
+        <div className="bg-gradient-dashboard p-6 animate-fade-in">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
@@ -419,9 +416,8 @@ const Users = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {!embedded && <Navbar />}
-      <div className="min-h-screen bg-gradient-dashboard p-6 animate-fade-in">
+    <div className="bg-background">
+      <div className="bg-gradient-dashboard p-6 animate-fade-in">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Header */}
           <div className="flex justify-between items-start">
