@@ -48,7 +48,7 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "bg-sidebar-accent text-sidebar-primary-foreground font-medium border-r-2 border-sidebar-primary" 
+      ? "bg-sidebar-accent text-sidebar-primary-foreground font-medium border-r-2 border-sidebar-primary relative overflow-visible before:absolute before:inset-[-4px] before:bg-gradient-to-r before:from-sidebar-primary/20 before:to-sidebar-primary/10 before:rounded-lg before:blur-md before:z-[-1] before:opacity-80" 
       : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
 
   return (
