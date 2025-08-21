@@ -62,7 +62,7 @@ export function AppSidebar() {
       collapsible="icon"
     >
       <SidebarHeader className={`border-b border-sidebar-border ${collapsed ? 'p-2' : 'p-4'}`}>
-        <div className="flex items-center gap-2 justify-center">
+        <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
           {/* Botón de hamburguesa para colapsar/expandir sidebar */}
           <button
             onClick={() => toggleSidebar()}
@@ -72,20 +72,22 @@ export function AppSidebar() {
             <Menu className="h-5 w-5 text-sidebar-foreground" />
           </button>
 
-          {/* Logo */}
-          <div className={`${collapsed ? 'h-6 w-6' : 'h-8 w-8'} bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-glow`}>
-            <PackageOpen className={`${collapsed ? 'h-3 w-3' : 'h-5 w-5'} text-primary-foreground`} />
-          </div>
-
           {!collapsed && (
-            <div className="flex flex-col">
-              <span className="text-sm font-heading font-bold text-gradient">
-                Ventory Manager
-              </span>
-              <span className="text-xs text-sidebar-foreground/70">
-                Sistema de Gestión
-              </span>
-            </div>
+            <>
+              {/* Logo */}
+              <div className="h-8 w-8 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-glow">
+                <PackageOpen className="h-5 w-5 text-primary-foreground" />
+              </div>
+
+              <div className="flex flex-col">
+                <span className="text-sm font-heading font-bold text-gradient">
+                  Ventory Manager
+                </span>
+                <span className="text-xs text-sidebar-foreground/70">
+                  Sistema de Gestión
+                </span>
+              </div>
+            </>
           )}
         </div>
       </SidebarHeader>
