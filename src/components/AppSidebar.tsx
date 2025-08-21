@@ -54,7 +54,7 @@ export function AppSidebar() {
   return (
     <Sidebar
       className={`
-        ${collapsed ? "w-16" : "w-64"} 
+        ${collapsed ? "w-20" : "w-64"} 
         transition-all duration-300 ease-in-out 
         border-r border-sidebar-border
         bg-sidebar/95 backdrop-blur-md
