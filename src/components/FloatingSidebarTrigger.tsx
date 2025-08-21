@@ -20,7 +20,7 @@ export function FloatingSidebarTrigger() {
         "border border-border/30",
         "shadow-lg hover:shadow-xl",
         "transition-all duration-200 ease-in-out",
-        "rounded-lg px-3 py-2"
+        "rounded-lg p-2"
       )}
     >
       <Button
@@ -39,13 +39,8 @@ export function FloatingSidebarTrigger() {
       </Button>
       
       {/* Logo de Ventory */}
-      <div className="flex items-center gap-2">
-        <div className="h-6 w-6 bg-gradient-primary rounded-lg flex items-center justify-center shadow-glow animate-glow">
-          <PackageOpen className="h-3 w-3 text-primary-foreground" />
-        </div>
-        <span className="text-sm font-heading font-bold text-gradient">
-          Ventory
-        </span>
+      <div className="h-6 w-6 bg-gradient-primary rounded-lg flex items-center justify-center shadow-glow animate-glow">
+        <PackageOpen className="h-3 w-3 text-primary-foreground" />
       </div>
     </div>
   )
