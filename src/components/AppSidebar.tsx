@@ -62,7 +62,7 @@ export function AppSidebar() {
       collapsible="icon"
     >
       <SidebarHeader className={`border-b border-sidebar-border ${collapsed ? 'p-2' : 'p-4'}`}>
-        <div className={`flex items-center ${collapsed ? 'flex-col gap-2' : 'gap-3'}`}>
+        <div className="flex items-center gap-2 justify-center">
           {/* Botón de hamburguesa para colapsar/expandir sidebar */}
           <button
             onClick={() => toggleSidebar()}
