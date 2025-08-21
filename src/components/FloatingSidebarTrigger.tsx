@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { PanelLeft } from "lucide-react"
+import { Menu, PackageOpen } from "lucide-react"
 import { useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 
@@ -12,25 +12,41 @@ export function FloatingSidebarTrigger() {
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <div
       className={cn(
         "fixed top-3 left-3 z-[100]",
-        "h-9 w-9",
+        "flex items-center gap-2",
         "bg-card/90 backdrop-blur-sm",
         "border border-border/30",
         "shadow-lg hover:shadow-xl",
         "transition-all duration-200 ease-in-out",
-        "hover:scale-105 hover:bg-accent",
-        "rounded-lg",
-        "flex items-center justify-center"
+        "rounded-lg px-3 py-2"
       )}
-      onClick={toggleSidebar}
-      title="Abrir menú"
     >
-      <PanelLeft className="h-4 w-4" />
-      <span className="sr-only">Abrir sidebar</span>
-    </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className={cn(
+          "h-8 w-8",
+          "hover:bg-accent",
+          "rounded-md"
+        )}
+        onClick={toggleSidebar}
+        title="Abrir menú"
+      >
+        <Menu className="h-4 w-4" />
+        <span className="sr-only">Abrir sidebar</span>
+      </Button>
+      
+      {/* Logo de Ventory */}
+      <div className="flex items-center gap-2">
+        <div className="h-6 w-6 bg-gradient-primary rounded-lg flex items-center justify-center shadow-glow animate-glow">
+          <PackageOpen className="h-3 w-3 text-primary-foreground" />
+        </div>
+        <span className="text-sm font-heading font-bold text-gradient">
+          Ventory
+        </span>
+      </div>
+    </div>
   )
 }
