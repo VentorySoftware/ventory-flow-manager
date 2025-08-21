@@ -55,8 +55,8 @@ export function AppSidebar() {
     <Sidebar
       className={`
         ${collapsed 
-          ? "w-20 fixed left-0 top-0 h-screen z-40 shadow-2xl" 
-          : "w-64"
+          ? "w-20 sticky top-0 h-screen shadow-2xl" 
+          : "w-64 sticky top-0 h-screen"
         } 
         transition-all duration-300 ease-in-out 
         border-r border-sidebar-border
@@ -116,24 +116,29 @@ export function AppSidebar() {
             <SidebarMenu className="space-y-1">
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "w-full px-0 mx-1" : "px-3"}`}>
+                    <SidebarMenuButton asChild className={`${collapsed ? "h-12 w-full p-0" : "h-10 px-3"}`}>
                       <NavLink 
                         to={item.path} 
                         end 
                         className={({ isActive }) => `
                           ${getNavCls({ isActive })}
-                          flex items-center rounded-lg transition-all duration-200
-                          ${collapsed ? "justify-center w-full" : "justify-start px-3"}
+                          flex items-center transition-all duration-200
+                          ${collapsed 
+                            ? "justify-center w-full h-full mx-1 rounded-lg" 
+                            : "justify-start px-3 rounded-lg"
+                          }
                         `}
                         title={collapsed ? item.name : undefined}
                       >
-                        <div className={`flex items-center justify-center ${collapsed ? "w-full h-full" : "w-5 h-5"}`}>
-                          <item.icon className="h-5 w-5 shrink-0" />
-                        </div>
-                        {!collapsed && (
-                          <span className="text-sm font-medium ml-3">
-                            {item.name}
-                          </span>
+                        {collapsed ? (
+                          <item.icon className="h-6 w-6 shrink-0" />
+                        ) : (
+                          <>
+                            <item.icon className="h-5 w-5 shrink-0" />
+                            <span className="text-sm font-medium ml-3">
+                              {item.name}
+                            </span>
+                          </>
                         )}
                       </NavLink>
                     </SidebarMenuButton>
@@ -155,24 +160,29 @@ export function AppSidebar() {
               <SidebarMenu className="space-y-1">
                 {adminItems.map((item) => (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild className={`h-10 ${collapsed ? "w-full px-0 mx-1" : "px-3"}`}>
+                    <SidebarMenuButton asChild className={`${collapsed ? "h-12 w-full p-0" : "h-10 px-3"}`}>
                       <NavLink 
                         to={item.path} 
                         end 
                         className={({ isActive }) => `
                           ${getNavCls({ isActive })}
-                          flex items-center rounded-lg transition-all duration-200
-                          ${collapsed ? "justify-center w-full" : "justify-start px-3"}
+                          flex items-center transition-all duration-200
+                          ${collapsed 
+                            ? "justify-center w-full h-full mx-1 rounded-lg" 
+                            : "justify-start px-3 rounded-lg"
+                          }
                         `}
                         title={collapsed ? item.name : undefined}
                       >
-                        <div className={`flex items-center justify-center ${collapsed ? "w-full h-full" : "w-5 h-5"}`}>
-                          <item.icon className="h-5 w-5 shrink-0" />
-                        </div>
-                        {!collapsed && (
-                          <span className="text-sm font-medium ml-3">
-                            {item.name}
-                          </span>
+                        {collapsed ? (
+                          <item.icon className="h-6 w-6 shrink-0" />
+                        ) : (
+                          <>
+                            <item.icon className="h-5 w-5 shrink-0" />
+                            <span className="text-sm font-medium ml-3">
+                              {item.name}
+                            </span>
+                          </>
                         )}
                       </NavLink>
                     </SidebarMenuButton>
