@@ -27,6 +27,7 @@ import NotFound from "./pages/NotFound";
 import KioskView from "./pages/KioskView";
 import VentyWidget from "@/components/venty/VentyWidget";
 import SettingsPage from "./pages/Settings";
+import ImportsPage from "./pages/Imports";
 import { FloatingSidebarTrigger } from "@/components/FloatingSidebarTrigger";
 
 const queryClient = new QueryClient();
@@ -109,6 +110,11 @@ const AppContent = () => {
                     <Route path="/users" element={
                       <ProtectedRoute requiredRole="admin">
                         <Users />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/imports" element={
+                      <ProtectedRoute requiredRole="admin">
+                        <ImportsPage />
                       </ProtectedRoute>
                     } />
                     <Route path="/settings" element={

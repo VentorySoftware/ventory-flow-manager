@@ -6,7 +6,9 @@ import {
   Tags,
   Receipt,
   BarChart3,
-  Menu
+  Menu,
+  Users,
+  Upload
 } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
@@ -39,6 +41,8 @@ export function AppSidebar() {
       { name: "Productos", icon: Package, path: "/products", category: "admin" },
       { name: "Categorías", icon: Tags, path: "/categories", category: "admin" },
       { name: "Ventas", icon: ShoppingCart, path: "/sales", category: "admin" },
+      { name: "Usuarios", icon: Users, path: "/users", category: "admin" },
+      { name: "Importaciones", icon: Upload, path: "/imports", category: "admin" },
     ] : []),
   ]
 

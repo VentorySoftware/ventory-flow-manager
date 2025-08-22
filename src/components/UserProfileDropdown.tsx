@@ -490,13 +490,6 @@ const UserProfileDropdown = () => {
             <span>Modo {theme === 'dark' ? 'claro' : 'oscuro'}</span>
           </DropdownMenuItem>
 
-          {/* Settings - Solo para Admin */}
-          {hasRole('admin') && (
-            <DropdownMenuItem className="flex items-center space-x-3 p-3" onClick={() => navigate('/settings')}>
-              <Settings className="h-4 w-4" />
-              <span>Configuración del Sistema</span>
-            </DropdownMenuItem>
-          )}
 
           <DropdownMenuSeparator />
 
